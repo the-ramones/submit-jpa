@@ -148,4 +148,7 @@
         <property name="minPoolSize" value="10" />
     </bean>-->    
 
+    <!-- validation -->
+    <bean id="validator" class="org.springframework.validation.beanvalidation.LocalValidatorFactoryBean" />
+    
 </beans>

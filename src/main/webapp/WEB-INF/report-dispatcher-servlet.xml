@@ -20,7 +20,11 @@
     <mvc:resources location="/resource/css" mapping="/resource/css/**" />
     
     <!-- Flip on all Spring MVC features or annotations: JSR-303, message conversion,
-    field formatting
+    field formatting. 
+    "With this minimal configuration, anytime a @Valid @Controller input is encountered,
+    it will be validated by the JSR-303 provider. JSR-303, in turn, will enforce any
+    constraints declared against the input. Any ConstraintViolations will automatically
+    be exposed as errors in the BindingResult renderable by standard Spring MVC form tags. "
     -->
     <mvc:annotation-driven />
     <!-- duplicate previous -->
@@ -61,7 +65,7 @@
     for the index controller we are using ParameterizableViewController, so we must
     define an explicit mapping for it.
     -->
-<!--    <bean id="urlMapping" class="org.springframework.web.servlet.handler.SimpleUrlHandlerMapping">
+    <!--    <bean id="urlMapping" class="org.springframework.web.servlet.handler.SimpleUrlHandlerMapping">
         <property name="mappings">
             <props>
                 <prop key="index.vm">indexController</prop>
@@ -79,8 +83,27 @@
     <!--
     The index controller.
     -->
-<!--    <bean name="indexController"
-          class="org.springframework.web.servlet.mvc.ParameterizableViewController"
-          p:viewName="index" />-->
+    <!--    <bean name="indexController"
+    class="org.springframework.web.servlet.mvc.ParameterizableViewController"
+    p:viewName="index" />-->
+
+    <!-- multipart resolver -->                
+    <bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver"
+          p:maxUploadSize="500000"/>
+    
+    <!-- Configures Handler Interceptors -->    
+    <mvc:interceptors>  
+        <!-- Changes the locale when a 'locale' request parameter is sent -->  
+        <bean class="org.springframework.web.servlet.i18n.LocaleChangeInterceptor"/>  
+    </mvc:interceptors>  
+  
+    <!-- Saves a locale change using a cookie -->  
+    <bean class="org.springframework.web.servlet.i18n.CookieLocaleResolver"   
+          id="localeResolver" />  
+  
+    <bean class="org.springframework.context.support.ResourceBundleMessageSource"  
+        id="messageSource">    
+        <property name="basename" value="messages" />  
+    </bean>
 
 </beans>
