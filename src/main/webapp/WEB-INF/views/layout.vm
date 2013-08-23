@@ -1,4 +1,3 @@
-## Reports! layout
 <!DOCTYPE html>
 <!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
 <!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
@@ -11,10 +10,13 @@
         <meta name="description" content="Spring-based application's front-end">
         <meta name="viewport" content="width=device-width, initial-scale=1">
 
-        <link rel="stylesheet" href="resources/css/normalize.min.css">
-        <link rel="stylesheet" href="resources/css/main.css">
+        <link rel="stylesheet" href="#springUrl('/resources/css/normalize.min.css')">
+        <link rel="stylesheet" href="#springUrl('/resources/css/main.css')">        
+        <link href='http://fonts.googleapis.com/css?family=Roboto+Slab:100&subset=latin,cyrillic' rel='stylesheet' type='text/css'>
 
-        <script src="/resources/js/vendor/modernizr-2.6.2-respond-1.1.0.min.js"></script>
+        <script src="#springUrl('/resources/js/vendor/modernizr-2.6.2-respond-1.1.0.min.js')"></script>
+        <script src="#springUrl('/resources/js/libs/jquery-1.10.2.js')"></script>
+   
     </head>
     <body>
         <!--[if lt IE 7]>
@@ -23,45 +25,88 @@
 
         <div class="header-container">
             <div class="wrapper clearfix">
-                <!--<a href="#"><img src="img/Reports!.png" /></a>-->
-                <h1 class="title">Reports! Track your activities</h1>
-                <div id="nav">                    
+                <a href="#springUrl('/home')"><div id="logo"></div></a>
+                <h1 class="title">Track your activities</h1>   
+                <nav>
                     <ul>
-                        <li><a href="#">Home</a></li>
-                        <li>
-                            <a href="#">Get Reports!</a>    
-                            <!-- DROP-DOWN                
-                            <ul id="drop-nav">
-                                <li><a href="#">Add report</a></li>
-                                <li><a href="#">Get report</a></li>
-                                <li><a href="#">Search</a></li>
+                        <li><a href="#springUrl('/home')">Home</a></li>
+                        <li><a href="#springUrl('/report')">Reports!</a>
+                            <ul>
+                                <li><a href="#springUrl('/report/add')">Add activity</a></li>
+                                <li><a href="#springUrl('/report/search')">Build report</a>
+                                    <ul>
+                                        <li><a href="#springUrl('/report/search')">Search activity</a></li>
+                                        <li><a href="#springUrl('/report/detail')">Activity details</a></li>
+                                        <li><a href="#springUrl('/registry')">Check registry</a></li>
+                                    </ul>
+                                </li>
+                                <li><a href="#springUrl('/report/realtime')">Ajax search</a></li>                                
                             </ul>
-                            #DROP_DOWN -->
-                        <li><a href="#">Contact</a></li>
+                        </li>
+                        <li><a href=""#springUrl('/contact')">Contact</a>
+                            <ul>
+                                <li><a href="#springUrl('/instruction')">Instruction</a></li>
+                                <li><a href="#springUrl('/contact')">Contacts</a></li>
+                                <li><a href="#springUrl('/about')">About</a></li>
+                            </ul>
+                        </li>
                     </ul>
-                </div> <!-- #nav -->
+                </nav>
             </div>        
         </div>
         <!-- content -->
         <div class="main-container">
             <div class="main wrapper clearfix">
 
-        $screen_content
+                <div id="article">
+                    <div>
+                        <h1>Reports!</h1>
+                        <p>Reports! is a Java web-application to store activities based on Spring WEB MVC Framework</p>
+                    </div>
+                    <hr />
+                    <div>
+                        <h2><a class="a-nav" href="#springUrl('/report/add')">Use case 1: "save report"</a></h2>
+                        <p>Fill in the form and click 'save' button to store a new activity record into the database</p>
+                    </div>
+
+                    <hr />
+                    <div>
+                        <h2><a class="a-nav" href="#springUrl('/report/search')">Use case 2: "retrieve reports"</a></h2>
+                        <p>Fill in the form and click 'get' button to get a report of activity records corresponding to a search criteria. If the number of reports more than !template! paging will be carried out</p>
+                    </div>
+
+                    <hr />
+                    <div> 
+                        <h2><a class="a-nav" href="#springUrl('/report/realtime')">Use case 3: "real-time search"</a></h2>
+                        <p>Start typing a search query into "search" field. Choose found elements in a drop-down list to narrow down a result list or click "search" to view a full result</p> 
+                    </div>
+                </div> <!-- #article -->
+
+                <div class="aside">
+                    <h3>About Reports!</h3>
+                    <p>Reports! is a Spring Framework based application developed for storing and tracking activities. Reports! allows to construct activity reports and get activity statistics</p>
+                    <button id="hide_btn" class="btn-small" type="button" >Hide it!</button>
+                </div>
+                
+                <div class="sticky">
+                    <a href="#">Get a hint!</a>
+                </div>
 
             </div> <!-- #main -->
         </div> <!-- #main-container -->
 
         <div class="footer-container">
-            <footer class="wrapper">
-                <h3> Copyright &copy 2013 Paul Kulitski</h3>
-            </footer>
+            <div class="wrapper clearfix">
+                <a href="#springUrl('/home')"><div id="logo_small"></div></a>
+                <a href="#springUrl('/contact')"><h3 style="float:left; text-decoration: none; color: #dddddd;"> Paul Kulitski 2013</h3></a>
+                <h3 id="facebook" class="image-replacement facebook-dark"><a href="https://www.facebook.com/pavel.kulicki"><span>Facebook Profile</span></a></h3>
+                <h3 id="google" class="image-replacement google-dark"><a href="mailto:p.kulitski@gmail.com"><span>Google Mail</span></a></h3>
+                <h3 id="twitter" class="image-replacement twitter-dark"><a href="https://twitter.com/PaulKulitski"><span>Twitter Profile</span></a></h3>
+            </div>
         </div>
 
-        <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.1/jquery.js"></script>
-        <script>window.jQuery || document.write('<script src="js/vendor/jquery-1.10.1.js"><\/script>')</script>
-
-        <script src="js/main.js"></script>
-
+        <script src="#springUrl('/resources/js/main.js')"></script>
+        
         <!-- Google Analitycs -->
         <script>
             var _gaq = [['_setAccount', 'UA-XXXXX-X'], ['_trackPageview']];
