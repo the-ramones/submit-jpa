@@ -1,4 +1,4 @@
-## Reports! layout
+## Reports! layout1
 <!DOCTYPE html>
 <!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
 <!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
@@ -11,10 +11,10 @@
         <meta name="description" content="Spring-based application's front-end">
         <meta name="viewport" content="width=device-width, initial-scale=1">
 
-        <link rel="stylesheet" href="resources/css/normalize.min.css">
-        <link rel="stylesheet" href="resources/css/main.css">
+        <link rel="stylesheet" type="text/css" href="#springUrl('/resources/css/normalize.min.css')     ">
+        <link rel="stylesheet" type="text/css" href="#springUrl('/resources/css/main.css')">
 
-        <script src="/resources/js/vendor/modernizr-2.6.2-respond-1.1.0.min.js"></script>
+        <script src="#springUrl('/resources/js/vendor/modernizr-2.6.2-respond-1.1.0.min.js')"></script>
     </head>
     <body>
         <!--[if lt IE 7]>
@@ -22,39 +22,19 @@
         <![endif]-->
 
         <div class="header-container">
-            <div class="wrapper clearfix">
-                <!--<a href="#"><img src="img/Reports!.png" /></a>-->
-                <h1 class="title">Reports! Track your activities</h1>
-                <div id="nav">                    
-                    <ul>
-                        <li><a href="#">Home</a></li>
-                        <li>
-                            <a href="#">Get Reports!</a>    
-                            <!-- DROP-DOWN                
-                            <ul id="drop-nav">
-                                <li><a href="#">Add report</a></li>
-                                <li><a href="#">Get report</a></li>
-                                <li><a href="#">Search</a></li>
-                            </ul>
-                            #DROP_DOWN -->
-                        <li><a href="#">Contact</a></li>
-                    </ul>
-                </div> <!-- #nav -->
-            </div>        
+            #parse('/layout/header-old.vm')
         </div>
         <!-- content -->
         <div class="main-container">
             <div class="main wrapper clearfix">
 
-        $screen_content
+            $screen_content
 
             </div> <!-- #main -->
         </div> <!-- #main-container -->
 
         <div class="footer-container">
-            <footer class="wrapper">
-                <h3> Copyright &copy 2013 Paul Kulitski</h3>
-            </footer>
+            #parse('/layout/footer-old.vm')
         </div>
 
         <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.1/jquery.js"></script>

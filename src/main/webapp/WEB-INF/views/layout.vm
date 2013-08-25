@@ -43,7 +43,7 @@
                                 <li><a href="#springUrl('/report/realtime')">Ajax search</a></li>                                
                             </ul>
                         </li>
-                        <li><a href=""#springUrl('/contact')">Contact</a>
+                        <li><a href="#springUrl('/contact')">Contact</a>
                             <ul>
                                 <li><a href="#springUrl('/instruction')">Instruction</a></li>
                                 <li><a href="#springUrl('/contact')">Contacts</a></li>

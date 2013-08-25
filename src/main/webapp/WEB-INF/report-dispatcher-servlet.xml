@@ -14,10 +14,11 @@
 ">
     <!-- mvc -->
     
-    <!-- direct mapping of resources without a controller -->
-    <mvc:resources location="/WEB-INF/resources/img" mapping="/resources/img/**" />
-    <mvc:resources location="/WEB-INF/resources/js" mapping="/resources/js/**" />
-    <mvc:resources location="/WEB-INF/resources/css" mapping="/resources/css/**" />
+    <!-- direct mapping of resources without a controller,
+    don't forget about the last '/' sign -->
+    <mvc:resources location="/resources/img/" mapping="/resources/img/**" />
+    <mvc:resources location="/resources/js/" mapping="/resources/js/**" />
+    <mvc:resources location="/resources/css/" mapping="/resources/css/**" />
     
     <!-- Flip on all Spring MVC features or annotations: JSR-303, message conversion,
     field formatting. 
@@ -44,45 +45,50 @@
     <!-- issue: include or not -->
     <tx:annotation-driven />
     
-    <context:component-scan base-package="sp" />
+    <context:component-scan base-package="sp.controller" />
     
     <!-- Velocity integration -->
     <bean id="velocityConfig"
           class="org.springframework.web.servlet.view.velocity.VelocityConfigurer">
-        <property name="resourceLoaderPath" value="/WEB-INF/views/" />
-        <property name="configLocation">
+        <!--<property name="resourceLoaderPath" value="/WEB-INF/views/" />-->
+        <property name="configLocation" >
             <value>/WEB-INF/velocity.properties</value>
         </property>
     </bean>
 	 
-    <bean id="viewResolver"
+<!--    <bean id="viewResolver"
           class="org.springframework.web.servlet.view.velocity.VelocityLayoutViewResolver">
-        <!--cache=true for production -->
+        cache=true for production 
         <property name="cache" value="false" />
         <property name="prefix" value="" />
         <property name="layoutUrl" value="layout.vm"/>
         <property name="suffix" value=".vm" />
-        <!--<property name="toolboxConfigLocation" value="/WEB-INF/velocity/toolbox.xml"/>-->
+        <property name="toolboxConfigLocation" value="/WEB-INF/velocity/toolbox.xml"/>
         <property name="exposeSpringMacroHelpers" value="true" />
         <property name="contentType" value="text/html;charset=UTF-8" />        
-        <!-- instead of default VelocityLayoutServlet -->
+         instead of default VelocityLayoutServlet 
         <property name="viewClass" value="org.springframework.web.servlet.view.velocity.VelocityLayoutView" />
+    </bean>-->
+    
+    <bean id="viewResolver"
+		class="org.springframework.web.servlet.view.velocity.VelocityLayoutViewResolver">
+		<property name="cache" value="false" />
+		<property name="layoutUrl" value="/layout/layout.vm" />
+		<property name="prefix" value="/templates/" />
+		<property name="suffix" value=".vm" />
+		<property name="exposeSpringMacroHelpers" value="true" />
+		<property name="contentType" value="text/html;charset=UTF-8" />
+		<property name="viewClass"
+			value="org.springframework.web.servlet.view.velocity.VelocityLayoutView" />
     </bean>
+    
     
     <!-- Internationalization -->    
     <bean id="messageSource"
           class="org.springframework.context.support.ReloadableResourceBundleMessageSource">
-        <property name="basename" value="classpath:i18n/messages" />
+        <property name="basename" value="/WEB-INF/i18n/messages" />
         <property name="defaultEncoding" value="UTF-8" />
-    </bean>
-
-    <!-- Interceptor that allows for changing the current locale on every request,
-    via a configurable request parameter. 
-    -->
-    <bean id="localeChangeInterceptor"
-          class="org.springframework.web.servlet.i18n.LocaleChangeInterceptor">
-        <!-- request parameter which specifies a locale -->
-        <property name="paramName" value="lang" />
+        <property name="cacheSeconds" value="1" />
     </bean>
 
     <!--  LocaleResolver implementation that uses a cookie sent back to the user 
@@ -95,13 +101,23 @@
           class="org.springframework.web.servlet.i18n.CookieLocaleResolver">
         <property name="defaultLocale" value="en" />
     </bean>
-
+    
+    <!-- Interceptor that allows for changing the current locale on every request,
+    via a configurable request parameter. 
+    -->
+    <mvc:interceptors>
+    <bean id="localeChangeInterceptor"
+          class="org.springframework.web.servlet.i18n.LocaleChangeInterceptor">
+        <!-- request parameter which specifies a locale -->
+        <property name="paramName" value="lang" />
+    </bean>
+    </mvc:interceptors>
     
     <bean id="handlerMapping"
           class="org.springframework.web.servlet.mvc.annotation.DefaultAnnotationHandlerMapping">
-        <property name="interceptors">
+<!--        <property name="interceptors">
             <ref bean="localeChangeInterceptor" />
-        </property>
+        </property>-->
     </bean>
     
     <!-- Configures Handler Interceptors -->    
@@ -149,5 +165,18 @@
           id="messageSource">    
         <property name="basename" value="messages" />  
     </bean>-->
+    
+    <!-- RESTful services -->
+    <!--    <bean class="org.springframework.web.servlet.view.ContentNegotiatingViewResolver">
+        <property name="mediaTypes">
+            <map>
+                <entry key="json" value="application/json" />
+                <entry key="xml" value="text/xml" />
+                <entry key="htm" value="text/html" />
+            </map>
+        </property>
+        <property name="defaultContentType" value="text/html" />
+    </bean>-->
+
 
 </beans>

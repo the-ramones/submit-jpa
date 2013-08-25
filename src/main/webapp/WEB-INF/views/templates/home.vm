@@ -1,0 +1,23 @@
+<div id="article">
+    <div>
+        <h1>Reports!</h1>
+        <p>#springMessage("content.home.title")</p>
+    </div>
+    <hr />
+    <div>
+        <h2><a class="a-nav" href="#springUrl('/report/add')">#springMessage("content.home.usecase1.title")</a></h2>
+        <p>#springMessage("content.home.usecase1")</p>
+    </div>
+
+    <hr />
+    <div>
+        <h2><a class="a-nav" href="#springUrl('/report/search')">#springMessage("content.home.usecase2.title")</a></h2>
+        <p>#springMessage("content.home.usecase2")</p>
+    </div>
+
+    <hr />
+    <div> 
+        <h2><a class="a-nav" href="#springUrl('/report/realtime')">#springMessage("content.home.usecase3.title")</a></h2>
+        <p>#springMessage("content.home.usecase3")</p> 
+    </div>
+</div> <!-- #article -->

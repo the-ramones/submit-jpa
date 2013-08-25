@@ -1,0 +1,5 @@
+<a href="#springUrl('/home')"><div id="logo_small"></div></a>
+<a href="#springUrl('/contact')"><h3 style="float:left; text-decoration: none; color: #dddddd;">#springMessage("footer")</h3></a>
+<h3 id="facebook" class="image-replacement facebook-dark"><a href="https://www.facebook.com/pavel.kulicki"><span>Facebook Profile</span></a></h3>
+<h3 id="google" class="image-replacement google-dark"><a href="mailto:p.kulitski@gmail.com"><span>Google Mail</span></a></h3>
+<h3 id="twitter" class="image-replacement twitter-dark"><a href="https://twitter.com/PaulKulitski"><span>Twitter Profile</span></a></h3>

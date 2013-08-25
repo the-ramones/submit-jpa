@@ -4,7 +4,7 @@
              xmlns="http://www.springframework.org/schema/security"
 
              xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.1.xsd
-       http://www.springframework.org/schema/security http://www.springframework.org/schema/aop/spring-security-3.1.xsd       
+       http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security-3.1.xsd       
 ">
     <!-- security -->
     <http>
@@ -18,6 +18,9 @@
         -->
         <intercept-url pattern="/login" requires-channel="https"/>
         <intercept-url pattern="/form" requires-channel="http"/>
+        <remember-me
+            key="spitterKey"
+            token-validity-seconds="2419200" />        
     </http>
     
     <!-- or this way -->
@@ -136,4 +139,36 @@
     objectclass:groupOfNames
     cn: spitter
     member: uid=habuma,ou=people,dc=habuma,dc=com-->
+    
+    <!-- Method invocation Securoty -->
+    <!-- 
+        @Secured - Spring
+        @RolesAllowed - JSR-250
+        @PreFilter @PostFilter @PreAuthorize @PostAuthorize
+        explicit pointcuts
+        
+        examples:
+        1. @Secured({'ROLE_USER', 'ROLE_ADMIN'})
+           public String securedMethod(UserModel model) throws AuthenticationException, AccessDeniedException
+        2. @RolesAllowed('ROLE_ADMIN')   
+           public String securedMethod(UserMOdel model) throw AuthenticationException, AcessDeniedException
+              + @DenyAll @PermitAll 
+        3. @PreAuthorise('hasRole('ROLE_ADMIN') and #spitter.spittle.length() < 140 or hasRole('ROLE_PREMIUM')")
+           @PostAuthorize('hasRole('ROLE_ADMIN') and returnObject.username == principal.username')
+           @PostFilter('filterObject.username == principal.username')  :  filters return List<Spittle>
+    -->
+    <global-method-security secured-annotations="enabled" pre-post-annotations="enabled">
+        <expression-handler ref="expressionHandler" />
+        <protect-pointcut expression="execution(@sp.Sensible * *.*(String)) and args(id,value)" access="ROLE_SPITTER, ROLE_ADMIN" />
+    </global-method-security>
+    
+    <beans:bean id="expressionHandler" 
+                class="org.springframework.security.access.expression.method.DefaultMethodSecurityExpressionHandler">
+        <beans:property name="permissionEvaluator">
+            <beans:bean class="com.habuma.spitter.security.SpittlePermissionEvaluator" />
+        </beans:property>
+    </beans:bean>
+    
+    
+
 </beans:beans>

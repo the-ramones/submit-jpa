@@ -12,6 +12,7 @@ import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.xml.bind.annotation.XmlRootElement;
 
 /**
  *
@@ -24,6 +25,7 @@ import javax.persistence.TemporalType;
     @NamedQuery(name = "Report.getReportsByPerformer", query = "select r from Report r where r.performer = :performer"),
     @NamedQuery(name = "Report.getReports", query = "select r from Report r where r.performer = :performer and r.startDate = :startDate and r.endDate = :endDate")
 })
+@XmlRootElement
 public class Report implements Serializable {
 
     private Long id;

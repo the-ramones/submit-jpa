@@ -1,0 +1,6 @@
+<h2>List of Reports</h2>
+<ul>
+   #foreach($report in $reports)
+   <li><a href="/report/detail/${report.id}">${report.performer} from ${report.startDate}#if(${endDate})to ${endDate}#end</a></li>
+   #end
+</ul>

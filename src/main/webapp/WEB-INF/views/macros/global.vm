@@ -1,0 +1,12 @@
+## Hint aside element and 'sticky' bar macro
+#macro ( hint )
+    <div class="aside">
+        <h3>$!hint_title</h3>
+        <p>$!hint</p>
+        <button id="hide_btn" class="btn-small" type="button" >#springMessage("button.hide")</button>
+    </div>
+    
+    <div class="sticky">
+        <a href="#">#springMessage("sticker")</a>
+    </div>
+#end

@@ -60,9 +60,12 @@ textarea {
 /* ===== Initializr Styles ==================================================
    Author: Jonathan Verrecchia - verekia.com/initializr/responsive-template
    ========================================================================== */
+@import url(http://fonts.googleapis.com/css?family=Roboto+Slab:300&subset=latin,cyrillic);
 
 body {
-    font: 16px/26px Helvetica, Helvetica Neue, Arial;
+    /*font: 16px/26px cursive;*/
+    font-family: 'Roboto Slab';
+    /*'Roboto Slab';, Helvetica, Helvetica Neue, Arial;*/
 }
 
 .wrapper {

@@ -1,0 +1,29 @@
+## search form template
+<h2>Reports! search form</h2>
+<!-- reports form -->
+<form name="report-request" action="./search" method="POST">
+    <label>Start date:</label><input type="date" name="startDate">    
+    <label>End date:</label><input type="date" name="endDate">
+    <label>Performer:</label>
+        <select name="performer">
+            #foreach( $performer in $performers ) 
+                <option value="$performer">$performer</option>
+            #end
+        </select>
+    <label>Time Period:</label>
+        <select name="timePeriod">
+            <option value="last-qtr">Last Qtr</option>
+            <option value="last-month">Last Month</option>
+            <option value="last-calendar-year">Last Calendar Year</option>
+            <option value="current-year-to-date">Current Year to Date</option>
+            <option value="current-qtr-to-date">Current Qtr to Date</option>
+            <option value="current-month-to-date">Current Month to Date</option>
+        </select>
+    <input type="submit" name="reportSubmit" value="Submit">
+</form>           
+<div class="aside">
+    <h3>Get Reports!</h3>
+    <p>Fill in the form and click 'get' button to get a report of activity records corresponding to a search criteria. If the number of reports more than !template! paging will be carried out</p>
+    <!-- insert 'hide' button -->
+</div> <!-- #aside -->
+    
