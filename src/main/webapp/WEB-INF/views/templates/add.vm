@@ -1,44 +1,41 @@
 ## add report template
-<form name="report-request" action="/search" method="POST">
-    <label>Start date:</label><input type="date" name="start-date">    
-    <label>End date:</label><input type="date" name="end-date">
+<form name="report-add" action="#springUrl('/report/add')" method="POST">
+    <label>Start date:</label>
+    #springFormInput('report.startDate' 'type="date" name="start-date"')    
+    #springShowErrors("<br />" "")
+    <label>End date:</label>
+    #springFormInput('report.endDate' 'type="date" name="end-date"')
+    #springShowErrors("<br />" "")
     <label>Performer:</label>
-        <select name="performer">
-            #foreach( $performer in $performers ) 
-                <option value="$performer">$performer</option>
-            #end
-        </select>
-    <label>Time Period:</label>
-        <select name="time-period">
-            <option value="last-qtr">Last Qtr</option>
-            <option value="last-month">Last Month</option>
-            <option value="last-calendar-year">Last Calendar Year</option>
-            <option value="current-year-to-date">Current Year to Date</option>
-            <option value="current-qtr-to-date">Current Qtr to Date</option>
-            <option value="current-month-to-date">Current Month to Date</option>
-        </select>
+    #springFormInput('report.performer' 'type="text" name="performer"')
+    #springShowErrors("<br />" "")
+    <label>Activity:</label>
+    #springFormInput('report.activity' 'type="text" name="activity"')
     <input type="submit" name="report-submit" value="Submit">
 </form>           
 
-<form class="form-horizontal">
-    <div class="control-group">
-        <label class="control-label" for="inputEmail">Email</label>
-        <div class="controls">
-            <input type="text" id="inputEmail" placeholder="Email">
-        </div>
-    </div>
-    <div class="control-group">
-        <label class="control-label" for="inputPassword">Password</label>
-        <div class="controls">
-            <input type="password" id="inputPassword" placeholder="Password">
-        </div>
-    </div>
-    <div class="control-group">
-        <div class="controls">
-            <label class="checkbox">
-                <input type="checkbox"> Remember me
-            </label>
-            <button type="submit" class="btn">Sign in</button>
-        </div>
-    </div>
-</form>
+#**
+#springBind("bindName")
+#if($status.errors.hasErrors())
+    ## Global error messages
+    #foreach($e in $status.errorMessages)
+        <p>${e}</p>
+    #end
+    ## Field error messages
+    #foreach($f in $status.errors.fieldErrors)
+        #springBind("bindName.${f.field}")
+        #foreach($e in $status.errorMessages)
+            <p>${e}</p>
+        #end
+    #end
+#end
+*#
+#**
+            #springBind("accessRequest")
+#if ($status && $status.errors.hasErrors())
+#foreach( $error in $status.errorMessages )
+<p>$error</p>
+#end
+#end
+
+*#

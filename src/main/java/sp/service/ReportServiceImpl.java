@@ -22,8 +22,8 @@ public class ReportServiceImpl implements ReportService {
     private ReportRepository reportRepository;
 
     @Override
-    //@Transactional(propagation = Propagation.REQUIRED, isolation = Isolation.SERIALIZABLE)
-    public Report addReport(Report report) {
+    //@Transactional(propagation = Propagation.REQUIRED, isolation = Isolation.DEFAULT)//Isolation.SERIALIZABLE)
+    public Report addReport(Report report) {        
         return reportRepository.saveReport(report);
     }
 

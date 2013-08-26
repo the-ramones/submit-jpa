@@ -55,6 +55,7 @@ public class ReportRepositoryImpl implements ReportRepository {
     @Override
     public Report saveReport(Report report) {
         entityManager.persist(report);
+        entityManager.flush();
         return report;
     }
 

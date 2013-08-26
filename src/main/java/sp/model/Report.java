@@ -12,7 +12,12 @@ import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Past;
+import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
+import org.hibernate.validator.constraints.NotEmpty;
+import org.springframework.format.annotation.DateTimeFormat;
 
 /**
  *
@@ -29,9 +34,21 @@ import javax.xml.bind.annotation.XmlRootElement;
 public class Report implements Serializable {
 
     private Long id;
+    
+    @NotNull(message = "start date should be specified2")
+    @Past(message = "start date should be in the past2") 
+    @DateTimeFormat(pattern = "DD M yy")
     private Date startDate;
+    
+    @DateTimeFormat(pattern = "DD M yyyy")
     private Date endDate;
+
+    @NotEmpty(message = "performer should be specified2")
+    @Size(min = 1, max = 255, message = "performer should be 1 to 255 characters long2")
     private String performer;
+    
+    @NotEmpty(message = "activity should be specified2")
+    @Size(min = 1, max = 255, message = "activity should be 1 to 255 characters long2")
     private String activity;
 
     @Id

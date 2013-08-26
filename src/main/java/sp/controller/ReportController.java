@@ -4,13 +4,16 @@ import java.util.Date;
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 import javax.inject.Inject;
+import javax.validation.Valid;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import sp.model.Report;
 import sp.service.ReportService;
 
 /**
@@ -43,8 +46,8 @@ public class ReportController {
     // TODO: fix select maximum height, css for form
     @RequestMapping(value = {"", "search"}, method = RequestMethod.GET)
     public String setupForm(Model model) {
+        model.addAttribute("view", "search");
         model.addAttribute("performers", reportService.getPerformers());
-        model.addAttribute("view", "search");               
         return "form";
     }
 
@@ -79,10 +82,35 @@ public class ReportController {
         return "form";
     }
 
+    /**
+     * Setup of 'add activity' form
+     * 
+     * @param model
+     * @return view name
+     */
     @RequestMapping(value = "add", method = RequestMethod.GET)
-    public String add(Model model) {
+    public String setupAddForm(Model model) {
         model.addAttribute("view", "add");
+        model.addAttribute("report", new Report());
         return "add";
+    }
+    /**
+     * 
+     * @param report
+     * @param result
+     * @param model
+     * @return view name
+     */
+    @RequestMapping(value = "add", method = RequestMethod.POST)
+    public String add(@Valid @ModelAttribute("report") Report report, 
+        BindingResult result, Model model) {
+        if (result.hasErrors()) {
+            model.addAttribute("view", "add");
+            return "add";
+        }
+        report = reportService.addReport(report);
+        System.out.println(report);
+        return "redirect:detail/" + report.getId();
     }
 
     @RequestMapping(value = "/realtime", method = RequestMethod.GET)
