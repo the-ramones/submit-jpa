@@ -1,12 +1,16 @@
 ## Hint aside element and 'sticky' bar macro
 #macro ( hint )
+    #if ($view)
+        #set($hint = "hint." + $view)
+        #set($hint_title = "hint." + $view + ".title")
     <div class="aside">
-        <h3>$!hint_title</h3>
-        <p>$!hint</p>
+        <h3>#springMessage($hint_title)</h3>
+        <p>#springMessage($hint)</p>
         <button id="hide_btn" class="btn-small" type="button" >#springMessage("button.hide")</button>
     </div>
     
     <div class="sticky">
         <a href="#">#springMessage("sticker")</a>
     </div>
+    #end
 #end

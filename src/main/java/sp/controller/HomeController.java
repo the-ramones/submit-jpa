@@ -3,7 +3,6 @@ package sp.controller;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 
 /**
  * Home page controller
@@ -15,6 +14,7 @@ public class HomeController {
 
     @RequestMapping({"/", "/home"})
     public String home(Model model) {
+        model.addAttribute("view", "home");                
         return "home";
     }
 
@@ -23,13 +23,13 @@ public class HomeController {
         return "contact";
     }
     
-    @RequestMapping(value = "/login", method = RequestMethod.GET)
-    public String loginForm(Model model) {
-        return "login";
+    @RequestMapping("/instruction")
+    public String instruction(Model model) {
+        return "home";
     }
     
-    @RequestMapping(value = "/login", method = RequestMethod.POST)
-    public String loginHome(Model model) {
+    @RequestMapping("/about")
+    public String about(Model model) {
         return "home";
     }
 }

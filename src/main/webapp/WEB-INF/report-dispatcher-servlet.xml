@@ -29,19 +29,6 @@
     -->
     <mvc:annotation-driven />
 
-    <!-- duplicate previous
-    Spring 3.1 introduced a new set of support classes for @RequestMapping methods
-    called RequestMappingHandlerMapping and RequestMappingHandlerAdapter respectively.
-    They are recommended for use and even required to take advantage of new features
-    in Spring MVC 3.1 and going forward. The new support classes are enabled by 
-    default by the MVC namespace and the MVC Java config but must be configured 
-    explicitly if using neither. This section describes a few important differences
-    between the old and the new support classes. 
-    
-    <bean class="org.springframework.web.servlet.mvc.annotation.DefaultAnnotationHandlerMapping" />
-    <bean class="org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerAdapter" />   
-    -->
-    
     <!-- issue: include or not -->
     <tx:annotation-driven />
     
@@ -56,20 +43,6 @@
         </property>
     </bean>
 	 
-<!--    <bean id="viewResolver"
-          class="org.springframework.web.servlet.view.velocity.VelocityLayoutViewResolver">
-        cache=true for production 
-        <property name="cache" value="false" />
-        <property name="prefix" value="" />
-        <property name="layoutUrl" value="layout.vm"/>
-        <property name="suffix" value=".vm" />
-        <property name="toolboxConfigLocation" value="/WEB-INF/velocity/toolbox.xml"/>
-        <property name="exposeSpringMacroHelpers" value="true" />
-        <property name="contentType" value="text/html;charset=UTF-8" />        
-         instead of default VelocityLayoutServlet 
-        <property name="viewClass" value="org.springframework.web.servlet.view.velocity.VelocityLayoutView" />
-    </bean>-->
-    
     <bean id="viewResolver"
 		class="org.springframework.web.servlet.view.velocity.VelocityLayoutViewResolver">
 		<property name="cache" value="false" />
@@ -82,7 +55,6 @@
 			value="org.springframework.web.servlet.view.velocity.VelocityLayoutView" />
     </bean>
     
-    
     <!-- Internationalization -->    
     <bean id="messageSource"
           class="org.springframework.context.support.ReloadableResourceBundleMessageSource">
@@ -94,7 +66,6 @@
     <!--  LocaleResolver implementation that uses a cookie sent back to the user 
     in case of a custom setting, with a fallback to the specified default locale
     or the request's accept-header locale.
-
     This is particularly useful for stateless applications without user sessions.  
     -->
     <bean id="localeResolver"
@@ -115,59 +86,15 @@
     
     <bean id="handlerMapping"
           class="org.springframework.web.servlet.mvc.annotation.DefaultAnnotationHandlerMapping">
-<!--        <property name="interceptors">
-            <ref bean="localeChangeInterceptor" />
-        </property>-->
     </bean>
-    
-    <!-- Configures Handler Interceptors -->    
-<!--    <mvc:interceptors>  
-         Changes the locale when a 'locale' request parameter is sent   
-        <bean class="org.springframework.web.servlet.i18n.LocaleChangeInterceptor"/>  
-    </mvc:interceptors>  -->
-    
-    <!--
-    Most controllers will use the ControllerClassNameHandlerMapping above, but
-    for the index controller we are using ParameterizableViewController, so we must
-    define an explicit mapping for it.
-    -->
-    <!--    <bean id="urlMapping" class="org.springframework.web.servlet.handler.SimpleUrlHandlerMapping">
-        <property name="mappings">
-            <props>
-                <prop key="index.vm">indexController</prop>
-            </props>
-        </property>
-    </bean>-->
-
-    <!-- default view resolver -->
-    <!--<bean id="viewResolver"
-          class="org.springframework.web.servlet.view.InternalResourceViewResolver"
-          p:prefix="/WEB-INF/jsp/"
-          p:suffix=".jsp" />
-    -->
-
-    <!--
-    The index controller.
-    -->
-    <!--    <bean name="indexController"
-    class="org.springframework.web.servlet.mvc.ParameterizableViewController"
-    p:viewName="index" />-->
 
     <!-- multipart resolver -->                
     <bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver"
           p:maxUploadSize="500000"/>
- 
-    <!-- Saves a locale change using a cookie -->  
-<!--    <bean class="org.springframework.web.servlet.i18n.CookieLocaleResolver"   
-          id="localeResolver" />  
-  
-    <bean class="org.springframework.context.support.ResourceBundleMessageSource"  
-          id="messageSource">    
-        <property name="basename" value="messages" />  
-    </bean>-->
-    
+   
     <!-- RESTful services -->
-    <!--    <bean class="org.springframework.web.servlet.view.ContentNegotiatingViewResolver">
+    <!--
+    <bean class="org.springframework.web.servlet.view.ContentNegotiatingViewResolver">
         <property name="mediaTypes">
             <map>
                 <entry key="json" value="application/json" />
@@ -176,7 +103,7 @@
             </map>
         </property>
         <property name="defaultContentType" value="text/html" />
-    </bean>-->
-
-
+    </bean>
+    -->
+    
 </beans>

@@ -33,10 +33,18 @@ public class ReportController {
     public void preDestroy() {
     }
 
+    public ReportController() {
+    }
+    
+    public ReportController(ReportService reportService) {
+        this.reportService = reportService;
+    }
+
     // TODO: fix select maximum height, css for form
     @RequestMapping(value = {"", "search"}, method = RequestMethod.GET)
     public String setupForm(Model model) {
         model.addAttribute("performers", reportService.getPerformers());
+        model.addAttribute("view", "search");               
         return "form";
     }
 
@@ -53,8 +61,14 @@ public class ReportController {
         return "list";
     }
 
+    @RequestMapping(value = "/detail", method = RequestMethod.GET)
+    public String setupDetailForm(Model model) {
+        model.addAttribute("view", "detail");        
+        return "detail-form";
+    }
+            
     @RequestMapping(value = "detail/{id}", method = RequestMethod.GET)
-    public String detail(Model model, @PathVariable("id") Long id) {
+    public String detailById(Model model, @PathVariable("id") Long id) {
         model.addAttribute("report", reportService.getReportById(id));
         return "detail";
     }
@@ -67,11 +81,13 @@ public class ReportController {
 
     @RequestMapping(value = "add", method = RequestMethod.GET)
     public String add(Model model) {
+        model.addAttribute("view", "add");
         return "add";
     }
 
     @RequestMapping(value = "/realtime", method = RequestMethod.GET)
     public String realTimeSearch(Model model) {
-        return "search";
+        model.addAttribute("view", "ajax");
+        return "ajax";
     }    
 }
