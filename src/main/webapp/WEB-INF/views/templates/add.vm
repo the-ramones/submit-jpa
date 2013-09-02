@@ -1,41 +1,139 @@
-## add report template
-<form name="report-add" action="#springUrl('/report/add')" method="POST">
-    <label>Start date:</label>
-    #springFormInput('report.startDate' 'type="date" name="start-date"')    
-    #springShowErrors("<br />" "")
-    <label>End date:</label>
-    #springFormInput('report.endDate' 'type="date" name="end-date"')
-    #springShowErrors("<br />" "")
-    <label>Performer:</label>
-    #springFormInput('report.performer' 'type="text" name="performer"')
-    #springShowErrors("<br />" "")
-    <label>Activity:</label>
-    #springFormInput('report.activity' 'type="text" name="activity"')
-    <input type="submit" name="report-submit" value="Submit">
-</form>           
-
-#**
-#springBind("bindName")
-#if($status.errors.hasErrors())
-    ## Global error messages
-    #foreach($e in $status.errorMessages)
-        <p>${e}</p>
-    #end
-    ## Field error messages
-    #foreach($f in $status.errors.fieldErrors)
-        #springBind("bindName.${f.field}")
-        #foreach($e in $status.errorMessages)
-            <p>${e}</p>
+## Add template. Utilizes reports context variable
+<div class="form-container" style="width: 100%">
+    ## activities list template
+    <h2>#springMessage('content.search.list.title')</h2>
+    <table class="table">
+        <caption>#springMesage('content.search.list.subtitle')</caption>
+        <thead>
+            <tr>
+                <th>id</th>
+                <th>#springMessage('content.detail.start')</th>
+                <th>#springMessage('content.detail.end')</th>
+                <th>#springMessage('content.detail.performer')</th>
+                <th>#springMessage('content.detail.activity')</th>
+            </tr>
+        <tbody>
+            #foreach($report in $reports)
+            <tr>
+                <td>${report.id}</td>
+                <td>${report.startDate}</td>
+                <td>${report.endDate}</td>
+                <td>${report.performer}</td>
+                <td>${report.activity}</td>
+            </tr>
+            <tr>
+                <td>${report.id}</td>
+                <td>${report.startDate}</td>
+                <td>${report.endDate}</td>
+                <td>${report.performer}</td>
+                <td>${report.activity}</td>
+            </tr>
+            <tr>
+                <td>${report.id}</td>
+                <td>${report.startDate}</td>
+                <td>${report.endDate}</td>
+                <td>${report.performer}</td>
+                <td>${report.activity}</td>
+            </tr>
+            <tr>
+                <td>${report.id}</td>
+                <td>${report.startDate}</td>
+                <td>${report.endDate}</td>
+                <td>${report.performer}</td>
+                <td>${report.activity}</td>
+            </tr>
+            <tr>
+                <td>${report.id}</td>
+                <td>${report.startDate}</td>
+                <td>${report.endDate}</td>
+                <td>${report.performer}</td>
+                <td>${report.activity}</td>
+            </tr>
+            <tr>
+                <td>${report.id}</td>
+                <td>${report.startDate}</td>
+                <td>${report.endDate}</td>
+                <td>${report.performer}</td>
+                <td>${report.activity}</td>
+            </tr>
+            <tr>
+                <td>${report.id}</td>
+                <td>${report.startDate}</td>
+                <td>${report.endDate}</td>
+                <td>${report.performer}</td>
+                <td>${report.activity}</td>
+            </tr>
+            <tr>
+                <td>${report.id}</td>
+                <td>${report.startDate}</td>
+                <td>${report.endDate}</td>
+                <td>${report.performer}</td>
+                <td>${report.activity}</td>
+            </tr>
+            <tr>
+                <td>${report.id}</td>
+                <td>${report.startDate}</td>
+                <td>${report.endDate}</td>
+                <td>${report.performer}</td>
+                <td>${report.activity}</td>
+            </tr>
+            <tr>
+                <td>${report.id}</td>
+                <td>${report.startDate}</td>
+                <td>${report.endDate}</td>
+                <td>${report.performer}</td>
+                <td>${report.activity}</td>
+            </tr>
+            <tr>
+                <td>${report.id}</td>
+                <td>${report.startDate}</td>
+                <td>${report.endDate}</td>
+                <td>${report.performer}</td>
+                <td>${report.activity}</td>
+            </tr>
+            <tr>
+                <td>${report.id}</td>
+                <td>${report.startDate}</td>
+                <td>${report.endDate}</td>
+                <td>${report.performer}</td>
+                <td>${report.activity}</td>
+            </tr>
+            <tr>
+                <td>${report.id}</td>
+                <td>${report.startDate}</td>
+                <td>${report.endDate}</td>
+                <td>${report.performer}</td>
+                <td>${report.activity}</td>
+            </tr>
+            <tr>
+                <td>${report.id}</td>
+                <td>${report.startDate}</td>
+                <td>${report.endDate}</td>
+                <td>${report.performer}</td>
+                <td>${report.activity}</td>
+                <!--button group-->
+            </tr>     
+            <tr>
+                <td>${report.id}</td>
+                <td>${report.startDate}</td>
+                <td>${report.endDate}</td>
+                <td>${report.performer}</td>
+                <td>${report.activity}</td>
+            </tr>                            <tr>
+                <td>${report.id}</td>
+                <td>${report.startDate}</td>
+                <td>${report.endDate}</td>
+                <td>${report.performer}</td>
+                <td>${report.activity}</td>
+        <div class="button-block clearfix hidden">
+            <button class="action">#springMessage('button.action.get')</button>
+            <button class="action update">#springMessage('button.action.update')</button>          
+            <button class="action delete">#springMessage('button.action.delete')</button>
+        </div>
+        </tr>
         #end
-    #end
-#end
-*#
-#**
-            #springBind("accessRequest")
-#if ($status && $status.errors.hasErrors())
-#foreach( $error in $status.errorMessages )
-<p>$error</p>
-#end
-#end
-
-*#
+        </tbody>
+        </thead>
+    </table>
+    <button class="action add" onclick="add_modal()">#springMessage('button.action.addnew')</button>    
+</div>

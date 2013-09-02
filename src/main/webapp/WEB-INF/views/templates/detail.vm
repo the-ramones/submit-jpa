@@ -1,3 +1,5 @@
+## Detail template. Utilizes report contexxt variable
+<div class="form-container">
 <h2>#springMessage("content.detail.title")</h2>
 <dl class="dl-horizontal">
     <dt>id</dt>
@@ -19,4 +21,6 @@
     <dt>#springMessage("content.detail.activity")</dt>
     <dd>${report.activity}</dd>
 </dl>
+<button class="action">#springMessage('button.action.get')</button>
+</div>
 

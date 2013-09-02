@@ -3,6 +3,7 @@
         <h1>Reports!</h1>
         <p>#springMessage("content.home.title")</p>
     </div>
+    
     <hr />
     <div>
         <h2><a class="a-nav" href="#springUrl('/report/add')">#springMessage("content.home.usecase1.title")</a></h2>

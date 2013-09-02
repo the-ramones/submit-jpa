@@ -1,6 +1,6 @@
 <a href="#springUrl('/home')"><div id="logo"></div></a>
 <h1 class="title">#springMessage("title")</h1>   
-<nav>
+<div id="nav">
     <ul>
         <li><a href="#springUrl('/home')">#springMessage("menu.home")</a></li>
         <li><a href="#springUrl('/report')">#springMessage("menu.reports")</a>
@@ -24,4 +24,4 @@
             </ul>
         </li>
     </ul>
-</nav>
+</div>

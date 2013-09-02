@@ -7,14 +7,21 @@
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
         <title>$!page_title</title>
-        <meta name="description" content="Spring-based application's front-end">
+        <meta name="description" content="Spring-based application's Reports!">
         <meta name="viewport" content="width=device-width, initial-scale=1">
 
         <link rel="stylesheet" href="#springUrl('/resources/css/normalize.min.css')">
-        <link rel="stylesheet" href="#springUrl('/resources/css/main.css')">        
+        <link rel="stylesheet" href="#springUrl('/resources/css/main.css')">  
+        <link rel="stylesheet" href="#springUrl('/resources/css/search.css')">
+        <link rel="stylesheet" href="#springUrl('/resources/css/modal.css')">
+        <link rel="stylesheet" href="#springUrl('/resources/css/jquery-ui-1.10.3.custom.min.css')">
+      
         <link href='http://fonts.googleapis.com/css?family=Roboto+Slab:100&subset=latin,cyrillic' rel='stylesheet' type='text/css'>
 
         <script src="#springUrl('/resources/js/vendor/modernizr-2.6.2-respond-1.1.0.min.js')"></script>      
+        <script src="#springUrl('/resources/js/libs/jquery-1.10.2.js')"></script>
+        <script src="#springUrl('/resources/js/libs/jquery-ui-1.10.3.custom.min.js')"></script>
+
     </head>
     <body>
         <!--[if lt IE 7]>
@@ -34,7 +41,9 @@
 
                 $!screen_content
 
+                #menu_sticker()
                 #hint()
+                #hint_sticker()
 
             </div> <!-- #main -->
         </div> <!-- #main-container -->
@@ -47,8 +56,17 @@
             </div>
         </div>
 
-        <script src="#springUrl('/resources/js/libs/jquery-1.10.2.js')"></script>
         <script src="#springUrl('/resources/js/main.js')"></script>
+        <script src="#springUrl('js/jquery.validate.js')"></script>        
+        <!--localize validation messages-->
+        <script src="#springUrl('js/localization/messages.js')"></script>
+        <script src="#springUrl('js/main-validation.js')"></script>
+        <!-- Datepicker localization -->
+        <!-- <script src="#springUrl('js/localization/jquery.ui.datepicker-ru.js')"></script> -->
+        <script type="text/javascript" src="#springUrl('js/search.js')"></script>
+        <script type="text/javascript" src="#springUrl('js/modal.js')"></script>
+        <script type="text/javascript">
+        </script>
         
     </body>
 </html>

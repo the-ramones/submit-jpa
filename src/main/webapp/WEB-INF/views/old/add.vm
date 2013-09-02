@@ -1,0 +1,41 @@
+## add report template
+<form name="report-add" action="#springUrl('/report/add')" method="POST">
+    <label>Start date:</label>
+    #springFormInput('report.startDate' 'type="date" name="start-date"')    
+    #springShowErrors("<br />" "")
+    <label>End date:</label>
+    #springFormInput('report.endDate' 'type="date" name="end-date"')
+    #springShowErrors("<br />" "")
+    <label>Performer:</label>
+    #springFormInput('report.performer' 'type="text" name="performer"')
+    #springShowErrors("<br />" "")
+    <label>Activity:</label>
+    #springFormInput('report.activity' 'type="text" name="activity"')
+    <input type="submit" name="report-submit" value="Submit">
+</form>           
+
+#**
+#springBind("bindName")
+#if($status.errors.hasErrors())
+    ## Global error messages
+    #foreach($e in $status.errorMessages)
+        <p>${e}</p>
+    #end
+    ## Field error messages
+    #foreach($f in $status.errors.fieldErrors)
+        #springBind("bindName.${f.field}")
+        #foreach($e in $status.errorMessages)
+            <p>${e}</p>
+        #end
+    #end
+#end
+*#
+#**
+            #springBind("accessRequest")
+#if ($status && $status.errors.hasErrors())
+#foreach( $error in $status.errorMessages )
+<p>$error</p>
+#end
+#end
+
+*#

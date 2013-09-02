@@ -1,4 +1,8 @@
-## Hint aside element and 'sticky' bar macro
+## Reports! Global Velocity Macros
+
+#*
+ * Uses 'view' variable from the context was called to construct Hint side bar
+ *#
 #macro ( hint )
     #if ($view)
         #set($hint = "hint." + $view)
@@ -6,11 +10,59 @@
     <div class="aside">
         <h3>#springMessage($hint_title)</h3>
         <p>#springMessage($hint)</p>
-        <button id="hide_btn" class="btn-small" type="button" >#springMessage("button.hide")</button>
-    </div>
-    
-    <div class="sticky">
-        <a href="#">#springMessage("sticker")</a>
+        <button id="hide_btn" class="btn-small" type="button">#springMessage("button.hide")</button>
     </div>
     #end
+#end
+
+#*
+ * Constructs right sticker ('get hint' sticker)
+ *#
+#macro ( hint_sticker )    
+    <div class="sticky">
+        <a href="#"><i class="icon-briefcase"></i>#springMessage("sticker")</a>
+    </div>
+#end
+
+#*
+ * Uses 'user' variable from the context was called to construct Hint side bar
+ *#
+#macro ( menu_sticker )
+     <div class="login-wrap">
+        <div class="login-stick">
+            <ul>
+                <li id="login">
+                    <a href="#" data-icon="&#128101;"></a>
+                </li>
+                <li id="language">
+                    <a href="#" data-icon="&#127758;"></a>
+                </li>
+                <li id="checklist">
+                    <a href="#springUrl('/checklist')" data-icon="&#59197;"></a>
+                </li>
+            </ul>
+        </div>
+        <div class="popup" id="popup-login">
+            <div class="arrow"></div>
+            <ul>
+                #if($user)
+                    <li><a href="#springUrl('/login')">${user.name}</a></li>
+                    <li><a href="#springUrl('/login?logout=true')">#springMessage('sticker.left.login.logout')</a></li>
+                #{else}
+                    <li><a href="#springUrl('/login?login=true')">Anonymous User</a></li>
+                    <li><a href="#springUrl('/login?login=true')">#springMessage('sticker.left.login.login')</a></li>
+                #end
+            </ul>
+        </div>                        
+        <div class="popup" id="popup-language">
+            <div class="arrow"></div>
+            <ul>
+                #set($url = $request.attributes.CURRENT_URL)
+                #set($en_url = $url + '?lang=en')
+                #set($ru_url = $url + '?lang=ru')
+                <li><a href="#springUrl($en_url)">#springMessage('sticker.left.language.english')</a></li>
+                <li><a href="#springUrl($ru_url)">#springMessage('sticker.left.language.russian')</a></li>
+            </ul>
+        </div>
+    </div>  
 #end
