@@ -22,7 +22,7 @@ public class ReportDateConstraintValidator implements ConstraintValidator<Report
         calendar.setTime(reportDate);
         if (calendar.isLenient()) {
             return false;
-        }
+        } 
         return true;
     }
 }

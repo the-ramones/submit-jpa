@@ -18,10 +18,12 @@ import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
 import org.hibernate.validator.constraints.NotEmpty;
 import org.springframework.format.annotation.DateTimeFormat;
+import sp.validation.ReportDate;
 
 /**
- *
- * @author the-ramones
+ *  Model for reports
+ * 
+ * @author Paul Kulitski
  */
 @Entity
 @Table(name = "reports", schema = "enterprise")
@@ -40,7 +42,8 @@ public class Report implements Serializable {
     @DateTimeFormat(pattern = "DD M yy")
     private Date startDate;
     
-    @DateTimeFormat(pattern = "DD M yyyy")
+    //@DateTimeFormat(pattern = "DD M yyyy")
+    @ReportDate
     private Date endDate;
 
     @NotEmpty(message = "performer should be specified2")

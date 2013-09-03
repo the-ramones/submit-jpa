@@ -1,21 +1,27 @@
 <div class="form-container">
     <h2>#springMessage('content.add.title')</h2>
+
+    #springBind("command")
     <form name="report-add" action="#springUrl('/report/add')" method="POST">
         <div class="form-line clearfix">
             <label for="startDate">#springMessage('content.add.caption.start'):</label>
             <input id="startDate" name="startDate" value="" type="text" placeholder="#springMessage('content.add.placeholder.start')" autocomplete="off">                            
+            <label for="startDate" class="error"></label>
         </div>
         <div class="form-line clearfix">
             <label for="endDate">#springMessage('content.add.caption.end'):</label>
-            <input id="endDate" name="endDate" value="" type="text" placeholder="#springMessage('content.add.placeholder.end')" autocomplete="off">             
+            <input id="endDate" name="endDate" value="" type="text" placeholder="#springMessage('content.add.placeholder.end')" autocomplete="off">            
+            <label for="endDate" class="error"></label>
         </div>
         <div class="form-line clearfix">
             <label for="performer">#springMessage('content.add.caption.performer'):</label>
             <input id="performer" name="performer" value="" type="text" placeholder="#springMessage('content.add.placeholder.performer')">
+            <label for="performer" class="error"></label>
         </div>
         <div class="form-line clearfix">
             <label for="activity">#springMessage('content.add.caption.activity'):</label>
             <input id="activity" name="activity" value="" type="text" placeholder="#springMessage('content.add.placeholder.activity')">     
+            <label for="activity" class="error"></label>
         </div>
         <input name="report-submit" class="btn" value="#springMessage('content.add.button.add')" type="submit">
     </form>      
