@@ -33,3 +33,6 @@
         <input class="btn" type="submit" name="reportSubmit" value="#springMessage('content.form.button.search')"/>
     </form>  
 </div>
+
+#hint()
+  

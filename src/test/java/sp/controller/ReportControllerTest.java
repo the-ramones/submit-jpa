@@ -28,8 +28,8 @@ public class ReportControllerTest {
         ReportController instance = new ReportController();
         String result = instance.setupDetailForm(model);
         assertEquals(true, model.containsAttribute("view"));
-        assertEquals("detail", model.asMap().get("view"));
-        assertEquals("detail-form", result);
+        assertEquals("byid", model.asMap().get("view"));
+        assertEquals("byid", result);
     }
 
     /**

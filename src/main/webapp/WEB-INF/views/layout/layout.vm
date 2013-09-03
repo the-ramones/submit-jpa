@@ -39,10 +39,10 @@
         <div class="main-container">
             <div class="main wrapper clearfix">
 
+                #menu_sticker()
+ 
                 $!screen_content
 
-                #menu_sticker()
-                #hint()
                 #hint_sticker()
 
             </div> <!-- #main -->
@@ -57,14 +57,17 @@
         </div>
 
         <script src="#springUrl('/resources/js/main.js')"></script>
-        <script src="#springUrl('js/jquery.validate.js')"></script>        
-        <!--localize validation messages-->
-        <script src="#springUrl('js/localization/messages.js')"></script>
-        <script src="#springUrl('js/main-validation.js')"></script>
-        <!-- Datepicker localization -->
-        <!-- <script src="#springUrl('js/localization/jquery.ui.datepicker-ru.js')"></script> -->
-        <script type="text/javascript" src="#springUrl('js/search.js')"></script>
-        <script type="text/javascript" src="#springUrl('js/modal.js')"></script>
+        <script src="#springUrl('/resources/js/libs/jquery.validate.js')"></script>        
+        <script src="#springUrl('/resources/js/validation.js')"></script>
+        <script type="text/javascript" src="#springUrl('/resources/js/search.js')"></script>
+        <script type="text/javascript" src="#springUrl('/resources/js/modal.js')"></script>
+        
+        #* 
+         * l10n 
+         *#
+        #validator_l10n()
+        #datepicker_l10n()
+
         <script type="text/javascript">
         </script>
         

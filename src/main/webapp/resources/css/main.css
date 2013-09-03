@@ -31,7 +31,7 @@
 
 .tile-button-menu {
     position: relative;
-    width: 42.5%;
+    width: 50%;
     display: block;
     margin: 0 auto;
 }
@@ -769,8 +769,11 @@ body {
    ========================================================================== */
 .a-nav {
     text-decoration: none;
-    text-align: justify;
     color: rgb(204, 103, 26);
+}
+
+#article p {
+    text-align: justify;
 }
 
 .a-nav:hover {

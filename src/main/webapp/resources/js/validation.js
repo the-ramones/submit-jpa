@@ -61,7 +61,7 @@ $.validator.addMethod("reportusername", function(value, element) {
  */
 $("form[name='report-add']").validate({
     lang: 'ru',
-    debug: true,
+  //  debug: true,
     rules: {
         startDate: {required: true,
             reportdate: true
@@ -82,7 +82,7 @@ $("form[name='report-add']").validate({
 
 $("form[name='search-report']").validate({
     lang: 'en',
-    debug: true,
+  //  debug: true,
     rules: {
         id: {
             required: true,
@@ -94,7 +94,7 @@ $("form[name='search-report']").validate({
 
 $("form[name='report-request']").validate({
     lang: 'en',
-    debug: true,
+  //  debug: true,
     rules: {
         performer: {},
         timePeriod: {},
@@ -111,7 +111,7 @@ $("form[name='report-request']").validate({
 
 $("form[name='login-form']").validate({
     lang: 'en',
-    debug: true,
+  //  debug: true,
     rules: {
         j_username: {
             required: true,

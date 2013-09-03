@@ -1,1 +1,1 @@
-<H3>Reports! Instruction</h3>
+<H3>#springMessage('content.instruction.title')</h3>

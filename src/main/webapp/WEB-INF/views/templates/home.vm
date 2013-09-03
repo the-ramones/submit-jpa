@@ -22,3 +22,6 @@
         <p>#springMessage("content.home.usecase3")</p> 
     </div>
 </div> <!-- #article -->
+
+#hint()
+  

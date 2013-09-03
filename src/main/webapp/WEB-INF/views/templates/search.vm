@@ -11,6 +11,8 @@
     <p class="stats"><span>#springMessage('content.search.result'): 419 (0,10 #springMessage('content.search.second').) </span></p>    
 </div>
 
+#hint()
+
 <div class="results-wrap">
     <h2>#springMessage('content.search.list.title')</h2>
     <table tabindex="1" class="table">
@@ -26,68 +28,6 @@
         <tbody>
             #foreach($report in $reports)
 
-            <tr>
-                <td>${report.id}</td>
-                <td>${report.startDate}</td>
-                <td>${report.endDate}</td>
-                <td>${report.performer}</td>
-                <td>${report.activity}</td>
-            </tr>
-            <tr>
-                <td>${report.id}</td>
-                <td>${report.startDate}</td>
-                <td>${report.endDate}</td>
-                <td>${report.performer}</td>
-                <td>${report.activity}</td>
-            </tr>
-            <tr>
-                <td>${report.id}</td>
-                <td>${report.startDate}</td>
-                <td>${report.endDate}</td>
-                <td>${report.performer}</td>
-                <td>${report.activity}</td>
-            </tr>
-            <tr>
-                <td>${report.id}</td>
-                <td>${report.startDate}</td>
-                <td>${report.endDate}</td>
-                <td>${report.performer}</td>
-                <td>${report.activity}</td>
-            </tr>
-            <tr>
-                <td>${report.id}</td>
-                <td>${report.startDate}</td>
-                <td>${report.endDate}</td>
-                <td>${report.performer}</td>
-                <td>${report.activity}</td>
-            </tr>   <tr>
-                <td>${report.id}</td>
-                <td>${report.startDate}</td>
-                <td>${report.endDate}</td>
-                <td>${report.performer}</td>
-                <td>${report.activity}</td>
-            </tr>
-            <tr>
-                <td>${report.id}</td>
-                <td>${report.startDate}</td>
-                <td>${report.endDate}</td>
-                <td>${report.performer}</td>
-                <td>${report.activity}</td>
-            </tr>
-            <tr>
-                <td>${report.id}</td>
-                <td>${report.startDate}</td>
-                <td>${report.endDate}</td>
-                <td>${report.performer}</td>
-                <td>${report.activity}</td>
-            </tr>
-            <tr>
-                <td>${report.id}</td>
-                <td>${report.startDate}</td>
-                <td>${report.endDate}</td>
-                <td>${report.performer}</td>
-                <td>${report.activity}</td>
-            </tr>
             <tr>
                 <td>${report.id}</td>
                 <td>${report.startDate}</td>

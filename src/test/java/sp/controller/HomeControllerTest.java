@@ -36,7 +36,7 @@ public class HomeControllerTest {
         Model model = (Model) new ExtendedModelMap();
         HomeController homeController = new HomeController();
         String viewName = homeController.instruction(model);
-        assertEquals("home", viewName);
+        assertEquals("instruction", viewName);
     }
 
     /**
@@ -58,6 +58,6 @@ public class HomeControllerTest {
         Model model = (Model) new ExtendedModelMap();
         HomeController homeController = new HomeController();
         String viewName = homeController.about(model);
-        assertEquals("home", viewName);
+        assertEquals("about", viewName);
     }
 }

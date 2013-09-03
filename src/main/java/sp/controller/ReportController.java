@@ -66,20 +66,14 @@ public class ReportController {
 
     @RequestMapping(value = "/detail", method = RequestMethod.GET)
     public String setupDetailForm(Model model) {
-        model.addAttribute("view", "detail");        
-        return "detail-form";
+        model.addAttribute("view", "byid");        
+        return "byid";
     }
             
     @RequestMapping(value = "detail/{id}", method = RequestMethod.GET)
     public String detailById(Model model, @PathVariable("id") Long id) {
         model.addAttribute("report", reportService.getReportById(id));
         return "detail";
-    }
-
-    @RequestMapping(value = "clear", method = RequestMethod.GET)
-    public String clear(Model model) {
-        //TODO: redirect to setupForm @RequestMapping
-        return "form";
     }
 
     /**
@@ -113,15 +107,9 @@ public class ReportController {
         return "redirect:detail/" + report.getId();
     }
 
-    @RequestMapping(value = "/realtime", method = RequestMethod.GET)
+    @RequestMapping(value = "/ajax", method = RequestMethod.GET)
     public String realTimeSearch(Model model) {
         model.addAttribute("view", "ajax");
-        return "ajax";
+        return "search";
     } 
-    
-    @RequestMapping(value="/checklist", method = RequestMethod.GET)
-    public String checklist(Model model) {
-        //TODO
-        return "checklist";
-    }
 }

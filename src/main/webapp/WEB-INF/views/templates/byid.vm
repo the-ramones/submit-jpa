@@ -8,3 +8,6 @@
         <input name="report-search" class="btn" value="#springMessage('content.byid.button')" type="submit"/>
     </form>
 </div>
+
+#hint()
+  

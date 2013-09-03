@@ -1,25 +1,173 @@
-## activities list template
-<h2>List of activities</h2>
-<table class="table">
-    <caption>Reports! records</caption>
-    <thead>
-        <tr>
-            <td>id</td>
-            <td>start date</td>
-            <td>end date</td>
-            <td>performer</td>
-            <td>activity</td>
-        </tr>
+## List template. Utilizes reports context variable
+<div class="form-container" style="width: 100%">
+    <h2>#springMessage('content.list.title')</h2>
+    <table class="table">
+        <caption>#springMessage('content.list.table.caption')</caption>
+        <thead>
+            <tr>
+                <th>id</th>
+                <th>#springMessage('content.detail.start')</th>
+                <th>#springMessage('content.detail.end')</th>
+                <th>#springMessage('content.detail.performer')</th>
+                <th>#springMessage('content.detail.activity')</th>
+            </tr>
         <tbody>
             #foreach($report in $reports)
-                <tr>
-                    <td>${report.id}</td>
-                    <td>${report.startDate}</td>
-                    <td>${report.endDate}</td>
-                    <td>${report.performer}</td>
-                    <td>${report.activity}</td>
-                </tr>
-            #end
+            <tr>
+                <td>${report.id}</td>
+                <td>${report.startDate}</td>
+                <td>${report.endDate}</td>
+                <td>${report.performer}</td>
+                <td>${report.activity}</td>
+            </tr>
+            <tr>
+                <td>${report.id}</td>
+                <td>${report.startDate}</td>
+                <td>${report.endDate}</td>
+                <td>${report.performer}</td>
+                <td>${report.activity}</td>
+        <div class="button-block clearfix hidden">
+            <button class="action">#springMessage('button.action.get')</button>
+            <button class="action update">#springMessage('button.action.update')</button>          
+            <button class="action delete">#springMessage('button.action.delete')</button>
+        </div>
+        </tr>
+        #end
         </tbody>
-    </thead>
-</table>
+        </thead>
+    </table>
+    <button class="action add" onclick="add_modal()">#springMessage('content.list.button.addnew')</button>    
+</div>
+
+
+## FOR TESTS
+
+      <script type="text/javascript">
+                            function add_modal() {
+                                modal.open({content: $("#action333").html()});
+                                modal.open({content: $("#add333").html()});
+                                modal.open({content: $("#update333").html()});
+                                //modal.open({content: $("#delete333").html()});
+                            }
+        </script>
+
+        <!--post-->
+
+        <div id="action333" style="display: none;">
+            <h2>Activity №${report.id}</h2>
+            <dl class="dl-horizontal">
+                <dt>id</dt>
+                <dd>${report.id}</dd>
+            </dl>
+            <dl class="dl-horizontal">
+                <dt>start of activity</dt>
+                <dd>${report.startDate}</dd>
+            </dl>
+            <dl class="dl-horizontal">
+                <dt>end of activity</dt>
+                <dd>${report.endDate}</dd>
+            </dl>
+            <dl class="dl-horizontal">
+                <dt>performer</dt>
+                <dd>${report.performer}</dd>
+            </dl>
+            <dl class="dl-horizontal">
+                <dt>activity</dt>
+                <dd>${report.activity}</dd>
+            </dl>
+            <input type="text" value="#{uri}" name="uri" style="width:100%;"><br />
+            <div class="modal-block">
+                <div class="button-block-modal">
+                    <button class="action delete">Close</button>
+                </div>
+            </div>
+        </div>
+        <div id="add333" style="display: none;">
+            <h2>Reports! add form</h2>
+            <!-- reports form -->
+
+            <form name="report-add" action="/report/add" method="POST">
+                <div class="form-line clearfix">
+                    <label>Start date:</label>
+                    <input id="startDate" name="startDate" value="" type="text" placeholder="Input a start date" autocomplete="off">                            
+                </div>
+                <div class="form-line clearfix">
+                    <label>End date:</label>
+                    <input id="endDate" name="endDate" value="" type="text" placeholder="Input an end date" autocomplete="off">             
+                </div>
+                <div class="form-line clearfix">
+                    <label>Performer:</label>
+                    <input id="performer" name="performer" value="" type="text" placeholder="Input a performer">
+                </div>
+                <div class="form-line clearfix">
+                    <label>Activity:</label>
+                    <input id="activity" name="activity" value="" type="text" placeholder="Input an activity">     
+                </div>
+                <div class='clearfix'>
+                    <div class='button-block-modal'>
+                        <button class="action" name="report-submit" type="submit">Add</button>
+                        <button class="action delete">Close</button>
+                    </div>
+                </div>
+            </form>           
+        </div>
+        <div id="update333" style="display: none;">
+            <h2>Reports! update form</h2>
+            <!-- reports form -->
+
+            <form name="report-add" action="/report/add" method="POST">
+                <div class="form-line clearfix">
+                    <label>Start date:</label>
+                    <input id="startDate" autofocus="true" name="startDate" value="" type="text" placeholder="Input a start date" autocomplete="off">                            
+                </div>
+                <div class="form-line clearfix">
+                    <label>End date:</label>
+                    <input id="endDate" name="endDate" value="" type="text" placeholder="Input an end date" autocomplete="off">             
+                </div>
+                <div class="form-line clearfix">
+                    <label>Performer:</label>
+                    <input id="performer" name="performer" value="" type="text" placeholder="Input a performer">
+                </div>
+                <div class="form-line clearfix">
+                    <label>Activity:</label>
+                    <input id="activity" name="activity" value="" type="text" placeholder="Input an activity">     
+                </div>
+                <div class='clearfix'>
+                    <div class='button-block-modal'>
+                        <button class="action" name="report-submit" type="submit">Update</button>
+                        <button class="action delete">Close</button>
+                    </div>
+                </div>
+            </form>           
+        </div>
+        <div id="delete333" style="display: none;">
+            <h2>Activity №${report.id}</h2>
+            <dl class="dl-horizontal">
+                <dt>id</dt>
+                <dd>${report.id}</dd>
+            </dl>
+            <dl class="dl-horizontal">
+                <dt>start of activity</dt>
+                <dd>${report.startDate}</dd>
+            </dl>
+            <dl class="dl-horizontal">
+                <dt>end of activity</dt>
+                <dd>${report.endDate}</dd>
+            </dl>
+            <dl class="dl-horizontal">
+                <dt>performer</dt>
+                <dd>${report.performer}</dd>
+            </dl>
+            <dl class="dl-horizontal">
+                <dt>activity</dt>
+                <dd>${report.activity}</dd>
+            </dl>
+            <div class="clearfix">
+                <span class='modal-span'>Are you sure to delete activity?</span>
+                <div class="button-block-modal">
+                    <button class="action">Yes</button>
+                    <button class="action delete">No</button>
+                </div>
+            </div>
+        </div>
+        <!--post-->

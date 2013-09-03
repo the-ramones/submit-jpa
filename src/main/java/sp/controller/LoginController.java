@@ -18,6 +18,7 @@ public class LoginController {
      */
     @RequestMapping(value = "/login", method = RequestMethod.GET)
     public String loginForm(Model model) {
+        model.addAttribute("view", "login");
         return "login";
     }
     
