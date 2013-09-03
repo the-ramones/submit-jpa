@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 /**
  * Admin web-interface controller
+ * 
  * @author the-ramones
  */
 @Controller

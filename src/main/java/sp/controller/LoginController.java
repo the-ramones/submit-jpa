@@ -13,7 +13,10 @@ import org.springframework.web.bind.annotation.RequestMethod;
 @Controller
 public class LoginController {
     
-        @RequestMapping(value = "/login", method = RequestMethod.GET)
+    /*
+     * 'login', 'login?login=true', 'login/lohout=true'
+     */
+    @RequestMapping(value = "/login", method = RequestMethod.GET)
     public String loginForm(Model model) {
         return "login";
     }

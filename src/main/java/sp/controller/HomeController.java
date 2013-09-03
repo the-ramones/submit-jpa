@@ -25,11 +25,11 @@ public class HomeController {
     
     @RequestMapping("/instruction")
     public String instruction(Model model) {
-        return "home";
+        return "instruction";
     }
     
     @RequestMapping("/about")
     public String about(Model model) {
-        return "home";
+        return "about";
     }
 }

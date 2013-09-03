@@ -1,1 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
+
+<!-- Sortable -->
+<tools>
+   <toolbox scope="application">
+     <tool class="org.apache.velocity.tools.generic.SortTool"/>
+   </toolbox>
+ </tools>
+<!-- Escape sequenses -->
+<tool>
+  <key>esc</key>
+  <scope>application</scope>
+  <class>org.apache.velocity.tools.generic.EscapeTool</class>
+</tool>

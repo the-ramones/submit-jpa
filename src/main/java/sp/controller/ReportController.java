@@ -117,5 +117,11 @@ public class ReportController {
     public String realTimeSearch(Model model) {
         model.addAttribute("view", "ajax");
         return "ajax";
-    }    
+    } 
+    
+    @RequestMapping(value="/checklist", method = RequestMethod.GET)
+    public String checklist(Model model) {
+        //TODO
+        return "checklist";
+    }
 }

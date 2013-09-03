@@ -1,0 +1,41 @@
+## Checklist template. Utilize reports context variable
+<div class="tile-menu-container">
+    <h3>#springMessage('content.checklist.title')</h3>
+    <div class="tile-button-menu">
+        <button class="action update">#springMessage('content.checklist.button.statistics')</button>
+        <button class="action delete">#springMessage('content.checklist.button.email')</button>
+        <button class="action">#springMessage('content.checklist.button.newsearch')</button>
+    </div>
+</div>
+#foreach ($report in $reports)
+<div class="tile-container">
+    <h2>Details of activity №${report.id}</h2>
+    <dl class="dl-horizontal">
+        <dt>id</dt>
+        <dd>${report.id}</dd>
+    </dl>
+    <dl class="dl-horizontal">
+        <dt>#springMessage('content.detail.start')</dt>
+        <dd>${report.startDate}</dd>
+    </dl>
+    <dl class="dl-horizontal">
+        <dt>#springMessage('content.detail.end')/dt>
+        <dd>${report.endDate}</dd>
+    </dl>
+    <dl class="dl-horizontal">
+        <dt>#springMessage('content.detail.performer')</dt>
+        <dd>${report.performer}</dd>
+    </dl>
+    <dl class="dl-horizontal">
+        <dt>#springMessage('content.detail.activity')</dt>
+        <dd>${report.activity}</dd>
+    </dl>
+    <button class="action">#springMessage('content.checklist.tile.uri')</button>
+    <button class="action delete">#springMessage('content.checklist.tile.away')</button>
+</div>
+#end
+<script>
+    $(document).ready(function() {
+        $(".tile-container").draggable();
+    });
+</script>

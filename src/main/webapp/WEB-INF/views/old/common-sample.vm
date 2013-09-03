@@ -13,17 +13,17 @@
                 @author Paul Kulitski
                 @version 5
             *#
-    #*
+        #*
         The shorthand notation of a variable consists of a leading "$" character
-    followed by a VTL Identifier. A VTL Identifier must start with an alphabetic
-    character (a .. z or A .. Z). The rest of the characters are limited to the 
-    following types of characters:
+        followed by a VTL Identifier. A VTL Identifier must start with an alphabetic
+        character (a .. z or A .. Z). The rest of the characters are limited to the 
+        following types of characters:
 
-        alphabetic (a .. z, A .. Z)
-        numeric (0 .. 9)
-        hyphen ("-")
-        underscore ("_")
-    *#
+            alphabetic (a .. z, A .. Z)
+            numeric (0 .. 9)
+            hyphen ("-")
+            underscore ("_")
+        *#
 
         </li>
         <li>properties: $product.price, $product.getPrice(), $product.price()</li>
@@ -62,13 +62,13 @@
         #end
     #end
     </li>
-    <li>Properties:
-       #* resource.loader = file
-        file.resource.loader.description = Velocity File Resource Loader
-        file.resource.loader.class = org.apache.velocity.runtime.resource.loader.FileResourceLoader
-        file.resource.loader.path = .
-        file.resource.loader.cache = false
-        file.resource.loader.modificationCheckInterval = 2
-       *#
-    </li>
- </ul>
+        <li>Properties:
+        #* resource.loader = file
+            file.resource.loader.description = Velocity File Resource Loader
+            file.resource.loader.class = org.apache.velocity.runtime.resource.loader.FileResourceLoader
+            file.resource.loader.path = .
+            file.resource.loader.cache = false
+            file.resource.loader.modificationCheckInterval = 2
+        *#
+        </li>
+    </ul>

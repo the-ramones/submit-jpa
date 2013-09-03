@@ -34,7 +34,7 @@
     padding-top: 20px;
 }
 
-input[type="text"] {
+input[name="search"] {
     background-attachment: scroll;
     background-clip: border-box;
     background-color: rgba(34,34,34, 0.8);
@@ -112,17 +112,17 @@ input[type="text"] {
     /*z-index: 2;*/
 }
 
-input[type="text"]:hover {
+input[name="search"]:hover {
     /*transition-duration: 0.5s;*/
     box-shadow: 0 0 4px rgb(224, 133, 36);
 }
 
-input[type="text"]::-moz-selection {
+input[name="search"]::-moz-selection {
     background: #222;
     text-shadow: none;
 }
 
-input[type="text"]::selection {
+input[name="search"]::selection {
     background: #222;
     text-shadow: none;
 }
