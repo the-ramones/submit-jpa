@@ -42,8 +42,8 @@ public class Report implements Serializable {
     @DateTimeFormat(pattern = "DD M yy")
     private Date startDate;
     
-    //@DateTimeFormat(pattern = "DD M yyyy")
-    @ReportDate
+    @DateTimeFormat(pattern = "DD M yy")
+    //@ReportDate
     private Date endDate;
 
     @NotEmpty(message = "performer should be specified2")
@@ -139,5 +139,10 @@ public class Report implements Serializable {
             return false;
         }
         return true;
+    }
+
+    @Override
+    public String toString() {
+        return "Report{" + "id=" + id + ", startDate=" + startDate + ", endDate=" + endDate + ", performer=" + performer + ", activity=" + activity + '}';
     }
 }

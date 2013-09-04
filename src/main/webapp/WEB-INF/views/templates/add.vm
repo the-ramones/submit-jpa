@@ -1,8 +1,9 @@
 <div class="form-container">
     <h2>#springMessage('content.add.title')</h2>
 
-    #springBind("command")
+    #springBind("report")
     <form name="report-add" action="#springUrl('/report/add')" method="POST">
+        #springShowErrors("<br>" "")<br>
         <div class="form-line clearfix">
             <label for="startDate">#springMessage('content.add.caption.start'):</label>
             <input id="startDate" name="startDate" value="" type="text" placeholder="#springMessage('content.add.placeholder.start')" autocomplete="off">                            

@@ -99,6 +99,8 @@ public class ReportController {
     public String add(@Valid @ModelAttribute("report") Report report, 
         BindingResult result, Model model) {
         if (result.hasErrors()) {
+            System.out.println("report: " + report);
+            System.out.println("model: " + model);
             model.addAttribute("view", "add");
             return "add";
         }
