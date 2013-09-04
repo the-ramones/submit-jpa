@@ -1,13 +1,20 @@
 package sp.controller;
 
+import java.text.DateFormat;
+import java.text.DateFormatSymbols;
+import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Locale;
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 import javax.inject.Inject;
 import javax.validation.Valid;
+import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.WebDataBinder;
+import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -17,7 +24,7 @@ import sp.model.Report;
 import sp.service.ReportService;
 
 /**
- * Report CRUD operations controller
+ * Report controller
  *
  * @author the-ramones
  */
@@ -34,6 +41,21 @@ public class ReportController {
 
     @PreDestroy
     public void preDestroy() {
+    }
+    
+    @InitBinder(value = { "startDate", "endDate" })
+    public void initReportDateEditor(WebDataBinder binder, Locale locale) {   
+        DateFormat df = new SimpleDateFormat("dd MMM yyyy", locale);
+        DateFormatSymbols dfs = new DateFormatSymbols() {
+             @Override
+        public String[] getMonths() {
+            return new String[]{"января", "февраля", "марта", "апреля", "мая", "июня",
+                "июля", "августа", "сентября", "октября", "ноября", "декабря"};
+        }
+        
+        
+        DateFormat rdf = new SimpleDateFormat("dd MMM yyyy", dfs);
+        binder.registerCustomEditor(Date.class, new CustomDateEditor(df, true));
     }
 
     public ReportController() {

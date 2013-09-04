@@ -305,7 +305,7 @@ button.action:active {
 }
 
 /*
- * validation
+ * Form Validation
  */
 .error {
     color: #b94a48;    
@@ -318,6 +318,11 @@ button.action:active {
 input.error {
     box-shadow: 0 0 5px #b94a48;
 }
+
+p.error-block {
+    text-align: center;
+    margin: 10px;
+}   
 
 label,
 select,

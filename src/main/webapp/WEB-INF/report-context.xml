@@ -149,6 +149,6 @@
     </bean>-->    
 
     <!-- validation -->
-    <bean id="validator" class="org.springframework.validation.beanvalidation.LocalValidatorFactoryBean" />
+    <!--<bean id="validator" class="org.springframework.validation.beanvalidation.LocalValidatorFactoryBean" />-->
     
 </beans>

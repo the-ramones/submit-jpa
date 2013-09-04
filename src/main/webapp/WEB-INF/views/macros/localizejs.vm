@@ -24,6 +24,12 @@
             $.extend(#[[{'dateFormat': 'dd M yy'}, $.datepicker.regional[]]#'$d_regional'#[[])
         );]]#
     </script>
+    #{else}
+    <script type="text/javascript">
+        #[[$.datepicker.setDefaults(
+            {'dateFormat': 'dd M yy'}
+        );]]#
+    </script>
     #end
 
 #end

@@ -12,8 +12,10 @@ import javax.validation.ConstraintValidatorContext;
  */
 public class ReportDateConstraintValidator implements ConstraintValidator<ReportDate, Date> {
 
+    private ReportDate reportDate;
     @Override
     public void initialize(ReportDate reportDate) {
+        this.reportDate = reportDate;
     }
 
     @Override

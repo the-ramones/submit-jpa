@@ -23,6 +23,7 @@ public class ReportServiceImpl implements ReportService {
 
     @Override
     //@Transactional(propagation = Propagation.REQUIRED, isolation = Isolation.DEFAULT)//Isolation.SERIALIZABLE)
+    @Transactional
     public Report addReport(Report report) {        
         return reportRepository.saveReport(report);
     }
@@ -37,6 +38,7 @@ public class ReportServiceImpl implements ReportService {
     @Override
     //@Cacheable(value = "sp.model.Report", key = "#performer")
     //@Transactional(propagation = Propagation.REQUIRED, readOnly = true)
+    @Transactional
     public List<Report> getReports(String performer) {
         return reportRepository.getReportsByPerformer(performer);
 
@@ -44,17 +46,20 @@ public class ReportServiceImpl implements ReportService {
 
     @Override
     //@Transactional(propagation = Propagation.REQUIRED, readOnly = true)
+    @Transactional
     public Report getReportById(Long id) {
         return reportRepository.getReportById(id);
     }
 
     @Override
     //@Transactional(propagation = Propagation.SUPPORTED, readOnly = true)
+    @Transactional
     public List<String> getPerformers() {
         return reportRepository.getPerformers();
     }   
 
     @Override
+    @Transactional
     public List<Report> getReports(String performer, Date startDate, Date endDate) {
         return reportRepository.getReports(performer, startDate, endDate);
     }

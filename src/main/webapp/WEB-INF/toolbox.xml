@@ -29,6 +29,13 @@
         <key>errors</key>
         <scope>request</scope>
         <class>org.apache.velocity.tools.struts.ErrorsTool</class>
-    </tool>    
+    </tool>  
+    
+    <tool>
+        <key>datetool</key>
+        <scope>request</scope>
+        <class>org.apache.velocity.tools.generic.DateTool</class>
+    </tool>
+    <!--format="dd M yy"-->
     
 </tools>

@@ -1,4 +1,19 @@
 /*
+ * Locale-holder cookie name
+ * @type String
+ */
+var reports_locale_cookie_name = "org.springframework.web.servlet.i18n.CookieLocaleResolver.LOCALE";
+/*
+ * Map of RegExp for a particular locale
+ * @type type
+ */
+var locale_map = {
+    "default": /(0?[1-9]|[12][0-9]|3[01]) (Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec){1} \d{4}$/i,
+    "en": /(0?[1-9]|[12][0-9]|3[01]) (Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec){1} \d{4}$/i,
+    "ru": /(0?[1-9]|[12][0-9]|3[01])(Янв|Дек|Мар|Апр|Май|Июн|Июл|Авг|Сен|Окт|Ноя|Дек){1}\d{4}$/i,
+};
+
+/*
  * Add a custom validation method
  * @param {type} param1
  * @param {type} param2
@@ -13,7 +28,18 @@ $.validator.addMethod("reportdate", function(value, element) {
     /* if a date has been specified it must be a valid date, even if optional    
      * result = this.optional(element) || /(0?[1-9]|[12][0-9]|3[01]) (Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec){1} \d{4}$/i.test(value);    
      */
-    result = /(0?[1-9]|[12][0-9]|3[01]) (Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec){1} \d{4}$/i.test(value);
+    //result = /(0?[1-9]|[12][0-9]|3[01]) (Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec){1} \d{4}$/i.test(value);
+    var cookies = document.cookie.split(';');
+    var locale;
+    var c_length = cookies.length;
+    for (var i = 0; i < c_length; i++) {
+        cookie = cookies[i];
+        if (cookie.indexOf('org.springframework.web.servlet.i18n.CookieLocaleResolver.LOCALE') !== -1) {
+            locale = cookie.split('=')[1];
+            break;
+        }
+    }
+    result = locale_map[locale];
 
     if (result === true) {
         parts = value.split(' ');

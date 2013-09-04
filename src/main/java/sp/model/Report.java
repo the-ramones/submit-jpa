@@ -37,21 +37,21 @@ public class Report implements Serializable {
 
     private Long id;
     
-    @NotNull(message = "start date should be specified2")
-    @Past(message = "start date should be in the past2") 
+    @NotNull()
+    @Past() 
     @DateTimeFormat(pattern = "DD M yy")
     private Date startDate;
     
-    @DateTimeFormat(pattern = "DD M yy")
+     @DateTimeFormat(pattern = "DD M yy")
     //@ReportDate
-    private Date endDate;
-
-    @NotEmpty(message = "performer should be specified2")
-    @Size(min = 1, max = 255, message = "performer should be 1 to 255 characters long2")
+    private Date endDate; 
+    
+    @NotEmpty()
+    @Size(min = 1, max = 255)
     private String performer;
     
-    @NotEmpty(message = "activity should be specified2")
-    @Size(min = 1, max = 255, message = "activity should be 1 to 255 characters long2")
+    @NotEmpty()
+    @Size(min = 1, max = 255)
     private String activity;
 
     @Id
