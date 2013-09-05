@@ -1,4 +1,4 @@
-## Real-time search template
+﻿## Real-time search template
 <div class="form-container">
     <h2>#springMessage('content.search.title')</h2>
     <form name="search-form" method="POST" action="search" autocomplete="off">

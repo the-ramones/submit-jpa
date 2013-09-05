@@ -1,4 +1,4 @@
-## contact template
+﻿## contact template
 <h2>#springMessage("content.contact.title"):</h2>
 <h3>Paul Kulitski</h3>
 <dl class="dl-horizontal">

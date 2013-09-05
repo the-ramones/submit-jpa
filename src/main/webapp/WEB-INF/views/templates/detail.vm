@@ -1,4 +1,4 @@
-## Detail template. Utilizes report context variable
+﻿## Detail template. Utilizes report context variable
 <div class="form-container">
 <h2>#springMessage("content.detail.title")</h2>
 <dl class="dl-horizontal">

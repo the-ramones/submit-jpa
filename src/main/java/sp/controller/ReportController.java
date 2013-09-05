@@ -2,12 +2,15 @@ package sp.controller;
 
 import java.text.DateFormat;
 import java.text.DateFormatSymbols;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 import javax.inject.Inject;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.stereotype.Controller;
@@ -42,25 +45,45 @@ public class ReportController {
     @PreDestroy
     public void preDestroy() {
     }
-    
-    @InitBinder(value = { "startDate", "endDate" })
-    public void initReportDateEditor(WebDataBinder binder, Locale locale) {   
-        DateFormat df = new SimpleDateFormat("dd MMM yyyy", locale);
-        DateFormatSymbols dfs = new DateFormatSymbols() {
-             @Override
-        public String[] getMonths() {
-            return new String[]{"января", "февраля", "марта", "апреля", "мая", "июня",
-                "июля", "августа", "сентября", "октября", "ноября", "декабря"};
+
+    @InitBinder
+    public void initReportDateEditor(WebDataBinder binder, Locale locale) {
+        DateFormat df = null;
+        if (locale.equals(Locale.forLanguageTag("ru"))) {
+            System.out.println("Check this shit out!");
+            df = new SimpleDateFormat("dd MMM yyyy", new DateFormatSymbols() {
+                @Override
+                public String[] getMonths() {
+                    return new String[]{
+                        "Января", "Февраля", "Марта", "Апреля", "Мая", "Июня", "Июля", "Августа", "Сентября", "Октября", "Ноября", "Февраля"
+                    };
+                }
+
+                @Override
+                public String[] getShortMonths() {
+                    return new String[]{
+                        "Янв", "Фев", "Мар", "Апр", "Мая", "Июн", "Июл", "Авг", "Сен", "Окт", "Ноя", "Фев"
+                    };
+                }
+            });
+        } else {
+            System.out.println("Dont be a Fuckin chick");
+           df = new SimpleDateFormat("dd MMM yyyy", locale);        
         }
-        
-        
-        DateFormat rdf = new SimpleDateFormat("dd MMM yyyy", dfs);
         binder.registerCustomEditor(Date.class, new CustomDateEditor(df, true));
+        System.out.println("=================================================");
+        try {
+        System.out.println(df.format(df.parse("23 Сен 2014")));
+        } catch(ParseException e) {
+            System.out.println("parseException e");
+        }
+        System.out.println("=================================================");
+        System.out.println("!!!!!!!!!!!! BInder assesed with Locale: " + locale.toString());
     }
 
     public ReportController() {
     }
-    
+
     public ReportController(ReportService reportService) {
         this.reportService = reportService;
     }
@@ -88,10 +111,10 @@ public class ReportController {
 
     @RequestMapping(value = "/detail", method = RequestMethod.GET)
     public String setupDetailForm(Model model) {
-        model.addAttribute("view", "byid");        
+        model.addAttribute("view", "byid");
         return "byid";
     }
-            
+
     @RequestMapping(value = "detail/{id}", method = RequestMethod.GET)
     public String detailById(Model model, @PathVariable("id") Long id) {
         model.addAttribute("report", reportService.getReportById(id));
@@ -100,26 +123,30 @@ public class ReportController {
 
     /**
      * Setup of 'add activity' form
-     * 
+     *
      * @param model
      * @return view name
      */
     @RequestMapping(value = "add", method = RequestMethod.GET)
-    public String setupAddForm(Model model) {
+    public String setupAddForm(Model model,HttpServletResponse res) {
+        res.setHeader("Content-Type", "text/html; charset=utf-8");
         model.addAttribute("view", "add");
         model.addAttribute("report", new Report());
         return "add";
     }
+
     /**
-     * 
+     *
      * @param report
      * @param result
      * @param model
      * @return view name
      */
-    @RequestMapping(value = "add", method = RequestMethod.POST)
-    public String add(@Valid @ModelAttribute("report") Report report, 
-        BindingResult result, Model model) {
+    @RequestMapping(value = "add", method = RequestMethod.POST, produces = "text/plain;charset=UTF-8")
+    public String add(@Valid @ModelAttribute("report") Report report,
+            BindingResult result, Model model, HttpServletRequest req, HttpServletResponse res) {
+        System.out.println(req.getHeader("Content-Type"));
+        res.setHeader("Content-Type", "text/html; charset=utf-8");
         if (result.hasErrors()) {
             System.out.println("report: " + report);
             System.out.println("model: " + model);
@@ -135,5 +162,5 @@ public class ReportController {
     public String realTimeSearch(Model model) {
         model.addAttribute("view", "ajax");
         return "search";
-    } 
+    }
 }

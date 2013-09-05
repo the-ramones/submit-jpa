@@ -1,4 +1,4 @@
-<div id="article">
+﻿<div id="article">
     <div>
         <h1>Reports!</h1>
         <p>#springMessage("content.home.title")</p>

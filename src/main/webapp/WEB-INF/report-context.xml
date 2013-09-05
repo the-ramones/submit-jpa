@@ -148,7 +148,20 @@
         <property name="minPoolSize" value="10" />
     </bean>-->    
 
-    <!-- validation -->
+    <!-- Enables Sprig Validation.
+        1. If want use JSR-303 validation, <mvc:annotation-driven /> will be sufficient.
+        2. Turn on if want to use Spring Validation or both.
+        3. Set <mvc:annotation-driven validator="validator" /> at the same time 
+           with lines below. This way you instantiate GLOBAL validator( will be
+           used for all controllers).
+        4. To set up per-controller validator use: 
+            @InitBinder
+            public void initBinder(WebDataBinder binder) {
+                binder.setValidator(new CustomValidator())   // mutually exclusive with previously instantiated global validator (won't be fired for this controller class)
+                binder.addValidators(new CustomValidator())  // cooperaters with global validator, order of fire up doesn't matter
+            }   
+        Note that for Spring Validator interface should specify <mvc:annotation-driver validator="spring-validator" />, but not compeletely assure
+    -->
     <!--<bean id="validator" class="org.springframework.validation.beanvalidation.LocalValidatorFactoryBean" />-->
     
 </beans>

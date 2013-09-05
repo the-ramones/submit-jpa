@@ -1,4 +1,4 @@
-## Detail template. Utilizes performers context variable
+﻿## Detail template. Utilizes performers context variable
 <div class="form-container">
     <h2>#springMessage('content.form.title')</h2>
     <form name="report-request" action="#springUrl('/report/search')" method="POST">

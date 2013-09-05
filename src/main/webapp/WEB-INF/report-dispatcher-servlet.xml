@@ -30,7 +30,13 @@
     constraints declared against the input. Any ConstraintViolations will automatically
     be exposed as errors in the BindingResult renderable by standard Spring MVC form tags. "
     -->
-    <mvc:annotation-driven />
+    <mvc:annotation-driven>
+        <mvc:message-converters register-defaults="true">
+            <bean class="org.springframework.http.converter.StringHttpMessageConverter">
+                <property name="supportedMediaTypes" value = "text/plain;charset=UTF-8" />
+            </bean>
+        </mvc:message-converters>
+    </mvc:annotation-driven>
 
     <!-- issue: include or not -->
     <tx:annotation-driven />
@@ -47,18 +53,18 @@
     </bean>
 	 
     <bean id="viewResolver"
-		class="org.springframework.web.servlet.view.velocity.VelocityLayoutViewResolver">
-		<property name="cache" value="false" />
-		<property name="layoutUrl" value="/layout/layout.vm" />
-		<property name="prefix" value="/templates/" />
-		<property name="suffix" value=".vm" />
-		<property name="exposeSpringMacroHelpers" value="true" />
-                <property name="toolboxConfigLocation" value="/WEB-INF/toolbox.xml" />
-		<property name="contentType" value="text/html;charset=UTF-8" />
-                <property name="dateToolAttribute" value="dateTool" />
-                <property name="numberToolAttribute" value="numberTool" />
-		<property name="viewClass"
-			value="org.springframework.web.servlet.view.velocity.VelocityLayoutView" />
+          class="org.springframework.web.servlet.view.velocity.VelocityLayoutViewResolver">
+        <property name="cache" value="false" />
+        <property name="layoutUrl" value="/layout/layout.vm" />
+        <property name="prefix" value="/templates/" />
+        <property name="suffix" value=".vm" />
+        <property name="exposeSpringMacroHelpers" value="true" />
+        <property name="toolboxConfigLocation" value="/WEB-INF/toolbox.xml" />
+        <property name="contentType" value="text/html;charset=UTF-8" />
+        <property name="dateToolAttribute" value="dateTool" />
+        <property name="numberToolAttribute" value="numberTool" />
+        <property name="viewClass"
+                  value="org.springframework.web.servlet.view.velocity.VelocityLayoutView" />
     </bean>
     
     <!-- Internationalization -->    
@@ -90,11 +96,11 @@
     via a configurable request parameter. 
     -->
     <mvc:interceptors>
-    <bean id="localeChangeInterceptor"
-          class="org.springframework.web.servlet.i18n.LocaleChangeInterceptor">
-        <!-- request parameter which specifies a locale -->
-        <property name="paramName" value="lang" />
-    </bean>
+        <bean id="localeChangeInterceptor"
+              class="org.springframework.web.servlet.i18n.LocaleChangeInterceptor">
+            <!-- request parameter which specifies a locale -->
+            <property name="paramName" value="lang" />
+        </bean>
     </mvc:interceptors>
     
     <bean id="handlerMapping"
@@ -119,4 +125,30 @@
     </bean>
     -->
     
+    <!--    <bean id="conversionService" 
+          class="org.springframework.format.support.FormattingConversionServiceFactoryBean">
+        <property name="registerDefaultFormatters" value="false" />
+        <property name="formatters">
+            <set>
+                <bean class="org.springframework.format.number.NumberFormatAnnotationFormatterFactory" />
+            </set>
+        </property>
+        <property name="formatterRegistrars">
+            <set>
+                <bean class="org.springframework.format.datetime.
+            </set>
+        </property>
+    </bean>-->
+    
+    <!-- Converters character encoding issue -->
+    <!--    <bean class = "org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerAdapter">
+        <property name="messageConverters">
+            <array>
+                <bean class = "org.springframework.http.converter.FormHttpMessageConverter">
+                    <property name="supportedMediaTypes" value = "*/*;charset=UTF-8" />
+                </bean>
+            </array>
+        </property>
+    </bean>-->
+
 </beans>

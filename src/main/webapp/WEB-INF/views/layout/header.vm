@@ -1,4 +1,4 @@
-<a href="#springUrl('/home')"><div id="logo"></div></a>
+﻿<a href="#springUrl('/home')"><div id="logo"></div></a>
 <h1 class="title">#springMessage("title")</h1>   
 <div id="nav">
     <ul>

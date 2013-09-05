@@ -39,10 +39,10 @@ public class Report implements Serializable {
     
     @NotNull()
     @Past() 
-    @DateTimeFormat(pattern = "DD M yy")
+    @DateTimeFormat(pattern = "dd MMM yyyy")
     private Date startDate;
     
-     @DateTimeFormat(pattern = "DD M yy")
+     @DateTimeFormat(pattern = "dd MMM yyyy")
     //@ReportDate
     private Date endDate; 
     

@@ -1,4 +1,4 @@
-<div class="form-container">
+﻿<div class="form-container">
     <h2>#springMessage('content.byid.title')</h2>
     <form name="search-report" method="GET" action="#springUrl('/report/detail')">
         <div class="form-line clearfix">

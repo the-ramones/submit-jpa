@@ -1,8 +1,8 @@
-<div class="form-container">
+﻿<div class="form-container">
     <h2>#springMessage('content.add.title')</h2>
 
     #springBind("report")
-    <p class="error error-bock">#springShowErrors("<br/>" "")</p>
+    <p class="error error-block">#springShowErrors("<br/>" "")</p>
     <form name="report-add" action="#springUrl('/report/add')" method="POST">
         #springBind("report.startDate")      
         <div class="form-line clearfix">
