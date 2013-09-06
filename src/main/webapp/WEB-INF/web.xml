@@ -78,4 +78,45 @@
         <error-code>500</error-code> 
         <location>/error.html</location> 
     </error-page>
+    <!-- 
+        Servlet 2.3/2.4 Filter that allows one to specify a character encoding
+     for requests. This is useful because current browsers typically do not set 
+     a character encoding even if specified in the HTML page or form.
+
+        This filter can either apply its encoding if the request does not already 
+     specify an encoding, or enforce this filter's encoding in any case 
+     ("forceEncoding"="true"). In the latter case, the encoding will also be 
+     applied as default response encoding on Servlet 2.4+ containers (although 
+     this will usually be overridden by a full content type set in the view).
+    -->
+    <filter>
+        <filter-name>utf8CharacterEncodingFilter</filter-name>
+        <filter-class>org.springframework.web.filter.CharacterEncodingFilter</filter-class>
+        <init-param>
+            <param-name>encoding</param-name>
+            <param-value>UTF-8</param-value>
+        </init-param>
+        <init-param>
+            <param-name>forceEncoding</param-name>
+            <param-value>true</param-value>
+        </init-param>        
+    </filter>
+    
+    <filter-mapping>
+        <filter-name>utf8CharacterEncodingFilter</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>
+    
+<!--    
+    <filter>
+    <filter-name>springSecurityFilterChain</filter-name>
+    <filter-class>org.springframework.web.filter.DelegatingFilterProxy</filter-class>
+</filter>
+<filter-mapping>
+    <filter-name>springSecurityFilterChain</filter-name>
+    <url-pattern>/*</url-pattern>
+</filter-mapping>
+<welcome-file-list>
+    <welcome-file>login</welcome-file>
+</welcome-file-list>-->
 </web-app>

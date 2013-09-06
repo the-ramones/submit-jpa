@@ -13,7 +13,7 @@
         #springBind("report.endDate")   
         <div class="form-line clearfix">
             <label for="endDate">#springMessage('content.add.caption.end'):</label>
-            <input id="endDate" name="endDate" value="#if(${report.endDate})$dateTool.format('dd MMM yyyy', ${report.endDate})#end" type="text" placeholder="#springMessage('content.add.placeholder.end')" autocomplete="off">            
+            <input id="endDate" name="endDate" value="#if(${report.endDate})$dateTool.format('dd MMM yyyy', ${report.endDate})#end" type="text" placeholder="#springMessage('content.add.placeholder.end')" autocomplete="off">
             <label for="endDate" class="error">#springShowErrors("<br/>" "")</label>
         </div>
         #springBind("report.performer")
