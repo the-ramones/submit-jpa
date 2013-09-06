@@ -48,9 +48,9 @@ public class ReportController {
 
     @InitBinder
     public void initReportDateEditor(WebDataBinder binder, Locale locale) {
-        DateFormat df = null;
+        DateFormat df;
         if (locale.equals(Locale.forLanguageTag("ru"))) {
-            System.out.println("Check this shit out!");
+            System.out.println("Checking Ru Locale in SimpleDateFormat");
             df = new SimpleDateFormat("dd MMM yyyy", new DateFormatSymbols() {
                 @Override
                 public String[] getMonths() {
@@ -67,7 +67,7 @@ public class ReportController {
                 }
             });
         } else {
-            System.out.println("Dont be a Fuckin chick");
+            System.out.println("Checking En Locale in SimpleDateFormating");
            df = new SimpleDateFormat("dd MMM yyyy", locale);        
         }
         binder.registerCustomEditor(Date.class, new CustomDateEditor(df, true));
@@ -78,7 +78,7 @@ public class ReportController {
             System.out.println("parseException e");
         }
         System.out.println("=================================================");
-        System.out.println("!!!!!!!!!!!! BInder assesed with Locale: " + locale.toString());
+        System.out.println("Binder assesed Locale: " + locale.toString());
     }
 
     public ReportController() {
@@ -129,7 +129,7 @@ public class ReportController {
      */
     @RequestMapping(value = "add", method = RequestMethod.GET)
     public String setupAddForm(Model model,HttpServletResponse res) {
-        res.setHeader("Content-Type", "text/html; charset=utf-8");
+        //res.setHeader("Content-Type", "text/html; charset=utf-8");
         model.addAttribute("view", "add");
         model.addAttribute("report", new Report());
         return "add";
@@ -145,8 +145,8 @@ public class ReportController {
     @RequestMapping(value = "add", method = RequestMethod.POST, produces = "text/plain;charset=UTF-8")
     public String add(@Valid @ModelAttribute("report") Report report,
             BindingResult result, Model model, HttpServletRequest req, HttpServletResponse res) {
-        System.out.println(req.getHeader("Content-Type"));
-        res.setHeader("Content-Type", "text/html; charset=utf-8");
+        //System.out.println(req.getHeader("Content-Type"));
+        //res.setHeader("Content-Type", "text/html; charset=utf-8");
         if (result.hasErrors()) {
             System.out.println("report: " + report);
             System.out.println("model: " + model);

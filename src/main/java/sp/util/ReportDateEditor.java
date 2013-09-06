@@ -1,8 +1,8 @@
 package sp.util;
 
 /**
- * PropertyEditor Converts string like '01 Sep 2010' to a valid java.util.Date
- * object a
+ * PropertyEditor Converts string like '01 Sep 2010' to a valid
+ * {@link java.util.Date} object
  *
  * @author Paul Kulitski
  */
@@ -36,15 +36,13 @@ public class ReportDateEditor extends PropertyEditorSupport {
             try {
                 setValue(this.dateFormat.parse(text));
             } catch (ParseException ex) {
-                throw new IllegalArgumentException("Could not parse date: "
-                        + ex.getMessage());
-            }
+                throw new IllegalArgumentException("Could not parse date: " + ex.getMessage());
+            } 
         }
     }
 
     @Override
     public String getAsText() {
-        return (getValue() == null ? "" : this.dateFormat
-                .format((Date) getValue()));
-    }    
+        return (getValue() == null ? "" : this.dateFormat.format((Date) getValue()));
+    }
 }
