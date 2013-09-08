@@ -96,6 +96,7 @@
     via a configurable request parameter. 
     -->
     <mvc:interceptors>
+        
         <bean id="localeChangeInterceptor"
               class="org.springframework.web.servlet.i18n.LocaleChangeInterceptor">
             <!-- request parameter which specifies a locale -->

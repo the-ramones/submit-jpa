@@ -21,7 +21,7 @@
         <script type="text/javascript" src="#springUrl(${d_url})"></script>  
     <script type="text/javascript">
         #[[$.datepicker.setDefaults(
-            $.extend(#[[{'dateFormat': 'dd M yy'}, $.datepicker.regional[]]#'$d_regional'#[[])
+            $.extend({'dateFormat': 'dd M yy'}, $.datepicker.regional[]]#'$d_regional'#[[])
         );]]#
     </script>
     #{else}

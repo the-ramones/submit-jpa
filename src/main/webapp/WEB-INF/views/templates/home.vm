@@ -18,7 +18,7 @@
 
     <hr />
     <div> 
-        <h2><a class="a-nav" href="#springUrl('/report/realtime')">#springMessage("content.home.usecase3.title")</a></h2>
+        <h2><a class="a-nav" href="#springUrl('/report/ajax')">#springMessage("content.home.usecase3.title")</a></h2>
         <p>#springMessage("content.home.usecase3")</p> 
     </div>
 </div> <!-- #article -->

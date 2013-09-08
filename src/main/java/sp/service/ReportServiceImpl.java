@@ -63,4 +63,10 @@ public class ReportServiceImpl implements ReportService {
     public List<Report> getReports(String performer, Date startDate, Date endDate) {
         return reportRepository.getReports(performer, startDate, endDate);
     }
+
+    @Override
+    public Boolean hasReport(Long id) {
+        
+        return reportRepository.hasReport(id);
+    }
 }

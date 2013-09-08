@@ -19,4 +19,6 @@ public interface ReportService {
     public Report getReportById(Long id);
     
     public List<String> getPerformers();
+    
+    public Boolean hasReport(Long id);
 }

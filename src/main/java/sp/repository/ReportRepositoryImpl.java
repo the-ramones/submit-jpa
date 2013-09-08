@@ -83,4 +83,12 @@ public class ReportRepositoryImpl implements ReportRepository {
         query.setParameter("endDate", endDate);
         return query.getResultList();
     }
+
+    @Override
+    public Boolean hasReport(Long id) {
+        TypedQuery<Report> query = 
+                entityManager.createNamedQuery("Report.hasReport", Report.class);
+        query.setParameter("id", id);
+        return !query.getResultList().isEmpty();
+    }
 }

@@ -1,9 +1,10 @@
 ﻿<div class="form-container">
     <h2>#springMessage('content.byid.title')</h2>
-    <form name="search-report" method="GET" action="#springUrl('/report/detail')">
+    <form name="search-report" method="POST" action="#springUrl('/report/detail')">
         <div class="form-line clearfix">
             <label for="id">#springMessage('content.byid.caption'):</label>
-            <input id="id" name="id" type="text" value="" class="" placeholder="#springMessage('content.byid.placeholder')" autocomplete="off">                                 
+            <input id="id" name="id" type="text" value="$!{id}" class="" placeholder="#springMessage('content.byid.placeholder')" autocomplete="off">                                 
+            <label for="id" class="error">#if($error)#springMessage('content.byid.id.wrong')#end</label>
         </div>
         <input name="report-search" class="btn" value="#springMessage('content.byid.button')" type="submit"/>
     </form>

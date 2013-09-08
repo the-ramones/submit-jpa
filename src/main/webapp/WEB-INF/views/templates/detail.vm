@@ -1,5 +1,7 @@
 ﻿## Detail template. Utilizes report context variable
+#if($report)
 <div class="form-container">
+
 <h2>#springMessage("content.detail.title")</h2>
 <dl class="dl-horizontal">
     <dt>id</dt>
@@ -11,7 +13,7 @@
 </dl>
 <dl class="dl-horizontal">
     <dt>#springMessage("content.detail.end")</dt>
-    <dd>$dateTool.format('dd MMM yyyy', ${report.startDate}) ${report.startDate}</dd>
+    <dd>$dateTool.format('dd MMM yyyy', ${report.startDate})</dd>
 </dl>
 <dl class="dl-horizontal">
     <dt>#springMessage("content.detail.performer")</dt>
@@ -21,5 +23,18 @@
     <dt>#springMessage("content.detail.activity")</dt>
     <dd>${report.activity}</dd>
 </dl>
-<button class="action">#springMessage('button.action.get')</button>
+    #if($uri)<button class="action" onclick="show_uri()">#springMessage('button.action.get')</button>#end
+    #if($back)<button class="action delete" onclick="redirect()">#springMessage('button.action.back')</button>#end
 </div>
+#else
+    #springMessage('content.detail.notfound')
+#end
+
+<script type="text/javascript">
+    function show_uri() {
+        alert("$uri");
+    }
+    function redirect() {
+        window.location.href="$back";
+    }
+</script>

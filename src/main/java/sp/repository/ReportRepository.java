@@ -19,4 +19,6 @@ public interface ReportRepository {
     public Report saveReport(Report report);
     
     public List<String> getPerformers();
+    
+    public Boolean hasReport(Long id);
 }
