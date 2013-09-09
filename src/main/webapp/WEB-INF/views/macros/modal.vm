@@ -1,0 +1,138 @@
+﻿## Reports! Modal Velocity Macros
+
+#*
+ * Uses 'view' variable from the context was called to construct Hint side bar
+ *#
+#macro ( modal_uri $uri )
+    <h2>report URI:</h2>
+    <input type="text" value="$uri">
+#end
+
+#macro ( modal_action $report $uri )
+<h2>Activity №${report.id}</h2>
+<dl class="dl-horizontal">
+    <dt>id</dt>
+    <dd>${report.id}</dd>
+</dl>
+<dl class="dl-horizontal">
+    <dt>start of activity</dt>
+    <dd>${report.startDate}</dd>
+</dl>
+<dl class="dl-horizontal">
+    <dt>end of activity</dt>
+    <dd>${report.endDate}</dd>
+</dl>
+<dl class="dl-horizontal">
+    <dt>performer</dt>
+    <dd>${report.performer}</dd>
+</dl>
+<dl class="dl-horizontal">
+    <dt>activity</dt>
+    <dd>${report.activity}</dd>
+</dl>
+<input type="text" value="${uri}" name="uri" style="width:100%;"><br />
+<div class="modal-block">
+    <div class="button-block-modal">
+        <button class="action delete">Close</button>
+    </div>
+</div>
+#end
+
+#macro ( modal_add )
+<h2>Reports! add form</h2>
+<form name="report-add" action="/report/add" method="POST">
+    <div class="form-line clearfix">
+        <label>Start date:</label>
+        <input id="startDate" name="startDate" value="" type="text" placeholder="Input a start date" autocomplete="off">                            
+    </div>
+    <div class="form-line clearfix">
+        <label>End date:</label>
+        <input id="endDate" name="endDate" value="" type="text" placeholder="Input an end date" autocomplete="off">             
+    </div>
+    <div class="form-line clearfix">
+        <label>Performer:</label>
+        <input id="performer" name="performer" value="" type="text" placeholder="Input a performer">
+    </div>
+    <div class="form-line clearfix">
+        <label>Activity:</label>
+        <input id="activity" name="activity" value="" type="text" placeholder="Input an activity">     
+    </div>
+    <div class='clearfix'>
+        <div class='button-block-modal'>
+            <button class="action" name="report-submit" type="submit">Add</button>
+            <button class="action delete">Close</button>
+        </div>
+    </div>
+</form>         
+#end
+
+#macro (modal_update )
+
+#end
+
+#macro ( modal_delete )
+
+#end
+#macro ( hint )
+    #if ($view)
+        #set($hint = "hint." + $view)
+        #set($hint_title = "hint." + $view + ".title")
+    <div class="aside">
+        <h3>#springMessage($hint_title)</h3>
+        <p>#springMessage($hint)</p>
+        <button id="hide_btn" class="btn-small" type="button">#springMessage("button.hide")</button>
+    </div>
+    #end
+#end
+
+#*
+ * Constructs right sticker ('get hint' sticker)
+ *#
+#macro ( hint_sticker )    
+    <div class="sticky">
+        <a href="#"><i class="icon-briefcase"></i>#springMessage("sticker")</a>
+    </div>
+#end
+
+#*
+ * Uses 'user' variable from the context was called to construct Hint side bar
+ *#
+#macro ( menu_sticker )
+     <div class="login-wrap">
+        <div class="login-stick">
+            <ul>
+                <li id="login">
+                    <a href="#" data-icon="#[[&#128101;]]#"></a>
+                </li>
+                <li id="language">
+                    <a href="#" data-icon="#[[&#127758;]]#"></a>
+                </li>
+                <li id="checklist">
+                    <a href="#springUrl('/checklist')" data-icon="#[[&#59197;]]#"></a>
+                </li>
+            </ul>
+        </div>
+        <div class="popup" id="popup-login">
+            <div class="arrow"></div>
+            <ul>
+                #if($user)
+                    <li><a href="#springUrl('/login')">${user.name}</a></li>
+                    <li><a href="#springUrl('/login?logout=true')">#springMessage('sticker.left.login.logout')</a></li>
+                #{else}
+                    <li><a href="#springUrl('/login?login=true')">#springMessage('sticker.left.anonymous')</a></li>
+                    <li><a href="#springUrl('/login?login=true')">#springMessage('sticker.left.login.login')</a></li>
+                #end
+            </ul>
+        </div>                        
+        <div class="popup" id="popup-language">
+            <div class="arrow"></div>
+            <ul>
+                #set($url = $request.attributes.CURRENT_URL)
+                #set($en_url = $url + '?lang=en')
+                #set($ru_url = $url + '?lang=ru')
+                <li><a href="?lang=en">#springMessage('sticker.left.language.english')</a></li>
+                <li><a href="?lang=ru">#springMessage('sticker.left.language.russian')</a></li>
+            </ul>
+        </div>
+    </div>  
+#end
