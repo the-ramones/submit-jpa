@@ -14,11 +14,13 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Past;
+import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
 import org.hibernate.validator.constraints.NotEmpty;
 import org.springframework.format.annotation.DateTimeFormat;
 import sp.validation.ReportDate;
+import sp.validation.ValidReport;
 
 /**
  *  Model for reports
@@ -35,6 +37,7 @@ import sp.validation.ReportDate;
         
 })
 @XmlRootElement
+@ValidReport
 public class Report implements Serializable {
 
     private Long id;
@@ -42,18 +45,21 @@ public class Report implements Serializable {
     @NotNull()
     @Past() 
     @DateTimeFormat(pattern = "dd MMM yyyy")
+    @ReportDate
     private Date startDate;
     
-     @DateTimeFormat(pattern = "dd MMM yyyy")
-    //@ReportDate
+    @DateTimeFormat(pattern = "dd MMM yyyy")
+    @ReportDate
     private Date endDate; 
     
     @NotEmpty()
     @Size(min = 1, max = 255)
+    @Pattern(regexp = "^[a-zA-Z][ a-zA-Z-#@%&\\$]{1,255}(?<!-)$")
     private String performer;
     
     @NotEmpty()
     @Size(min = 1, max = 255)
+    @Pattern(regexp = "^[a-zA-Z][ a-zA-Z-#@%&\\$]{1,255}(?<!-)$")
     private String activity;
 
     @Id

@@ -6,26 +6,32 @@ import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 
 /**
- * Validator for input dates
+ * Validates dates 
  *
  * @author the-ramones
  */
 public class ReportDateConstraintValidator implements ConstraintValidator<ReportDate, Date> {
 
-    private ReportDate reportDate;
-    
     @Override
-    public void initialize(ReportDate reportDate) {
-        this.reportDate = reportDate;
+    public void initialize(ReportDate reportDate) {        
     }
 
+    /**
+     * Validates: 'an entered date must be strict (not lenient)'
+     * 
+     * @param date an entered date
+     * @param context an validation context
+     * @return true, if a date is valid; false - otherwise
+     */
     @Override
-    public boolean isValid(Date reportDate, ConstraintValidatorContext cvc) {
+    public boolean isValid(Date date, ConstraintValidatorContext context) {
         Calendar calendar = Calendar.getInstance();
-        calendar.setTime(reportDate);        
-        if (calendar.isLenient()) {
-            return false;
-        } 
+        if (date != null) {
+            calendar.setTime(date);        
+            if (calendar.isLenient()) {
+                return false;
+            } 
+        }
         return true;
     }
 }

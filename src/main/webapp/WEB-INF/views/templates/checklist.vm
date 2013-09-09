@@ -1,4 +1,4 @@
-﻿## Checklist template. Utilize reports context variable
+## Checklist template. Utilize reports context variable
 <div class="tile-menu-container">
     <h3>#springMessage('content.checklist.title')</h3>
     <div class="tile-button-menu">

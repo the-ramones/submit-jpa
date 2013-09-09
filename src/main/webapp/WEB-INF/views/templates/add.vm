@@ -1,4 +1,4 @@
-﻿<div class="form-container">
+<div class="form-container">
     <h2>#springMessage('content.add.title')</h2>
 
     #springBind("report")

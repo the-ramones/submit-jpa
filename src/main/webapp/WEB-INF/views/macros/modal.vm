@@ -1,15 +1,24 @@
-﻿## Reports! Modal Velocity Macros
+## Reports! Modal Velocity Macros
 
 #*
- * Uses 'view' variable from the context was called to construct Hint side bar
+ * Uses 'uri' variable from the context was called to show uri 
  *#
 #macro ( modal_uri $uri )
-    <h2>report URI:</h2>
-    <input type="text" value="$uri">
+    <h2>#springMessage('modal.reporturi'):</h2> \
+    <input type="text" value="$uri" style="width: 320px;"> \
+    <div class="modal-block"> \
+        <div class="button-block-modal"> \
+            <button id="close-btn" class="action delete">#springMessage('button.close')</button> \
+        </div> \
+    </div> \
 #end
 
+#*
+ * Uses 'report' and 'uri' variable from the context was called to construct
+ * detailed information 
+ *#
 #macro ( modal_action $report $uri )
-<h2>Activity №${report.id}</h2>
+<h2>#springMessage('content.activity') №${report.id}</h2>
 <dl class="dl-horizontal">
     <dt>id</dt>
     <dd>${report.id}</dd>
@@ -33,106 +42,130 @@
 <input type="text" value="${uri}" name="uri" style="width:100%;"><br />
 <div class="modal-block">
     <div class="button-block-modal">
-        <button class="action delete">Close</button>
+        <button class="action delete">#springMessage('button.close')</button>
     </div>
 </div>
 #end
 
-#macro ( modal_add )
-<h2>Reports! add form</h2>
-<form name="report-add" action="/report/add" method="POST">
+#*
+ * Utilizes 'report' variable from the context to fill in entered fields if
+ * validation fails
+ *#
+#macro ( modal_add $report )
+<h2>#springMessage('content.add.title')</h2>
+
+#springBind("report")
+<p class="error error-block">#springShowErrors("<br/>" "")</p>
+<form name="report-add" action="#springUrl('/report/add')" method="POST">
+    #springBind("report.startDate")      
     <div class="form-line clearfix">
-        <label>Start date:</label>
-        <input id="startDate" name="startDate" value="" type="text" placeholder="Input a start date" autocomplete="off">                            
+        <label for="startDate">#springMessage('content.add.caption.start'):</label>
+        <input id="startDate" name="startDate" value="#if(${report.endDate})$dateTool.format('dd MMM yyyy', ${report.startDate})#end" type="text" placeholder="#springMessage('content.add.placeholder.start')" autocomplete="off">                                        
+        <label for="startDate" class="error">#springShowErrors("<br/>" "")</label>
     </div>
+    #springBind("report.endDate")   
     <div class="form-line clearfix">
-        <label>End date:</label>
-        <input id="endDate" name="endDate" value="" type="text" placeholder="Input an end date" autocomplete="off">             
+        <label for="endDate">#springMessage('content.add.caption.end'):</label>
+        <input id="endDate" name="endDate" value="#if(${report.endDate})$dateTool.format('dd MMM yyyy', ${report.endDate})#end" type="text" placeholder="#springMessage('content.add.placeholder.end')" autocomplete="off">
+        <label for="endDate" class="error">#springShowErrors("<br/>" "")</label>
     </div>
+    #springBind("report.performer")
     <div class="form-line clearfix">
-        <label>Performer:</label>
-        <input id="performer" name="performer" value="" type="text" placeholder="Input a performer">
+        <label for="performer">#springMessage('content.add.caption.performer'):</label>
+        <input id="performer" name="performer" value="$!{report.performer}" type="text" placeholder="#springMessage('content.add.placeholder.performer')">
+        <label for="performer" class="error">#springShowErrors("<br/>" "")</label>
     </div>
+    #springBind("report.activity")
     <div class="form-line clearfix">
-        <label>Activity:</label>
-        <input id="activity" name="activity" value="" type="text" placeholder="Input an activity">     
+        <label for="activity">#springMessage('content.add.caption.activity'):</label>
+        <input id="activity" name="activity" value="$!{report.activity}" type="text" placeholder="#springMessage('content.add.placeholder.activity')">     
+        <label for="activity" class="error">#springShowErrors("<br/>" "")</label>
     </div>
     <div class='clearfix'>
         <div class='button-block-modal'>
-            <button class="action" name="report-submit" type="submit">Add</button>
-            <button class="action delete">Close</button>
+            <button class="action" name="report-submit" type="submit">#springMessage('button.add')</button>
+            <button class="action delete">#springMessage('button.close')</button>
         </div>
-    </div>
-</form>         
-#end
-
-#macro (modal_update )
-
-#end
-
-#macro ( modal_delete )
-
-#end
-#macro ( hint )
-    #if ($view)
-        #set($hint = "hint." + $view)
-        #set($hint_title = "hint." + $view + ".title")
-    <div class="aside">
-        <h3>#springMessage($hint_title)</h3>
-        <p>#springMessage($hint)</p>
-        <button id="hide_btn" class="btn-small" type="button">#springMessage("button.hide")</button>
-    </div>
-    #end
+    </div>    
+</form>        
 #end
 
 #*
- * Constructs right sticker ('get hint' sticker)
+ * Utilizes 'report' variable from the context to fill in field values based 
+ * on current report values
  *#
-#macro ( hint_sticker )    
-    <div class="sticky">
-        <a href="#"><i class="icon-briefcase"></i>#springMessage("sticker")</a>
+#macro (modal_update $report)
+<h2>#springMessage('content.update.title')</h2>
+
+#springBind("report")
+<p class="error error-block">#springShowErrors("<br/>" "")</p>
+<form name="report-add" action="#springUrl('/report/add')" method="POST">
+    #springBind("report.startDate")      
+    <div class="form-line clearfix">
+        <label for="startDate">#springMessage('content.add.caption.start'):</label>
+        <input id="startDate" name="startDate" value="#if(${report.endDate})$dateTool.format('dd MMM yyyy', ${report.startDate})#end" type="text" placeholder="#springMessage('content.add.placeholder.start')" autocomplete="off">                                        
+        <label for="startDate" class="error">#springShowErrors("<br/>" "")</label>
     </div>
+    #springBind("report.endDate")   
+    <div class="form-line clearfix">
+        <label for="endDate">#springMessage('content.add.caption.end'):</label>
+        <input id="endDate" name="endDate" value="#if(${report.endDate})$dateTool.format('dd MMM yyyy', ${report.endDate})#end" type="text" placeholder="#springMessage('content.add.placeholder.end')" autocomplete="off">
+        <label for="endDate" class="error">#springShowErrors("<br/>" "")</label>
+    </div>
+    #springBind("report.performer")
+    <div class="form-line clearfix">
+        <label for="performer">#springMessage('content.add.caption.performer'):</label>
+        <input id="performer" name="performer" value="$!{report.performer}" type="text" placeholder="#springMessage('content.add.placeholder.performer')">
+        <label for="performer" class="error">#springShowErrors("<br/>" "")</label>
+    </div>
+    #springBind("report.activity")
+    <div class="form-line clearfix">
+        <label for="activity">#springMessage('content.add.caption.activity'):</label>
+        <input id="activity" name="activity" value="$!{report.activity}" type="text" placeholder="#springMessage('content.add.placeholder.activity')">     
+        <label for="activity" class="error">#springShowErrors("<br/>" "")</label>
+    </div>
+    <div class='clearfix'>
+        <div class='button-block-modal'>
+            <button class="action" name="report-submit" type="submit">#springMessage('button.action.update')</button>
+            <button class="action delete">#springMessage('button.close')</button>
+        </div>
+    </div>
+</form>        
 #end
 
 #*
- * Uses 'user' variable from the context was called to construct Hint side bar
+ * Utilizes 'report' variable from the context to show detailed information 
  *#
-#macro ( menu_sticker )
-     <div class="login-wrap">
-        <div class="login-stick">
-            <ul>
-                <li id="login">
-                    <a href="#" data-icon="#[[&#128101;]]#"></a>
-                </li>
-                <li id="language">
-                    <a href="#" data-icon="#[[&#127758;]]#"></a>
-                </li>
-                <li id="checklist">
-                    <a href="#springUrl('/checklist')" data-icon="#[[&#59197;]]#"></a>
-                </li>
-            </ul>
-        </div>
-        <div class="popup" id="popup-login">
-            <div class="arrow"></div>
-            <ul>
-                #if($user)
-                    <li><a href="#springUrl('/login')">${user.name}</a></li>
-                    <li><a href="#springUrl('/login?logout=true')">#springMessage('sticker.left.login.logout')</a></li>
-                #{else}
-                    <li><a href="#springUrl('/login?login=true')">#springMessage('sticker.left.anonymous')</a></li>
-                    <li><a href="#springUrl('/login?login=true')">#springMessage('sticker.left.login.login')</a></li>
-                #end
-            </ul>
-        </div>                        
-        <div class="popup" id="popup-language">
-            <div class="arrow"></div>
-            <ul>
-                #set($url = $request.attributes.CURRENT_URL)
-                #set($en_url = $url + '?lang=en')
-                #set($ru_url = $url + '?lang=ru')
-                <li><a href="?lang=en">#springMessage('sticker.left.language.english')</a></li>
-                <li><a href="?lang=ru">#springMessage('sticker.left.language.russian')</a></li>
-            </ul>
-        </div>
-    </div>  
+#macro ( modal_delete $report )
+<h2>#springMessage('content.activity') №${report.id}</h2>
+
+<h2>#springMessage("content.detail.title")</h2>
+<dl class="dl-horizontal">
+    <dt>id</dt>
+    <dd>${report.id}</dd>
+</dl>
+<dl class="dl-horizontal">
+    <dt>#springMessage("content.detail.start")</dt>
+    <dd>$dateTool.format('dd MMM yyyy', ${report.startDate})</dd>
+</dl>
+<dl class="dl-horizontal">
+    <dt>#springMessage("content.detail.end")</dt>
+    <dd>$dateTool.format('dd MMM yyyy', ${report.startDate})</dd>
+</dl>
+<dl class="dl-horizontal">
+    <dt>#springMessage("content.detail.performer")</dt>
+    <dd>${report.performer}</dd>
+</dl>
+<dl class="dl-horizontal">
+    <dt>#springMessage("content.detail.activity")</dt>
+    <dd>${report.activity}</dd>
+</dl>
+</div>
+<div class="clearfix">
+    <span class='modal-span'>#springMessage('modal.delete.assure')</span>
+    <div class="button-block-modal">
+        <button class="action">#springMessage('content.yes')</button>
+        <button class="action delete">#springMessage('content.no')</button>
+    </div>
+</div>
 #end

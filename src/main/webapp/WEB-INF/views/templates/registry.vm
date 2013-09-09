@@ -1,4 +1,4 @@
-﻿<div class="form-container" style="width: 100%">
+<div class="form-container" style="width: 100%">
     ## registry list template
     <h2>#springMessage('registry.title')</h2>
     <table class="table">

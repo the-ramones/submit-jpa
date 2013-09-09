@@ -1,4 +1,4 @@
-﻿## Reports! Global l10n Macros
+## Reports! Global l10n Macros
 
 #*
  * Localizes validation messages for jQuery Validator plugin
@@ -15,10 +15,11 @@
  *#
 #macro ( datepicker_l10n )
     
-    #set( $d_url = '/resources/js/localization/' + $springMacroRequestContext.getMessage('jquery.datepicker') )
+    #set($path_prefix = '/resources/js/localization/')
+    #set( $d_url = $path_prefix + $springMacroRequestContext.getMessage('jquery.datepicker') )
     #set( $d_regional = $springMacroRequestContext.getMessage('jquery.datepicker.regional') )
-    #if( ($d_url ne '') && $d_url )
-        <script type="text/javascript" src="#springUrl(${d_url})"></script>  
+    #if( ($d_url ne $path_prefix) && $d_url )
+    <script type="text/javascript" src="#springUrl(${d_url})"></script>  
     <script type="text/javascript">
         #[[$.datepicker.setDefaults(
             $.extend({'dateFormat': 'dd M yy'}, $.datepicker.regional[]]#'$d_regional'#[[])

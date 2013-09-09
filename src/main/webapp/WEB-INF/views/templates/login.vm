@@ -1,4 +1,4 @@
-﻿<div class="form-container">
+<div class="form-container">
     <h2>#springMessage('content.login.title')</h2>
     <form name="login-form" method="POST" action="/login">
         <div class="form-line clearfix">
