@@ -53,7 +53,6 @@ public class ReportController {
     public void initReportDateEditor(WebDataBinder binder, Locale locale) {
         DateFormat df;
         if (locale.equals(Locale.forLanguageTag("ru"))) {
-            System.out.println("Checking Ru Locale in SimpleDateFormat");
             df = new SimpleDateFormat("dd MMM yyyy", new DateFormatSymbols() {
                 @Override
                 public String[] getMonths() {
@@ -73,15 +72,8 @@ public class ReportController {
             System.out.println("Checking En Locale in SimpleDateFormating");
             df = new SimpleDateFormat("dd MMM yyyy", locale);
         }
+        df.setLenient(false);
         binder.registerCustomEditor(Date.class, new CustomDateEditor(df, true));
-        System.out.println("=================================================");
-        try {
-            System.out.println(df.format(df.parse("23 Сен 2014")));
-        } catch (ParseException e) {
-            System.out.println("parseException e");
-        }
-        System.out.println("=================================================");
-        System.out.println("Binder assesed Locale: " + locale.toString());
     }
 
     public ReportController() {
@@ -193,14 +185,14 @@ public class ReportController {
         model.addAttribute("uri", protocol + req.getServerName() + ":" + req.getServerPort() + req.getContextPath() + "/report/detail/" + report.getId());
         model.addAttribute("back", req.getRequestURL());
         model.addAttribute("report", report);
-            System.out.println(model);
+        System.out.println(model);
         mav.addAllObjects(model.asMap());
         mav.setViewName("detail");
-            System.out.println("Context:" + req.getContextPath());
-            System.out.println("URI:" + req.getRequestURI());
-            System.out.println("URL:" + req.getRequestURL());
-            System.out.println("User:" + req.getRemoteUser());
-            System.out.println("Session id :" + req.getRequestedSessionId());
+        System.out.println("Context:" + req.getContextPath());
+        System.out.println("URI:" + req.getRequestURI());
+        System.out.println("URL:" + req.getRequestURL());
+        System.out.println("User:" + req.getRemoteUser());
+        System.out.println("Session id :" + req.getRequestedSessionId());
         return mav;
     }
 

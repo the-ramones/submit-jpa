@@ -23,6 +23,8 @@ var non31_months_map = {
     "ru": /^(Апр|Июн|Сен|Ноя){1}$/i
 };
 
+var performer_regexp = "^[a-zа-я][ 0-9a-zа-я-#@%&\\$]{1,255}(?!-)$";
+var activity_regexp = "^[ a-zа-я0-9-#@%&\\$]{1,255}(?!-)$";
 /*
  * Add a custom validation method
  * @param {type} constraint validation mathod name
@@ -95,6 +97,11 @@ $.validator.addMethod("reportusername", function(value, element) {
     return /^[a-zA-Z0-9_-]{6,16}|([a-z0-9_\\.-]+)@([\da-z\\.-]+)\\.([a-z\\.]{2,6})$/.test(value);
 });
 
+$.validator.addMethod("regexp", function(value, element, regexp) {
+    var reg = new RegExp(regexp, 'i');
+    return this.optional(element) || reg.test(value);
+});
+
 /*
  * English version:
  * /(0?[1-9]|[12][0-9]|3[01])(Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec){1}\d{4}$/i
@@ -110,7 +117,8 @@ $.validator.addMethod("reportusername", function(value, element) {
 $("form[name='report-add']").validate({
 //  debug: true,
     rules: {
-        startDate: {required: true,
+        startDate: {
+            required: true,
             reportdate: true
         },
         endDate: {
@@ -118,11 +126,13 @@ $("form[name='report-add']").validate({
         },
         performer: {
             required: true,
-            rangelength: [1, 255]
+            rangelength: [1, 255],
+            regexp: performer_regexp
         },
         activity: {
             required: true,
-            rangelength: [1, 255]
+            rangelength: [1, 255],
+            regexp: activity_regexp
         }
     }
 });

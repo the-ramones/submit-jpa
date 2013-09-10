@@ -5,6 +5,7 @@ import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
+import java.util.Calendar;
 import javax.validation.Constraint;
 import javax.validation.Payload;
 
@@ -24,4 +25,6 @@ public @interface ReportDate {
     Class<?>[] groups() default {};
     
     Class<? extends Payload>[] payload() default {};
+
+    String startup() default "";
 }

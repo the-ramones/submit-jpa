@@ -54,12 +54,12 @@ public class Report implements Serializable {
     
     @NotEmpty()
     @Size(min = 1, max = 255)
-    @Pattern(regexp = "^[a-zA-Z][ a-zA-Z-#@%&\\$]{1,255}(?<!-)$")
+    @Pattern(regexp = "^(?iu)[a-zа-я][ 0-9a-zа-я-#@%&\\$]{1,255}(?<!-)$")
     private String performer;
     
     @NotEmpty()
     @Size(min = 1, max = 255)
-    @Pattern(regexp = "^[a-zA-Z][ a-zA-Z-#@%&\\$]{1,255}(?<!-)$")
+    @Pattern(regexp = "^(?iu)[a-zа-я0-9 #@%&\\$]{1,255}(?<!-)$")
     private String activity;
 
     @Id
