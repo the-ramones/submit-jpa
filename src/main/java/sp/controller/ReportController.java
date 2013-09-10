@@ -1,8 +1,9 @@
 package sp.controller;
 
+import ch.qos.logback.classic.LoggerContext;
+import ch.qos.logback.core.util.StatusPrinter;
 import java.text.DateFormat;
 import java.text.DateFormatSymbols;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
@@ -12,6 +13,8 @@ import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -24,8 +27,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-import org.springframework.web.servlet.view.RedirectView;
 import sp.model.Report;
 import sp.service.ReportService;
 
@@ -38,6 +39,7 @@ import sp.service.ReportService;
 @RequestMapping("/report")
 public class ReportController {
 
+    static final Logger logger = LoggerFactory.getLogger(ReportController.class);
     @Inject
     private ReportService reportService;
 
@@ -52,6 +54,10 @@ public class ReportController {
     @InitBinder
     public void initReportDateEditor(WebDataBinder binder, Locale locale) {
         DateFormat df;
+        logger.info("IN @InitBinder");
+        LoggerContext lc = (LoggerContext) LoggerFactory.getILoggerFactory();
+        StatusPrinter.print(lc);
+
         if (locale.equals(Locale.forLanguageTag("ru"))) {
             df = new SimpleDateFormat("dd MMM yyyy", new DateFormatSymbols() {
                 @Override
@@ -73,6 +79,7 @@ public class ReportController {
             df = new SimpleDateFormat("dd MMM yyyy", locale);
         }
         df.setLenient(false);
+        logger.debug("EXITING @InitBinder");
         binder.registerCustomEditor(Date.class, new CustomDateEditor(df, true));
     }
 
