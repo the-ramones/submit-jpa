@@ -25,11 +25,11 @@
 </dl>
 <dl class="dl-horizontal">
     <dt>start of activity</dt>
-    <dd>$datetool.format( 'dd MMM yyyy', ${report.startDate} )</dd>
+    <dd>${report.startDate}</dd>
 </dl>
 <dl class="dl-horizontal">
     <dt>end of activity</dt>
-    <dd>$datetool.format( 'dd MMM yyyy', ${report.endDate} )</dd>
+    <dd>${report.endDate}</dd>
 </dl>
 <dl class="dl-horizontal">
     <dt>performer</dt>
@@ -60,13 +60,13 @@
     #springBind("report.startDate")      
     <div class="form-line clearfix">
         <label for="startDate">#springMessage('content.add.caption.start'):</label>
-        <input id="startDate" name="startDate" value="#if(${report.endDate})$datetool.format('dd MMM yyyy', ${report.startDate})#end" type="text" placeholder="#springMessage('content.add.placeholder.start')" autocomplete="off">                                        
+        <input id="startDate" name="startDate" value="#if(${report.endDate})$dateTool.format('dd MMM yyyy', ${report.startDate})#end" type="text" placeholder="#springMessage('content.add.placeholder.start')" autocomplete="off">                                        
         <label for="startDate" class="error">#springShowErrors("<br/>" "")</label>
     </div>
     #springBind("report.endDate")   
     <div class="form-line clearfix">
         <label for="endDate">#springMessage('content.add.caption.end'):</label>
-        <input id="endDate" name="endDate" value="#if(${report.endDate})$datetool.format('dd MMM yyyy', ${report.endDate})#end" type="text" placeholder="#springMessage('content.add.placeholder.end')" autocomplete="off">
+        <input id="endDate" name="endDate" value="#if(${report.endDate})$dateTool.format('dd MMM yyyy', ${report.endDate})#end" type="text" placeholder="#springMessage('content.add.placeholder.end')" autocomplete="off">
         <label for="endDate" class="error">#springShowErrors("<br/>" "")</label>
     </div>
     #springBind("report.performer")
@@ -103,13 +103,13 @@
     #springBind("report.startDate")      
     <div class="form-line clearfix">
         <label for="startDate">#springMessage('content.add.caption.start'):</label>
-        <input id="startDate" name="startDate" value="#if(${report.endDate})$datetool.format('dd MMM yyyy', ${report.startDate})#end" type="text" placeholder="#springMessage('content.add.placeholder.start')" autocomplete="off">                                        
+        <input id="startDate" name="startDate" value="#if(${report.endDate})$dateTool.format('dd MMM yyyy', ${report.startDate})#end" type="text" placeholder="#springMessage('content.add.placeholder.start')" autocomplete="off">                                        
         <label for="startDate" class="error">#springShowErrors("<br/>" "")</label>
     </div>
     #springBind("report.endDate")   
     <div class="form-line clearfix">
         <label for="endDate">#springMessage('content.add.caption.end'):</label>
-        <input id="endDate" name="endDate" value="#if(${report.endDate})$datetool.format('dd MMM yyyy', ${report.endDate})#end" type="text" placeholder="#springMessage('content.add.placeholder.end')" autocomplete="off">
+        <input id="endDate" name="endDate" value="#if(${report.endDate})$dateTool.format('dd MMM yyyy', ${report.endDate})#end" type="text" placeholder="#springMessage('content.add.placeholder.end')" autocomplete="off">
         <label for="endDate" class="error">#springShowErrors("<br/>" "")</label>
     </div>
     #springBind("report.performer")
@@ -146,11 +146,11 @@
 </dl>
 <dl class="dl-horizontal">
     <dt>#springMessage("content.detail.start")</dt>
-    <dd>$datetool.format('dd MMM yyyy', ${report.startDate})</dd>
+    <dd>$dateTool.format('dd MMM yyyy', ${report.startDate})</dd>
 </dl>
 <dl class="dl-horizontal">
     <dt>#springMessage("content.detail.end")</dt>
-    <dd>$datetool.format('dd MMM yyyy', ${report.endDate})</dd>
+    <dd>$dateTool.format('dd MMM yyyy', ${report.startDate})</dd>
 </dl>
 <dl class="dl-horizontal">
     <dt>#springMessage("content.detail.performer")</dt>

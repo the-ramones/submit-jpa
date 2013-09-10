@@ -9,11 +9,11 @@
 </dl>
 <dl class="dl-horizontal">
     <dt>#springMessage("content.detail.start")</dt>
-    <dd>$dateTool.format('dd MMM yyyy', ${report.startDate})</dd>
+    <dd>$datetool.format('dd MMM yyyy', ${report.startDate})</dd>
 </dl>
 <dl class="dl-horizontal">
     <dt>#springMessage("content.detail.end")</dt>
-    <dd>$dateTool.format('dd MMM yyyy', ${report.endDate})</dd>
+    <dd>$datetool.format('dd MMM yyyy', ${report.endDate})</dd>
 </dl>
 <dl class="dl-horizontal">
     <dt>#springMessage("content.detail.performer")</dt>

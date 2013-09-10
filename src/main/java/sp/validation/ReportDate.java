@@ -5,7 +5,6 @@ import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
-import java.util.Calendar;
 import javax.validation.Constraint;
 import javax.validation.Payload;
 
@@ -16,7 +15,7 @@ import javax.validation.Payload;
  */
 @Documented
 @Constraint(validatedBy = ReportDateConstraintValidator.class)
-@Target({ElementType.FIELD, ElementType.METHOD})
+@Target({ElementType.FIELD, ElementType.METHOD, ElementType.ANNOTATION_TYPE})
 @Retention(RetentionPolicy.RUNTIME)
 public @interface ReportDate {
     

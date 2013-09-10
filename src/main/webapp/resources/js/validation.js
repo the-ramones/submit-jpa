@@ -103,6 +103,8 @@ $.validator.addMethod("regexp", function(value, element, regexp) {
 });
 
 /*
+ * Used RegExps + ISO Date
+ * 
  * English version:
  * /(0?[1-9]|[12][0-9]|3[01])(Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec){1}\d{4}$/i
  * Russian version

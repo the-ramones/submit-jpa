@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<!-- Sortable -->
-<tools>
+<!--<tools>
     <data type="number">
         <key>app_version</key>
         <value>0.1</value>
@@ -15,27 +14,88 @@
         <value>true</value>
     </data>
     
+    <toolbox scope="request">
+        <tool key="datetool" /> 
+    </toolbox> 
+    
+     Sort Tool 
     <toolbox scope="application">
         <tool class="org.apache.velocity.tools.generic.SortTool"/>
     </toolbox>
-    <!-- Escape sequenses -->
+     Escape Sequenses 
     <tool>
         <key>esc</key>
         <scope>application</scope>
         <class>org.apache.velocity.tools.generic.EscapeTool</class>
     </tool>
-    <!-- errors -->
+     Errors 
     <tool>
         <key>errors</key>
         <scope>request</scope>
         <class>org.apache.velocity.tools.struts.ErrorsTool</class>
     </tool>  
-    
+     Date Tool 
     <tool>
         <key>datetool</key>
         <scope>request</scope>
         <class>org.apache.velocity.tools.generic.DateTool</class>
+        format="dd M yy"
+        <class>sp.util.SpDateTool</class>
     </tool>
-    <!--format="dd M yy"-->
     
-</tools>
+</tools>-->
+
+<toolbox>
+    <data type="number">
+        <key>app_version</key>
+        <value>0.1</value>
+    </data>
+    <data type="string">
+        <key>app_name</key>
+        <value>Reports!</value>
+    </data>
+    <data type="boolean">
+        <key>debug</key>
+        <value>true</value>
+    </data>
+    
+    <!--    <toolbox scope="request">
+        <tool key="datetool" /> 
+    </toolbox> 
+    -->
+    <!-- Sort Tool -->
+    <!--    <toolbox scope="application">
+       <tool class="org.apache.velocity.tools.generic.SortTool"/>
+   </toolbox>
+    Escape Sequenses -->
+    <!--    <tool>
+        <key>esc</key>
+        <scope>application</scope>
+        <class>org.apache.velocity.tools.generic.EscapeTool</class>
+    </tool>-->
+    <!-- Errors -->
+    <!--    <tool>
+        <key>errors</key>
+        <scope>request</scope>
+        <class>org.apache.velocity.tools.struts.ErrorsTool</class>
+    </tool>  -->
+    
+    <!-- Date Tool -->
+    <tool>
+        <key>datetool</key>
+        <scope>request</scope>
+        <!--        <class>org.apache.velocity.tools.generic.DateTool</class>
+        <format="dd MMM yyyy"-->
+        <class>sp.util.SpDateTool</class>
+    </tool>
+    
+    <!-- Math Tool -->
+    <tool>
+        <key>math</key>
+        <scope>application</scope>
+        <!--restrict tool appliance-->
+        <!--<request-path>/catalog/*</request-path>-->
+        <!--<parameter name="my.parameter.name" value="my.parameter.value"/>-->
+        <class>org.apache.velocity.tools.generic.MathTool</class>
+    </tool>
+</toolbox>
