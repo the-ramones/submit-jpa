@@ -56,28 +56,28 @@ public class ReportController {
         DateFormat df;
         logger.info("IN @InitBinder");
         LoggerContext lc = (LoggerContext) LoggerFactory.getILoggerFactory();
-        StatusPrinter.print(lc);
-        //df = sp.util.SpDateFormatFactory(locale);
-        if (locale.equals(Locale.forLanguageTag("ru"))) {
-            df = new SimpleDateFormat("dd MMM yyyy", new DateFormatSymbols() {
-                @Override
-                public String[] getMonths() {
-                    return new String[]{
-                        "Января", "Февраля", "Марта", "Апреля", "Мая", "Июня", "Июля", "Августа", "Сентября", "Октября", "Ноября", "Февраля"
-                    };
-                }
-
-                @Override
-                public String[] getShortMonths() {
-                    return new String[]{
-                        "Янв", "Фев", "Мар", "Апр", "Мая", "Июн", "Июл", "Авг", "Сен", "Окт", "Ноя", "Фев"
-                    };
-                }
-            });
-        } else {
-            System.out.println("Checking En Locale in SimpleDateFormating");
-            df = new SimpleDateFormat("dd MMM yyyy", locale);
-        }
+        StatusPrinter.print(lc);        
+//        if (locale.equals(Locale.forLanguageTag("ru"))) {
+//            df = new SimpleDateFormat("dd MMM yyyy", new DateFormatSymbols() {
+//                @Override
+//                public String[] getMonths() {
+//                    return new String[]{
+//                        "Января", "Февраля", "Марта", "Апреля", "Мая", "Июня", "Июля", "Августа", "Сентября", "Октября", "Ноября", "Февраля"
+//                    };
+//                }
+//
+//                @Override
+//                public String[] getShortMonths() {
+//                    return new String[]{
+//                        "Янв", "Фев", "Мар", "Апр", "Мая", "Июн", "Июл", "Авг", "Сен", "Окт", "Ноя", "Фев"
+//                    };
+//                }
+//            });
+//        } else {
+//            System.out.println("Checking En Locale in SimpleDateFormating");
+//            df = new SimpleDateFormat("dd MMM yyyy", locale);
+//        }
+        df = sp.util.SpDateFormatFactory.getDateFormat("dd MMM yyyy", locale, null);
         df.setLenient(false);
         logger.debug("EXITING @InitBinder");
         binder.registerCustomEditor(Date.class, new CustomDateEditor(df, true));
