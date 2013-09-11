@@ -37,7 +37,7 @@ import sp.service.ReportService;
  */
 @Controller
 @RequestMapping("/report")
-public class ReportController {
+public class ReportController { 
 
     static final Logger logger = LoggerFactory.getLogger(ReportController.class);
     @Inject

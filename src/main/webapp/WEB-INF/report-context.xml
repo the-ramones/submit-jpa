@@ -160,8 +160,10 @@
                 binder.setValidator(new CustomValidator())   // mutually exclusive with previously instantiated global validator (won't be fired for this controller class)
                 binder.addValidators(new CustomValidator())  // cooperaters with global validator, order of fire up doesn't matter
             }   
-        Note that for Spring Validator interface should specify <mvc:annotation-driver validator="spring-validator" />, but not compeletely assure
+        Note that for Spring Validator interface should specify <mvc:annotation-driver validator="spring-validator" />, but not compeletely assure.
+        But JSR-303 will be detacted automatically
     -->
+    <!-- Triggers default bootstrap mechanism JSR-303 or Spring. Use @Autowire -->
     <!--<bean id="validator" class="org.springframework.validation.beanvalidation.LocalValidatorFactoryBean" />-->
     
 </beans>

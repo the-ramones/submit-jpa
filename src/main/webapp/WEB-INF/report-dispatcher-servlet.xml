@@ -126,23 +126,119 @@
     </bean>
     -->
     
-    <!--    <bean id="conversionService" 
+    <!-- Basic way -->
+<!--    <bean class="org.springframework.beans.factory.config.CustomEditorConfigurer">
+        <property name="customEditors">
+            <map>
+               --><!-- synchronization? --><!--
+                <entry key="example.ExoticType" value="example.ExoticTypeEditor"/>
+            </map>
+        </property>
+    </bean>-->
+    <!-- CustomPropertyRegistars use PropetyEditor and PropertyEditorSupport, PropertyEditorRegistrar --> 
+<!--    <bean class="org.springframework.beans.factory.config.CustomEditorConfigurer">
+    <property name="propertyEditorRegistrars">
+        <list>
+            <ref bean="customPropertyEditorRegistrar"/>
+        </list>
+    </property>
+</bean>
+
+in controller -->
+<!--private final PropertyEditorRegistrar customPropertyEditorRegistrar;
+
+    public RegisterUserController(PropertyEditorRegistrar propertyEditorRegistrar) {
+        this.customPropertyEditorRegistrar = propertyEditorRegistrar;
+    }
+
+    protected void initBinder(HttpServletRequest request, ServletRequestDataBinder binder)
+                        throws Exception {
+        this.customPropertyEditorRegistrar.registerCustomEditors(binder);
+    }-->
+    
+          <!--implementaion-->
+<!--public final class CustomPropertyEditorRegistrar implements PropertyEditorRegistrar {
+
+    public void registerCustomEditors(PropertyEditorRegistry registry) {
+
+        // it is expected that new PropertyEditor instances are created
+        registry.registerCustomEditor(ExoticType.class, new ExoticTypeEditor());
+
+        // you could register as many custom property editors as are required here...
+    }-->
+
+<!--<bean id="customPropertyEditorRegistrar"
+      class="com.foo.editors.spring.CustomPropertyEditorRegistrar"/>-->
+    
+    <!--example-->
+<!--   <mvc:annotation-driven conversion-service="conversionService"/>
+
+    <bean id="conversionService"
           class="org.springframework.format.support.FormattingConversionServiceFactoryBean">
-        <property name="registerDefaultFormatters" value="false" />
+        <property name="converters">
+            <set>
+                <bean class="org.example.MyConverter"/>
+            </set>
+        </property>
         <property name="formatters">
             <set>
-                <bean class="org.springframework.format.number.NumberFormatAnnotationFormatterFactory" />
+                <bean class="org.example.MyFormatter"/>
+                <bean class="org.example.MyAnnotationFormatterFactory"/>
             </set>
         </property>
         <property name="formatterRegistrars">
             <set>
-                <bean class="org.springframework.format.datetime.
+                <bean class="org.example.MyFormatterRegistrar"/>
             </set>
         </property>
     </bean>-->
     
+    <!--If you are using Spring MVC remember to explicitly configure the conversion service that is used. For Java based @Configuration this means extending the WebMvcConfigurationSupport class and overriding the mvcConversionService() method. For XML you should use the 'conversion-service' attribute of the mvc:annotation-driven element. See Section 7.6.5, “Configuring Formatting in Spring MVC” for details.-->
+    
+    <!--implementation-->
+<!--    package org.springframework.format.datetime;
+
+public final class DateFormatter implements Formatter<Date> {
+
+    private String pattern;
+
+    public DateFormatter(String pattern) {
+        this.pattern = pattern;
+    }
+
+    public String print(Date date, Locale locale) {
+        if (date == null) {
+            return "";
+        }
+        return getDateFormat(locale).format(date);
+    }
+
+    public Date parse(String formatted, Locale locale) throws ParseException {
+        if (formatted.length() == 0) {
+            return null;
+        }
+        return getDateFormat(locale).parse(formatted);
+    }
+
+    protected DateFormat getDateFormat(Locale locale) {
+        DateFormat dateFormat = new SimpleDateFormat(this.pattern, locale);
+        dateFormat.setLenient(false);
+        return dateFormat;
+    }
+    
+    public class MyModel {
+
+    @DateTimeFormat(iso=ISO.DATE)
+    private Date date;
+
+}
+
+}-->
+
+<!--Check it out, @NumberFormat trigger parser and printer to action-->
+    
     <!-- Converters character encoding issue -->
-<!--    <bean class = "org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerAdapter">
+    <!--    <bean class = "org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerAdapter">
         <property name="messageConverters">
             <array>
                 <bean class = "org.springframework.http.converter.StringHttpMessageConverter">
