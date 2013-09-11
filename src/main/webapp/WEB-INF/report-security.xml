@@ -14,7 +14,7 @@
         <intercept-url pattern="/admin/**" access="ROLE_ADMIN" />
         <intercept-url pattern="/add/**" access="ROLE_USER"/>
         <!-- Spring Security will see that it requires
-        the https channel and automatically redirect the request to go over HTTPS
+         the https channel and automatically redirect the request to go over HTTPS
         -->
         <intercept-url pattern="/login" requires-channel="https"/>
         <intercept-url pattern="/form" requires-channel="http"/>
@@ -24,7 +24,8 @@
     </http>
     
     <!-- or this way -->
-    <!--<http auto-config="true">
+    <!--
+    <http auto-config="true">
         <intercept-url pattern="/admin" access="ROLE_ADMIN" />
     </http>    
     -->
@@ -105,42 +106,39 @@
     
     <!--Users LDIF -->
     <!--dn: ou=groups,dc=habuma,dc=com
-    objectclass:top
-    objectclass:organizationalUnit
-    ou: groups
-    dn: ou=people,dc=habuma,dc=com
-    objectclass:top
-    objectclass:organizationalUnit
-    ou: people
-    dn: uid=habuma,ou=people,dc=habuma,dc=com
-    objectclass:top
-    objectclass:person
-    objectclass:organizationalPerson
-    objectclass:inetOrgPerson
-    cn: CraigWalls
-    sn: Walls
-    uid: habuma
-    userPassword:password
-    dn: uid=jsmith,ou=people,dc=habuma,dc=com
-    objectclass:top
-    objectclass:person
-    objectclass:organizationalPerson
-    objectclass:inetOrgPerson
-    4 See http://tools.ietf.org/html/rfc2849 for more details on the LDIF specification.
-    Listing9.6A sample LDIF file used to load user details into LDAP
-    Licensed to Christian Cederquist <chrisman@kaus.dk>
-    Authentic 245 ating users
-    cn: JohnSmith
-    sn: Smith
-    uid: jsmith
-    userPassword:password
-    dn: cn=spitter,ou=groups,dc=habuma,dc=com
-    objectclass:top
-    objectclass:groupOfNames
-    cn: spitter
-    member: uid=habuma,ou=people,dc=habuma,dc=com-->
+        objectclass:top
+        objectclass:organizationalUnit
+        ou: groups
+        dn: ou=people,dc=habuma,dc=com
+        objectclass:top
+        objectclass:organizationalUnit
+        ou: people
+        dn: uid=habuma,ou=people,dc=habuma,dc=com
+        objectclass:top
+        objectclass:person
+        objectclass:organizationalPerson
+        objectclass:inetOrgPerson
+        cn: CraigWalls
+        sn: Walls
+        uid: habuma
+        userPassword:password
+        dn: uid=jsmith,ou=people,dc=habuma,dc=com
+        objectclass:top
+        objectclass:person
+        objectclass:organizationalPerson
+        objectclass:inetOrgPerson
+         cn: JohnSmith
+        sn: Smith
+       uid: jsmith
+        userPassword:password
+        dn: cn=spitter,ou=groups,dc=habuma,dc=com
+        objectclass:top
+        objectclass:groupOfNames
+        cn: spitter
+        member: uid=habuma,ou=people,dc=habuma,dc=com
+    -->
     
-    <!-- Method invocation Securoty -->
+    <!-- Method invocation Security -->
     <!-- 
         @Secured - Spring
         @RolesAllowed - JSR-250
@@ -167,8 +165,6 @@
         <beans:property name="permissionEvaluator">
             <beans:bean class="com.habuma.spitter.security.SpittlePermissionEvaluator" />
         </beans:property>
-    </beans:bean>
-    
-    
+    </beans:bean>   
 
 </beans:beans>

@@ -9,7 +9,7 @@ import org.hibernate.validator.cfg.ConstraintMapping;
 
 /**
  * Programmatic validation bootstrap
- * 
+ *
  * @author Paul Kulitski
  */
 public class ValidationBootstrap {
@@ -20,6 +20,6 @@ public class ValidationBootstrap {
         Validator validator = factory.getValidator();
         validator.validate(Object.class);
         // programmation constraint mappings
-        ConstraintMapping mapping = new ConstraintMapping();        
+        ConstraintMapping mapping = new ConstraintMapping();
     }
 }

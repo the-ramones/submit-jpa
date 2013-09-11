@@ -8,7 +8,7 @@ import org.slf4j.LoggerFactory;
 /**
  * Reports! servlet context loader listener implementation
  *
- * @author the-ramones
+ * @author Paul Kulitski
  */
 public class SpContextLoaderListener implements ServletContextListener {
 
@@ -18,6 +18,9 @@ public class SpContextLoaderListener implements ServletContextListener {
 
     @Override
     public void contextDestroyed(ServletContextEvent sce) {
+        /*
+         * Clean up of Logback resources
+         */
         LoggerContext loggerContext = (LoggerContext) LoggerFactory.getILoggerFactory();
         loggerContext.stop();
     }

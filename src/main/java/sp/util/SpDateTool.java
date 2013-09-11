@@ -38,9 +38,10 @@ public class SpDateTool extends DateTool {
     @Override
     public DateFormat getDateFormat(String format, Locale locale, TimeZone timezone) {
         DateFormat df = null;
-            LOG.warning("getDateFormat, format={" + format + "}, locale={" + locale + ", timezone={" + timezone + "}");
-            System.out.println("getDateFormat, format={" + format + "}, locale={" + locale + ", timezone={" + timezone + "}");
-            locale = LocaleContextHolder.getLocale();
+        /*
+         * issue: hard-coded
+         */
+        locale = LocaleContextHolder.getLocale();
         /*
          * Check if format is custom standart Java DateFormat compatible:
          * if - true, delegates to SpDateFormatFactory, else - fallback to 

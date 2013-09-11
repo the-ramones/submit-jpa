@@ -100,27 +100,27 @@
             <param-name>forceEncoding</param-name>
             <param-value>true</param-value>
         </init-param>        
-    </filter>
-    
+    </filter>    
     <filter-mapping>
         <filter-name>utf8CharacterEncodingFilter</filter-name>
         <url-pattern>/*</url-pattern>
     </filter-mapping>
-    
+        
     <!--    
-        <filter>
+     <filter>
         <filter-name>springSecurityFilterChain</filter-name>
         <filter-class>org.springframework.web.filter.DelegatingFilterProxy</filter-class>
-    </filter>
-    <filter-mapping>
+     </filter>     
+     <filter-mapping>
         <filter-name>springSecurityFilterChain</filter-name>
         <url-pattern>/*</url-pattern>
-    </filter-mapping>
-    <welcome-file-list>
+     </filter-mapping>    
+     <welcome-file-list>
         <welcome-file>login</welcome-file>
-    </welcome-file-list>-->
+     </welcome-file-list>
+    -->
 
-    <!-- Logback status Servlet view -->
+    <!-- Logback servlet status view -->
     <servlet>
         <servlet-name>ViewStatusMessages</servlet-name>
         <servlet-class>ch.qos.logback.classic.ViewStatusMessagesServlet</servlet-class>
@@ -128,12 +128,12 @@
 
     <servlet-mapping>
         <servlet-name>ViewStatusMessages</servlet-name>
-        <url-pattern>/lbClassicStatus</url-pattern>
+        <url-pattern>/lb-status</url-pattern>
     </servlet-mapping>
     
-    <!-- releases Logback resources -->
+    <!-- Load and releases non-Spring resources on ServletContext srart up and shut down -->
     <listener>
-        <description>Bootstrap listener to start up and shut down Spring's root WebApplicationContext</description>        
+        <description>Bootstrap listener to start up and shut down Servlet Context</description>        
         <listener-class>sp.util.SpContextLoaderListener</listener-class>
     </listener>
 </web-app>

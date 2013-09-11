@@ -7,14 +7,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 /**
  * Home page controller
  *
- * @author the-ramones
+ * @author Paul Kulitski
  */
 @Controller
 public class HomeController {
 
     @RequestMapping({"/", "/home"})
     public String home(Model model) {
-        model.addAttribute("view", "home");                
+        model.addAttribute("view", "home");
         return "home";
     }
 
@@ -22,12 +22,12 @@ public class HomeController {
     public String contact(Model model) {
         return "contact";
     }
-    
+
     @RequestMapping("/instruction")
     public String instruction(Model model) {
         return "instruction";
     }
-    
+
     @RequestMapping("/about")
     public String about(Model model) {
         return "about";

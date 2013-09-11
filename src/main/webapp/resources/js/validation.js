@@ -50,7 +50,7 @@ $.validator.addMethod("reportdate", function(value, element) {
         }
     }
     var result = locale_map[locale] ? locale_map[locale] : locale_map["default"];
-    var feb = feb_map[locale]? feb_map[locale] : feb_map["default"];
+    var feb = feb_map[locale] ? feb_map[locale] : feb_map["default"];
     var non31 = non31_months_map[locale] ? non31_months_map[locale] : non31_months_map["default"];
 
     /*

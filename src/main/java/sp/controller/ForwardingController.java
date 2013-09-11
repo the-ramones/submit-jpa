@@ -5,9 +5,9 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 /**
- * Forward controller 
- * 
- * @author the-ramones
+ * Forward controller
+ *
+ * @author Paul Kulitski
  */
 @Controller
 public class ForwardingController {

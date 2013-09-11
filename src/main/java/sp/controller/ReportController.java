@@ -33,7 +33,7 @@ import sp.service.ReportService;
 /**
  * Report controller
  *
- * @author the-ramones
+ * @author Paul Kulitski
  */
 @Controller
 @RequestMapping("/report")
@@ -54,33 +54,7 @@ public class ReportController {
     @InitBinder
     public void initReportDateEditor(WebDataBinder binder, Locale locale) {
         DateFormat df;
-        logger.info("IN @InitBinder");
-        LoggerContext lc = (LoggerContext) LoggerFactory.getILoggerFactory();
-        StatusPrinter.print(lc);    
-        // TODO: clean up
-//        if (locale.equals(Locale.forLanguageTag("ru"))) {
-//            df = new SimpleDateFormat("dd MMM yyyy", new DateFormatSymbols() {
-//                @Override
-//                public String[] getMonths() {
-//                    return new String[]{
-//                        "Января", "Февраля", "Марта", "Апреля", "Мая", "Июня", "Июля", "Августа", "Сентября", "Октября", "Ноября", "Февраля"
-//                    };
-//                }
-//
-//                @Override
-//                public String[] getShortMonths() {
-//                    return new String[]{
-//                        "Янв", "Фев", "Мар", "Апр", "Мая", "Июн", "Июл", "Авг", "Сен", "Окт", "Ноя", "Фев"
-//                    };
-//                }
-//            });
-//        } else {
-//            System.out.println("Checking En Locale in SimpleDateFormating");
-//            df = new SimpleDateFormat("dd MMM yyyy", locale);
-//        } 
         df = sp.util.SpDateFormatFactory.getDateFormat("dd MMM yyyy", locale, null);
-        df.setLenient(false);
-        logger.debug("EXITING @InitBinder");
         binder.registerCustomEditor(Date.class, new CustomDateEditor(df, true));
     }
 
@@ -144,35 +118,6 @@ public class ReportController {
         return "add";
     }
 
-    /**
-     * Posting back of command object
-     *
-     * @param report
-     * @param result
-     * @param model
-     * @return view name
-     */
-//    @RequestMapping(value = "add", method = RequestMethod.POST, produces = "text/plain;charset=UTF-8")
-//    public String add(@Valid @ModelAttribute("report") Report report,
-//            BindingResult result, Model model, HttpServletRequest req, HttpServletResponse res) {
-//        if (result.hasErrors()) {
-//            System.out.println("report: " + report);
-//            System.out.println("model: " + model);
-//            model.addAttribute("view", "add");
-//            return "add";
-//        }
-//        report = reportService.addReport(report);
-//        String detailUri = "detail/" + report.getId();
-//        String redirectUri = "redirect:" + detailUri;
-//        model.addAttribute("uri", req.getContextPath() + detailUri);
-//        model.addAttribute("back", req.getRequestURI());
-//        model.addAttribute("report", report);
-//        System.out.println("URI:" + req.getRequestURI());
-//        System.out.println("URL:" + req.getRequestURL());
-//        System.out.println("User:" + req.getRemoteUser());
-//        System.out.println("Session id :" + req.getRequestedSessionId());
-//        return redirectUri;
-//    }
     @RequestMapping(value = "add", method = RequestMethod.POST)
     public ModelAndView add(@Valid @ModelAttribute("report") Report report,
             BindingResult result, Model model, HttpServletRequest req, HttpServletResponse res) {

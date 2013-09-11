@@ -15,7 +15,7 @@ import org.springframework.transaction.TransactionException;
 /**
  * JPA Dialect enhancement for supporting custom isolation levels
  *
- * @author the-ramones
+ * @author web-resource
  */
 public class SpEclipseLinkJpaDialect extends EclipseLinkJpaDialect {
 
@@ -38,18 +38,18 @@ public class SpEclipseLinkJpaDialect extends EclipseLinkJpaDialect {
         boolean infoEnabled = false;
         boolean debugEnabled = false;
         Session session = (Session) entityManager.getDelegate();
-        if (definition.getTimeout() != TransactionDefinition.TIMEOUT_DEFAULT) {            
-           // getSession(entityManager).acquireUnitOfWork().setTimeout(definition.getTimeout());
+        if (definition.getTimeout() != TransactionDefinition.TIMEOUT_DEFAULT) {
+            // getSession(entityManager).acquireUnitOfWork().setTimeout(definition.getTimeout());
         }
         Connection connection;// = session.connection();
 
-    //    Integer previousIsolationLevel = DataSourceUtils.prepareConnectionForTransaction(connection, definition);
+        //    Integer previousIsolationLevel = DataSourceUtils.prepareConnectionForTransaction(connection, definition);
 
         entityManager.getTransaction().begin();
 
         Object transactionDataFromHibernateJpaTemplate = prepareTransaction(entityManager, definition.isReadOnly(), definition.getName());
 
-   //     return new IsolationSupportSessionTransactionData(transactionDataFromHibernateJpaTemplate, previousIsolationLevel, connection);
+        //     return new IsolationSupportSessionTransactionData(transactionDataFromHibernateJpaTemplate, previousIsolationLevel, connection);
         return null;
     }
 

@@ -7,16 +7,15 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 /**
  * Admin web-interface controller
- * 
- * @author the-ramones
+ *
+ * @author Paul Kulitski
  */
 @Controller
 @RequestMapping(value = "/admin")
 public class AdminController {
-    
-    @RequestMapping(value = {"/","/manager"}, method = RequestMethod.GET) 
+
+    @RequestMapping(value = {"/", "/manager", "/admin"}, method = RequestMethod.GET)
     public String manager(Model model) {
         return "admin";
     }
-
 }

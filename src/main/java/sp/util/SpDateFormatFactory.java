@@ -8,9 +8,8 @@ import java.util.HashSet;
 import java.util.Locale;
 import java.util.Set;
 import java.util.TimeZone;
-import java.util.logging.Logger;
-import org.mockito.internal.listeners.CollectCreatedMocks;
-import org.springframework.context.i18n.LocaleContextHolder;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Factory for Reports! {@link java.text.DateFormat} being used in
@@ -23,17 +22,17 @@ import org.springframework.context.i18n.LocaleContextHolder;
  * @see SimpleDateFormat
  */
 public class SpDateFormatFactory {
-    
-    private static final Logger LOG = Logger.getLogger(SpDateFormatFactory.class.getName());
-    
+
+    private static final Logger logger = LoggerFactory.getLogger(SpDateFormatFactory.class);
+
     public static DateFormat getDateFormat(Locale locale) {
         return getDateFormat(null, locale, null);
     }
-    
+
     public static DateFormat getDateFormat(String format) {
         return getDateFormat(format, null, null);
     }
-    
+
     public static DateFormat getDateFormat(String format, Locale locale) {
         return getDateFormat(format, locale, null);
     }
@@ -48,7 +47,7 @@ public class SpDateFormatFactory {
      * @return
      */
     public static DateFormat getDateFormat(String format, Locale locale, TimeZone timezone) {
-            LOG.warning("getCustomDateFormat locale: " + locale);
+        logger.debug("getCustomDateFormat locale: {}", locale);
         if (timezone == null) {
             timezone = TimeZone.getDefault();
         }
@@ -85,14 +84,12 @@ public class SpDateFormatFactory {
      * @return
      */
     private static DateFormat getCustomDateFormat(String format, Locale locale) {
-            LOG.warning("getCustomDateFormat locale: " + locale);
+        logger.debug("getCustomDateFormat locale: {}", locale);
         DateFormat df;
-           LOG.warning("getCustomDateFormat, format={" + format + "}, locale={" + locale + "}");
-           System.out.println("getCustomDateFormat, format={" + format + "}, locale={" + locale + "}");
+        logger.debug("getCustomDateFormat, format={}, locale={}", format, locale);
         Set<Locale> russian = new HashSet<Locale>(Arrays.asList(russianLocales));
         if (russian.contains(locale)) {
-               LOG.warning("in Russian locale getCustomDateFormat, format={" + format + "}, locale={" + locale + "}");
-               System.out.println("in Russian locale getCustomDateFormat, format={" + format + "}, locale={" + locale + "}");
+            logger.debug("getCustomDateFormat Russian locale , format={}, , locale={}", format, locale);
             df = new SimpleDateFormat(format, new DateFormatSymbolsRu());
         } else {
             df = new SimpleDateFormat(format, locale);
@@ -106,14 +103,14 @@ public class SpDateFormatFactory {
      * locale. Overrides month names to be in genitive case
      */
     static class DateFormatSymbolsRu extends DateFormatSymbols {
-        
+
         @Override
         public String[] getMonths() {
             return new String[]{
                 "Января", "Февраля", "Марта", "Апреля", "Мая", "Июня", "Июля", "Августа", "Сентября", "Октября", "Ноября", "Февраля"
             };
         }
-        
+
         @Override
         public String[] getShortMonths() {
             return new String[]{

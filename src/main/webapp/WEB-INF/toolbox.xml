@@ -1,51 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<!--<tools>
-    <data type="number">
-        <key>app_version</key>
-        <value>0.1</value>
-    </data>
-    <data type="string">
-        <key>app_name</key>
-        <value>Reports!</value>
-    </data>
-    <data type="boolean">
-        <key>debug</key>
-        <value>true</value>
-    </data>
-    
-    <toolbox scope="request">
-        <tool key="datetool" /> 
-    </toolbox> 
-    
-     Sort Tool 
-    <toolbox scope="application">
-        <tool class="org.apache.velocity.tools.generic.SortTool"/>
-    </toolbox>
-     Escape Sequenses 
-    <tool>
-        <key>esc</key>
-        <scope>application</scope>
-        <class>org.apache.velocity.tools.generic.EscapeTool</class>
-    </tool>
-     Errors 
-    <tool>
-        <key>errors</key>
-        <scope>request</scope>
-        <class>org.apache.velocity.tools.struts.ErrorsTool</class>
-    </tool>  
-     Date Tool 
-    <tool>
-        <key>datetool</key>
-        <scope>request</scope>
-        <class>org.apache.velocity.tools.generic.DateTool</class>
-        format="dd M yy"
-        <class>sp.util.SpDateTool</class>
-    </tool>
-    
-</tools>-->
-
 <toolbox>
+    <!-- Properties -->
     <data type="number">
         <key>app_version</key>
         <value>0.1</value>
@@ -58,34 +14,12 @@
         <key>debug</key>
         <value>true</value>
     </data>
-    
-    <!--    <toolbox scope="request">
-        <tool key="datetool" /> 
-    </toolbox> 
-    -->
-    <!-- Sort Tool -->
-    <!--    <toolbox scope="application">
-       <tool class="org.apache.velocity.tools.generic.SortTool"/>
-   </toolbox>
-    Escape Sequenses -->
-    <!--    <tool>
-        <key>esc</key>
-        <scope>application</scope>
-        <class>org.apache.velocity.tools.generic.EscapeTool</class>
-    </tool>-->
-    <!-- Errors -->
-    <!--    <tool>
-        <key>errors</key>
-        <scope>request</scope>
-        <class>org.apache.velocity.tools.struts.ErrorsTool</class>
-    </tool>  -->
     
     <!-- Date Tool -->
     <tool>
         <key>datetool</key>
         <scope>request</scope>
-        <!--        <class>org.apache.velocity.tools.generic.DateTool</class>
-        <format="dd MMM yyyy"-->
+        <!--<class>org.apache.velocity.tools.generic.DateTool</class>-->
         <class>sp.util.SpDateTool</class>
     </tool>
     
@@ -99,3 +33,28 @@
         <class>org.apache.velocity.tools.generic.MathTool</class>
     </tool>
 </toolbox>
+
+<!-- Old -->
+<!--<tools>
+    
+    <toolbox scope="request">
+        <tool key="datetool" /> 
+    </toolbox> 
+
+    <toolbox scope="application">
+        <tool class="org.apache.velocity.tools.generic.SortTool"/>
+    </toolbox>
+
+    <tool>
+        <key>esc</key>
+        <scope>application</scope>
+        <class>org.apache.velocity.tools.generic.EscapeTool</class>
+    </tool>
+
+    <tool>
+        <key>datetool</key>
+        <scope>request</scope>
+        <class>sp.util.SpDateTool</class>
+    </tool>
+    
+</tools>-->

@@ -115,7 +115,7 @@
     
     <!-- caches -->
     
-    <!--     @Cacheable will be scanned at srart-up of context 
+    <!-- @Cacheable will be scanned at start-up of context 
     <cache:annotation-driven cache-manager="cacheManager" mode="proxy" order="" />
     
     <bean id="cacheManager" class="org.springframework.cache.ehcache.EhCacheCacheManager">
@@ -125,7 +125,8 @@
      Ehcache library setup 
     <bean id="ehcache" class="org.springframework.cache.ehcache.EhCacheManagerFactoryBean">
         <property name="configLocation" value="classpath:ehcache-report.xml"/>
-    </bean>-->
+    </bean>
+    -->
     
     <!-- post processors -->
     
@@ -162,6 +163,9 @@
             }   
         Note that for Spring Validator interface should specify <mvc:annotation-driver validator="spring-validator" />, but not compeletely assure
     -->
-    <!--<bean id="validator" class="org.springframework.validation.beanvalidation.LocalValidatorFactoryBean" />-->
+    
+    <!-- Validator Bean
+     <bean id="validator" class="org.springframework.validation.beanvalidation.LocalValidatorFactoryBean" />
+    -->
     
 </beans>

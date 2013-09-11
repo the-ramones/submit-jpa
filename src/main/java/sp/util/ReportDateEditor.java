@@ -37,7 +37,7 @@ public class ReportDateEditor extends PropertyEditorSupport {
                 setValue(this.dateFormat.parse(text));
             } catch (ParseException ex) {
                 throw new IllegalArgumentException("Could not parse date: " + ex.getMessage());
-            } 
+            }
         }
     }
 

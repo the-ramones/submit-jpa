@@ -11,7 +11,7 @@ import sp.service.ReportService;
 
 /**
  * Report controller test
- * 
+ *
  * @author Paul Kulitski
  */
 public class ReportControllerTest {
@@ -35,7 +35,7 @@ public class ReportControllerTest {
     /**
      * Test of detail method, of class ReportController.
      */
-  //  @Test
+    //@Test
     public void testDetailBuId() {
         Model model = new ExtendedModelMap();
         Long id = 1L;
@@ -44,16 +44,15 @@ public class ReportControllerTest {
         expReport.setId(id);
         expReport.setStartDate(new Date());
         expReport.setEndDate(new Date());
-        expReport.setPerformer("Michael Douglas");        
+        expReport.setPerformer("Michael Douglas");
         expReport.setActivity("swimming");
-        
-        ReportService reportService = mock(ReportService.class);        
+
+        ReportService reportService = mock(ReportService.class);
         when(reportService.getReportById(id)).thenReturn(expReport);
-        
+
         ReportController reportController = new ReportController(reportService);
 //        String viewName = reportController.detailById(model, id);
-  //      assertEquals("detail", viewName);
+        //      assertEquals("detail", viewName);
         assertSame(expReport, model.asMap().get("report"));
     }
-    
 }

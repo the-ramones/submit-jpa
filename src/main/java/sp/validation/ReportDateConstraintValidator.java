@@ -1,17 +1,14 @@
 package sp.validation;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
-import org.springframework.context.i18n.LocaleContextHolder;
 
 /**
- * Validates dates
+ * Validator for {@link sp.validation.ReportDate}
  *
- * @author the-ramones
+ * @author Paul Kulitski
  */
 public class ReportDateConstraintValidator implements ConstraintValidator<ReportDate, Date> {
 
@@ -39,12 +36,10 @@ public class ReportDateConstraintValidator implements ConstraintValidator<Report
      */
     @Override
     public boolean isValid(Date date, ConstraintValidatorContext context) {
-        System.out.println("Date: " + date);
         Calendar calendar = Calendar.getInstance();
         if (date != null) {
             calendar.setTime(date);
             if (calendar.before(STARTUP)) {
-                DateFormat df = new SimpleDateFormat("dd MMM yyyy", LocaleContextHolder.getLocale());
                 context.disableDefaultConstraintViolation();
                 context.buildConstraintViolationWithTemplate(
                         "{ReportDate.outrange}").addConstraintViolation();

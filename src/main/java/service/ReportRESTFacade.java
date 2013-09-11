@@ -18,14 +18,15 @@ import javax.ws.rs.core.Response;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
+ * REST service facade
  *
- * @author paul
+ * @author Paul Kulitski
  */
 @Path("sp/model/report")
 @com.sun.jersey.spi.resource.Singleton
 //@com.sun.jersey.api.spring.Autowire
 public class ReportRESTFacade {
-    
+
     @PersistenceContext(unitName = "reportPU")
     protected EntityManager entityManager;
 
@@ -36,7 +37,7 @@ public class ReportRESTFacade {
     @Consumes({"application/xml", "application/json"})
     @Transactional
     public Response create(Report entity) {
-        entityManager.persist(entity); 
+        entityManager.persist(entity);
         return Response.created(URI.create(entity.getId().toString())).build();
     }
 
@@ -103,5 +104,4 @@ public class ReportRESTFacade {
             entityManager.close();
         }
     }
-    
 }

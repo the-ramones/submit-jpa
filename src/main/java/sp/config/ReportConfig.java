@@ -4,7 +4,8 @@ import org.springframework.context.annotation.Configuration;
 
 /**
  * Generic Java-based configuration
- * @author the-ramones
+ *
+ * @author Paul Kulitski
  */
 //@Configuration
 public class ReportConfig {

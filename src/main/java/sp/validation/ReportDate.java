@@ -9,20 +9,20 @@ import javax.validation.Constraint;
 import javax.validation.Payload;
 
 /**
- * Custom date constraint
- * 
- * @author the-ramones
+ * Validates date fields of {@link sp.model.Report}
+ *
+ * @author Paul Kulitski
  */
 @Documented
 @Constraint(validatedBy = ReportDateConstraintValidator.class)
 @Target({ElementType.FIELD, ElementType.METHOD, ElementType.ANNOTATION_TYPE})
 @Retention(RetentionPolicy.RUNTIME)
 public @interface ReportDate {
-    
+
     String message() default "{ReportDate}";
-    
+
     Class<?>[] groups() default {};
-    
+
     Class<? extends Payload>[] payload() default {};
 
     String startup() default "";

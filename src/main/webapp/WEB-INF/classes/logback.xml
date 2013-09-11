@@ -5,6 +5,7 @@
     <!-- coloring (for Windows OS) -->
     <withJansi>true</withJansi>
 
+    <!-- Status Listener -->
     <statusListener class="ch.qos.logback.core.status.OnConsoleStatusListener" />
     
     <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
@@ -30,32 +31,35 @@
         <appender-ref ref="CONSOLE" />
     </root>
     
-<!-- examples -->
-<!--<appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
-     encoders are assigned the type
+    <!-- Examples -->
+    <!--
+     <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+         encoders are assigned the type
          ch.qos.logback.classic.encoder.PatternLayoutEncoder by default 
-    <encoder>
-      <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
-    </encoder>
-  </appender>-->
+        <encoder>
+            <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
+        </encoder>
+     </appender>
+    -->
 
-<!--<appender name="FILE" class="ch.qos.logback.core.FileAppender">
-    <file>myApp.log</file>
+    <!--
+     <appender name="FILE" class="ch.qos.logback.core.FileAppender">
+         <file>myApp.log</file>
+         <encoder>
+            <pattern>%date %level [%thread] %logger{10} [%file:%line] %msg%n</pattern>
+        </encoder>
+     </appender>
 
-    <encoder>
-      <pattern>%date %level [%thread] %logger{10} [%file:%line] %msg%n</pattern>
-    </encoder>
-  </appender>
+     <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>%msg%n</pattern>
+        </encoder>
+     </appender>
 
-  <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
-    <encoder>
-      <pattern>%msg%n</pattern>
-    </encoder>
-  </appender>
-
-  <root level="debug">
-    <appender-ref ref="FILE" />
-    <appender-ref ref="STDOUT" />
-  </root>-->
+     <root level="debug">
+        <appender-ref ref="FILE" />
+        <appender-ref ref="STDOUT" />
+     </root>
+    -->
 
 </configuration>

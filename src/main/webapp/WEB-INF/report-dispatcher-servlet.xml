@@ -17,7 +17,7 @@
     <!-- mvc -->
     
     <!-- direct mapping of resources without a controller,
-    don't forget about the last '/' sign -->
+         don't forget about the last '/' sign -->
     <mvc:resources location="/resources/img/" mapping="/resources/img/**" />
     <mvc:resources location="/resources/js/" mapping="/resources/js/**" />
     <mvc:resources location="/resources/css/" mapping="/resources/css/**" />
@@ -38,7 +38,7 @@
         </mvc:message-converters>
     </mvc:annotation-driven>
 
-    <!-- issue: include or not -->
+    <!-- issue: include or not? -->
     <tx:annotation-driven />
     
     <context:component-scan base-package="sp.controller" />
@@ -82,7 +82,7 @@
         <property name="cacheSeconds" value="1" />
     </bean>
 
-    <!--  LocaleResolver implementation that uses a cookie sent back to the user 
+    <!-- LocaleResolver implementation that uses a cookie sent back to the user 
     in case of a custom setting, with a fallback to the specified default locale
     or the request's accept-header locale.
     This is particularly useful for stateless applications without user sessions.  
@@ -95,8 +95,7 @@
     <!-- Interceptor that allows for changing the current locale on every request,
     via a configurable request parameter. 
     -->
-    <mvc:interceptors>
-        
+    <mvc:interceptors>        
         <bean id="localeChangeInterceptor"
               class="org.springframework.web.servlet.i18n.LocaleChangeInterceptor">
             <!-- request parameter which specifies a locale -->
@@ -104,6 +103,7 @@
         </bean>
     </mvc:interceptors>
     
+    <!-- @RequestMapping annotation processor -->
     <bean id="handlerMapping"
           class="org.springframework.web.servlet.mvc.annotation.DefaultAnnotationHandlerMapping">
     </bean>
@@ -126,8 +126,8 @@
     </bean>
     -->
     
-    <!--    <bean id="conversionService" 
-          class="org.springframework.format.support.FormattingConversionServiceFactoryBean">
+    <!--
+    <bean id="conversionService" class="org.springframework.format.support.FormattingConversionServiceFactoryBean">
         <property name="registerDefaultFormatters" value="false" />
         <property name="formatters">
             <set>
@@ -139,10 +139,12 @@
                 <bean class="org.springframework.format.datetime.
             </set>
         </property>
-    </bean>-->
+    </bean>
+    -->
     
     <!-- Converters character encoding issue -->
-<!--    <bean class = "org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerAdapter">
+    <!-- 
+    <bean class = "org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerAdapter">
         <property name="messageConverters">
             <array>
                 <bean class = "org.springframework.http.converter.StringHttpMessageConverter">
@@ -150,6 +152,7 @@
                 </bean>
             </array>
         </property>
-    </bean>-->
+    </bean>
+    -->
 
 </beans>

@@ -7,12 +7,12 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 /**
  * Login controller
- * 
- * @author paul
+ *
+ * @author Paul Kulitski
  */
 @Controller
 public class LoginController {
-    
+
     /*
      * 'login', 'login?login=true', 'login/lohout=true'
      */
@@ -21,7 +21,7 @@ public class LoginController {
         model.addAttribute("view", "login");
         return "login";
     }
-    
+
     @RequestMapping(value = "/login", method = RequestMethod.POST)
     public String loginHome(Model model) {
         return "home";

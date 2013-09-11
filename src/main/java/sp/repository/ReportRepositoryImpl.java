@@ -10,7 +10,7 @@ import sp.model.Report;
 
 /**
  *
- * @author the-ramones
+ * @author Paul Kulitski
  */
 @Repository
 public class ReportRepositoryImpl implements ReportRepository {
@@ -46,7 +46,7 @@ public class ReportRepositoryImpl implements ReportRepository {
      */
     @PersistenceContext
     private EntityManager entityManager;
-    
+
     @Override
     public Report getReportById(Long id) {
         return entityManager.find(Report.class, id);
@@ -61,19 +61,19 @@ public class ReportRepositoryImpl implements ReportRepository {
 
     @Override
     public List<Report> getReportsByPerformer(String performer) {
-        TypedQuery<Report> query = 
-                entityManager.createNamedQuery("Report.getReportsByPerformer", Report.class);        
+        TypedQuery<Report> query =
+                entityManager.createNamedQuery("Report.getReportsByPerformer", Report.class);
         query.setParameter("performer", performer);
         return query.getResultList();
     }
 
     @Override
     public List<String> getPerformers() {
-        TypedQuery<String> query = 
+        TypedQuery<String> query =
                 entityManager.createNamedQuery("Report.getPerformers", String.class);
         return query.getResultList();
     }
-    
+
     @Override
     public List<Report> getReports(String performer, Date startDate, Date endDate) {
         TypedQuery<Report> query =
@@ -86,7 +86,7 @@ public class ReportRepositoryImpl implements ReportRepository {
 
     @Override
     public Boolean hasReport(Long id) {
-        TypedQuery<Report> query = 
+        TypedQuery<Report> query =
                 entityManager.createNamedQuery("Report.hasReport", Report.class);
         query.setParameter("id", id);
         return !query.getResultList().isEmpty();

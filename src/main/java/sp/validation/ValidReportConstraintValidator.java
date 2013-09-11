@@ -6,8 +6,9 @@ import javax.validation.ConstraintValidatorContext;
 import sp.model.Report;
 
 /**
- * {@link ConstraintValidator} implementation for {@link ValidReport} constraint
- * for validation an object's fields correlation
+ * {@link sp.validation.ConstraintValidator} implementation for
+ * {@link sp.validation.ValidReport} constraint for validation an object's
+ * fields correlation
  *
  * @author Paul Kulitski
  */
