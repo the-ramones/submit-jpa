@@ -56,7 +56,8 @@ public class ReportController {
         DateFormat df;
         logger.info("IN @InitBinder");
         LoggerContext lc = (LoggerContext) LoggerFactory.getILoggerFactory();
-        StatusPrinter.print(lc);        
+        StatusPrinter.print(lc);    
+        // TODO: clean up
 //        if (locale.equals(Locale.forLanguageTag("ru"))) {
 //            df = new SimpleDateFormat("dd MMM yyyy", new DateFormatSymbols() {
 //                @Override
@@ -76,7 +77,7 @@ public class ReportController {
 //        } else {
 //            System.out.println("Checking En Locale in SimpleDateFormating");
 //            df = new SimpleDateFormat("dd MMM yyyy", locale);
-//        }
+//        } 
         df = sp.util.SpDateFormatFactory.getDateFormat("dd MMM yyyy", locale, null);
         df.setLenient(false);
         logger.debug("EXITING @InitBinder");
