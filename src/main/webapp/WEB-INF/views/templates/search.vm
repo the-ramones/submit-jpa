@@ -1,7 +1,7 @@
 ## Real-time search template
 <div class="form-container">
     <h2>#springMessage('content.search.title')</h2>
-    <form name="search-form" method="POST" action="search" autocomplete="off">
+    <form name="search-form" method="POST" action="#springUrl('/report/ajax')" autocomplete="off">
         <input type="button" name="search-button" id="search_button" />
         <input type="text" name="search" value="" placeholder="#springMessage('content.search.placeholder')" />
         <ul class="subnav">

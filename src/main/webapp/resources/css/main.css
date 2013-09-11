@@ -322,6 +322,8 @@ input.error {
 p.error-block {
     text-align: center;
     margin: 10px;
+    border-radius: 6px;
+    box-shadow: 0 0 3px #b94a48 inset;
 }   
 
 label,
@@ -367,6 +369,7 @@ input[type="checkbox"] {
     margin: 0 auto;
     padding: 20px;
     padding-top: 10px;
+    padding-bottom: 10px;
     text-align: center;
     color: rgb(204, 103, 26);
 }
@@ -378,7 +381,7 @@ input[type="checkbox"] {
 }
 
 .form-line {
-    border: 1px dotted #222;
+    /* border: 1px dotted #222; */
     display: block;
     clear: both;
 }

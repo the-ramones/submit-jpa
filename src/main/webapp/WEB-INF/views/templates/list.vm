@@ -15,35 +15,58 @@
             #foreach($report in $reports)
             <tr>
                 <td>${report.id}</td>
-                <td>${report.startDate}</td>
-                <td>${report.endDate}</td>
+                <td>$datetool.format( 'dd MMM yyyy', ${report.startDate} )</td>
+                <td>$datetool.format( 'dd MMM yyyy', ${report.endDate} )</td>
                 <td>${report.performer}</td>
                 <td>${report.activity}</td>
             </tr>
-            <tr>
-                <td>${report.id}</td>
-                <td>${report.startDate}</td>
-                <td>${report.endDate}</td>
-                <td>${report.performer}</td>
-                <td>${report.activity}</td>
-        <div class="button-block clearfix hidden">
-            <button class="action">#springMessage('button.action.get')</button>
-            <button class="action update">#springMessage('button.action.update')</button>          
-            <button class="action delete">#springMessage('button.action.delete')</button>
-        </div>
-        </tr>
-        #end
+            #end
+            <div class="button-block clearfix hidden">
+                <button class="action" onclick="model_action()">#springMessage('button.action.get')</button>
+                <button class="action update" onclick="modal_update()">#springMessage('button.action.update')</button>          
+                <button class="action delete" onclick="model_delete()">#springMessage('button.action.delete')</button>
+            </div>
         </tbody>
         </thead>
     </table>
-    <button class="action add" onclick="add_modal()">#springMessage('content.list.button.addnew')</button>    
+    <button class="action add" onclick="modal_add()">#springMessage('content.list.button.addnew')</button>    
 </div>
 
+<script type="text/javascript">
+
+    function modal_add() {
+        modal.open({content: '#modal_add( $reports.get(1) )'});
+        $("#close-btn").click(function() {
+            $("#close").click();
+        });
+    }
+
+    function modal_update() {
+        modal.open({content: '#modal_update( $reports.get(1) )'});
+        $("#close-btn").click(function() {
+            $("#close").click();
+        });
+    }
+
+    function modal_delete() {
+        modal.open({content: '#modal_delete( $reports.get(1) )'});
+        $("#close-btn").click(function() {
+            $("#close").click();
+        });
+    }
+
+    function modal_uri() {
+        modal.open({content: '#modal_action( $reports.get(1) "action_uri" )'});
+        $("#close-btn").click(function() {
+            $("#close").click();
+        });
+    }
+</script>    
 
 ## FOR TESTS
 
       <script type="text/javascript">
-                            function add_modal() {
+                            function add_modal2() {
                                 modal.open({content: $("#action333").html()});
                                 modal.open({content: $("#add333").html()});
                                 modal.open({content: $("#update333").html()});

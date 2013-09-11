@@ -1,11 +1,8 @@
 package sp.controller;
 
-import ch.qos.logback.classic.LoggerContext;
-import ch.qos.logback.core.util.StatusPrinter;
 import java.text.DateFormat;
-import java.text.DateFormatSymbols;
-import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
@@ -39,7 +36,8 @@ import sp.service.ReportService;
 @RequestMapping("/report")
 public class ReportController {
 
-    static final Logger logger = LoggerFactory.getLogger(ReportController.class);
+    private static final Logger logger = LoggerFactory.getLogger(ReportController.class);
+    
     @Inject
     private ReportService reportService;
 
@@ -70,18 +68,28 @@ public class ReportController {
     public String setupForm(Model model) {
         model.addAttribute("view", "search");
         model.addAttribute("performers", reportService.getPerformers());
+        model.addAttribute("startDate", new Date());
+        model.addAttribute("endDate", new Date());
+        model.addAttribute("performer", new String());
         return "form";
     }
 
     // TODO: fix pagination
     @RequestMapping(value = "search", method = RequestMethod.POST)
-    public String doSearch(Model model,
-            @ModelAttribute("performer")
-            @RequestParam(value = "performer", defaultValue = "") String performer,
+    public String doSearch(
             @ModelAttribute("startDate")
             @RequestParam(value = "startDate") Date startDate,
             @ModelAttribute("endDate")
-            @RequestParam(value = "endDate") Date endDate) {
+            @RequestParam(value = "endDate") Date endDate, 
+            @ModelAttribute("performer")
+            @RequestParam(value = "performer", defaultValue = "") String performer,
+            Model model) {
+        //model.addAttribute("reports", reportService.getReports(performer, new Date(), new Date()));
+        logger.info("startDate: {} of type {}", startDate, startDate.getClass().getConstructors());
+        logger.info("endDate: {} of type {}", endDate, endDate.getClass().getConstructors());
+        logger.info("performer: {} of type {}", performer, performer.getClass().getConstructors());
+        List<Report> reports = reportService.getReports(performer, startDate, endDate);
+        logger.info("Reports cardinality: {}", reports.size());
         model.addAttribute("reports", reportService.getReports(performer, startDate, endDate));
         return "list";
     }

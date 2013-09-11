@@ -3,14 +3,19 @@
     <h2>#springMessage('content.form.title')</h2>
     <form name="report-request" action="#springUrl('/report/search')" method="POST">
         <div class="form-line clearfix">
+            #springBind('startDate')
             <label for="startDate">#springMessage('content.form.caption.start'):</label>
             <input type="text" name="startDate" placeholder="#springMessage('content.form.placeholder.start')" autocomplete="off">                             
+            <label for="startDate" class="error">#springShowErrors("<br/>" "")</label>
         </div>
         <div class="form-line clearfix">
+            #springBind('endDate')
             <label for="endDate">#springMessage('content.form.caption.end'):</label>
             <input type="text" name="endDate" placeholder="#springMessage('content.form.placeholder.end')" autocomplete="off">
+            <label for="endDate" class="error">#springShowErrors("<br/>" "")</label>
         </div>
         <div class="form-line clearfix">
+            #springBind('performer')
             <label for="performer">#springMessage('content.form.caption.performer'):</label>                        
             <select name="performer">
                 <option value="" disabled selected>#springMessage('content.form.select.option.default')</option>
@@ -18,6 +23,7 @@
                 <option value="$performer">$performer</option>
                 #end
             </select>
+            <label for="performer" class="error">#springShowErrors("<br/>" "")</label>
         </div>
         <div class="form-line clearfix">
             <label for="timePeriod">#springMessage('content.form.caption.timeperiod'):</label>

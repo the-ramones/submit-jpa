@@ -14,7 +14,7 @@ import sp.model.Report;
  */
 public class ValidReportConstraintValidator implements ConstraintValidator<ValidReport, Report> {
 
-    private static final String END_DATE_VIOLATION_TEMPLATE = "report is not valid: end date must be equal or greater than start date";
+    private static final String DEFAULT_MESSAGE = "entered report fields are not valid";
 
     @Override
     public void initialize(ValidReport a) {
@@ -34,7 +34,7 @@ public class ValidReportConstraintValidator implements ConstraintValidator<Valid
         if (endDate != null) {
             if (startDate.compareTo(endDate) >= 1) {
                 context.disableDefaultConstraintViolation();
-                context.buildConstraintViolationWithTemplate(END_DATE_VIOLATION_TEMPLATE)
+                context.buildConstraintViolationWithTemplate(DEFAULT_MESSAGE)
                         .addConstraintViolation();
                 return false;
             }
