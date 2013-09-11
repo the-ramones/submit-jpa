@@ -57,7 +57,7 @@ public class ReportController {
         logger.info("IN @InitBinder");
         LoggerContext lc = (LoggerContext) LoggerFactory.getILoggerFactory();
         StatusPrinter.print(lc);
-
+        //df = sp.util.SpDateFormatFactory(locale);
         if (locale.equals(Locale.forLanguageTag("ru"))) {
             df = new SimpleDateFormat("dd MMM yyyy", new DateFormatSymbols() {
                 @Override

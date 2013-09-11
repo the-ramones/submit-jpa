@@ -10,6 +10,7 @@ import java.util.Set;
 import java.util.TimeZone;
 import java.util.logging.Logger;
 import org.mockito.internal.listeners.CollectCreatedMocks;
+import org.springframework.context.i18n.LocaleContextHolder;
 
 /**
  * Factory for Reports! {@link java.text.DateFormat} being used in
@@ -24,6 +25,10 @@ import org.mockito.internal.listeners.CollectCreatedMocks;
 public class SpDateFormatFactory {
     
     private static final Logger LOG = Logger.getLogger(SpDateFormatFactory.class.getName());
+    
+    public static DateFormat getDateFormat(Locale locale) {
+        return getDateFormat(null, locale, null);
+    }
     
     public static DateFormat getDateFormat(String format) {
         return getDateFormat(format, null, null);
@@ -49,6 +54,9 @@ public class SpDateFormatFactory {
         }
         if (locale == null) {
             locale = Locale.getDefault();
+        }
+        if (format == null || format.trim().equals("")) {
+            format = SHORT_MONTHS_FORMAT;
         }
         DateFormat df = getCustomDateFormat(format, locale);
         df.setTimeZone(timezone);
