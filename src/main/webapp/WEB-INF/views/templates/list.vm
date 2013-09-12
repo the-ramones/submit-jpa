@@ -22,9 +22,9 @@
             </tr>
             #end
             <div class="button-block clearfix hidden">
-                <button class="action" onclick="model_action()">#springMessage('button.action.get')</button>
+                <button class="action" onclick="modal_action()">#springMessage('button.action.get')</button>
                 <button class="action update" onclick="modal_update()">#springMessage('button.action.update')</button>          
-                <button class="action delete" onclick="model_delete()">#springMessage('button.action.delete')</button>
+                <button class="action delete" onclick="modal_delete()">#springMessage('button.action.delete')</button>
             </div>
         </tbody>
         </thead>
@@ -35,162 +35,34 @@
 <script type="text/javascript">
 
     function modal_add() {
-        modal.open({content: '#modal_add( $reports.get(1) )'});
+        var html = '#modal_add( )';        
+        modal.open({ content: html });
         $("#close-btn").click(function() {
             $("#close").click();
         });
-    }
+    }; 
 
     function modal_update() {
-        modal.open({content: '#modal_update( $reports.get(1) )'});
+        var html = '#modal_update( )';        
+        modal.open({ content: html });
         $("#close-btn").click(function() {
             $("#close").click();
         });
-    }
+    };
 
     function modal_delete() {
-        modal.open({content: '#modal_delete( $reports.get(1) )'});
+        var html = '#modal_delete( )';        
+        modal.open({ content: html });
         $("#close-btn").click(function() {
             $("#close").click();
         });
-    }
+    };
 
-    function modal_uri() {
-        modal.open({content: '#modal_action( $reports.get(1) "action_uri" )'});
+    function modal_action() {
+        var html = '#modal_action( )';        
+        modal.open({ content: html});
         $("#close-btn").click(function() {
             $("#close").click();
         });
-    }
+    }; 
 </script>    
-
-## FOR TESTS
-
-      <script type="text/javascript">
-                            function add_modal2() {
-                                modal.open({content: $("#action333").html()});
-                                modal.open({content: $("#add333").html()});
-                                modal.open({content: $("#update333").html()});
-                                //modal.open({content: $("#delete333").html()});
-                            }
-        </script>
-
-        <!--post-->
-
-        <div id="action333" style="display: none;">
-            <h2>Activity №${report.id}</h2>
-            <dl class="dl-horizontal">
-                <dt>id</dt>
-                <dd>${report.id}</dd>
-            </dl>
-            <dl class="dl-horizontal">
-                <dt>start of activity</dt>
-                <dd>${report.startDate}</dd>
-            </dl>
-            <dl class="dl-horizontal">
-                <dt>end of activity</dt>
-                <dd>${report.endDate}</dd>
-            </dl>
-            <dl class="dl-horizontal">
-                <dt>performer</dt>
-                <dd>${report.performer}</dd>
-            </dl>
-            <dl class="dl-horizontal">
-                <dt>activity</dt>
-                <dd>${report.activity}</dd>
-            </dl>
-            <input type="text" value="#{uri}" name="uri" style="width:100%;"><br />
-            <div class="modal-block">
-                <div class="button-block-modal">
-                    <button class="action delete">Close</button>
-                </div>
-            </div>
-        </div>
-        <div id="add333" style="display: none;">
-            <h2>Reports! add form</h2>
-            <!-- reports form -->
-
-            <form name="report-add" action="/report/add" method="POST">
-                <div class="form-line clearfix">
-                    <label>Start date:</label>
-                    <input id="startDate" name="startDate" value="" type="text" placeholder="Input a start date" autocomplete="off">                            
-                </div>
-                <div class="form-line clearfix">
-                    <label>End date:</label>
-                    <input id="endDate" name="endDate" value="" type="text" placeholder="Input an end date" autocomplete="off">             
-                </div>
-                <div class="form-line clearfix">
-                    <label>Performer:</label>
-                    <input id="performer" name="performer" value="" type="text" placeholder="Input a performer">
-                </div>
-                <div class="form-line clearfix">
-                    <label>Activity:</label>
-                    <input id="activity" name="activity" value="" type="text" placeholder="Input an activity">     
-                </div>
-                <div class='clearfix'>
-                    <div class='button-block-modal'>
-                        <button class="action" name="report-submit" type="submit">Add</button>
-                        <button class="action delete">Close</button>
-                    </div>
-                </div>
-            </form>           
-        </div>
-        <div id="update333" style="display: none;">
-            <h2>Reports! update form</h2>
-            <!-- reports form -->
-
-            <form name="report-add" action="/report/add" method="POST">
-                <div class="form-line clearfix">
-                    <label>Start date:</label>
-                    <input id="startDate" autofocus="true" name="startDate" value="" type="text" placeholder="Input a start date" autocomplete="off">                            
-                </div>
-                <div class="form-line clearfix">
-                    <label>End date:</label>
-                    <input id="endDate" name="endDate" value="" type="text" placeholder="Input an end date" autocomplete="off">             
-                </div>
-                <div class="form-line clearfix">
-                    <label>Performer:</label>
-                    <input id="performer" name="performer" value="" type="text" placeholder="Input a performer">
-                </div>
-                <div class="form-line clearfix">
-                    <label>Activity:</label>
-                    <input id="activity" name="activity" value="" type="text" placeholder="Input an activity">     
-                </div>
-                <div class='clearfix'>
-                    <div class='button-block-modal'>
-                        <button class="action" name="report-submit" type="submit">Update</button>
-                        <button class="action delete">Close</button>
-                    </div>
-                </div>
-            </form>           
-        </div>
-        <div id="delete333" style="display: none;">
-            <h2>Activity №${report.id}</h2>
-            <dl class="dl-horizontal">
-                <dt>id</dt>
-                <dd>${report.id}</dd>
-            </dl>
-            <dl class="dl-horizontal">
-                <dt>start of activity</dt>
-                <dd>${report.startDate}</dd>
-            </dl>
-            <dl class="dl-horizontal">
-                <dt>end of activity</dt>
-                <dd>${report.endDate}</dd>
-            </dl>
-            <dl class="dl-horizontal">
-                <dt>performer</dt>
-                <dd>${report.performer}</dd>
-            </dl>
-            <dl class="dl-horizontal">
-                <dt>activity</dt>
-                <dd>${report.activity}</dd>
-            </dl>
-            <div class="clearfix">
-                <span class='modal-span'>Are you sure to delete activity?</span>
-                <div class="button-block-modal">
-                    <button class="action">Yes</button>
-                    <button class="action delete">No</button>
-                </div>
-            </div>
-        </div>
-        <!--post-->

@@ -23,6 +23,8 @@
     <mvc:resources location="/resources/css/" mapping="/resources/css/**" />
     <mvc:resources location="/resources/font/" mapping="/resources/font/**" />
     
+    <context:property-placeholder location="classpath:report-servlet.properties" />
+    
     <!-- Flip on all Spring MVC features or annotations: JSR-303, message conversion,
     field formatting. 
     "With this minimal configuration, anytime a @Valid @Controller input is encountered,

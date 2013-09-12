@@ -17,6 +17,8 @@ public interface ReportService {
 
     public List<Report> getReports(String performer, Date startDate, Date endDate);
 
+    public List<Report> getReports(Date startDate, Date endDate);    
+
     public Report getReportById(Long id);
 
     public List<String> getPerformers();

@@ -10,9 +10,13 @@ import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
+import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
+import org.springframework.beans.support.PagedListHolder;
+import org.springframework.beans.support.SortDefinition;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -26,6 +30,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 import sp.model.Report;
 import sp.service.ReportService;
+import sp.util.SpHasher;
 
 /**
  * Report controller
@@ -37,6 +42,9 @@ import sp.service.ReportService;
 public class ReportController {
 
     private static final Logger logger = LoggerFactory.getLogger(ReportController.class);
+    
+    @Value("${pagination.threshold}")
+    private int PAGINATION_THRESHOLD;
     
     @Inject
     private ReportService reportService;
@@ -84,13 +92,29 @@ public class ReportController {
             @ModelAttribute("performer")
             @RequestParam(value = "performer", defaultValue = "") String performer,
             Model model) {
-        //model.addAttribute("reports", reportService.getReports(performer, new Date(), new Date()));
+        logger.info("pagination.threshold: {}", PAGINATION_THRESHOLD);
         logger.info("startDate: {} of type {}", startDate, startDate.getClass().getConstructors());
         logger.info("endDate: {} of type {}", endDate, endDate.getClass().getConstructors());
-        logger.info("performer: {} of type {}", performer, performer.getClass().getConstructors());
-        List<Report> reports = reportService.getReports(performer, startDate, endDate);
+        logger.info("performer: {} of type {}", performer, performer.getClass().getConstructors());        
+        List<Report> reports;        
+        PagedListHolder pager;       
+        if (performer.isEmpty()) {
+            reports = reportService.getReports(startDate, endDate);
+        } else {
+            reports = reportService.getReports(startDate, endDate);
+            //reports = reportService.getReports(performer, startDate, endDate);
+        } 
+        model.addAttribute("search_id", SpHasher.getHash(new Object[] {startDate, endDate}));
+        long size = reports.size();
+        if (size > PAGINATION_THRESHOLD) {
+            pager = new PagedListHolder(reports, new sp.util.SpSortDefinition());
+            pager.setPageSize(PAGINATION_THRESHOLD);
+            Integer page = (Integer) model.asMap().get("page");
+            pager.setPage(page);
+            model.addAttribute("pager", pager);
+        }
         logger.info("Reports cardinality: {}", reports.size());
-        model.addAttribute("reports", reportService.getReports(performer, startDate, endDate));
+        model.addAttribute("reports", reports);
         return "list";
     }
 

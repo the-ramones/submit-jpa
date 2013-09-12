@@ -17,7 +17,7 @@
         <div class="form-line clearfix">
             #springBind('performer')
             <label for="performer">#springMessage('content.form.caption.performer'):</label>                        
-            <select name="performer">
+            <select name="performer" auto>
                 <option value="" disabled selected>#springMessage('content.form.select.option.default')</option>
                 #foreach( $performer in $performers ) 
                 <option value="$performer">$performer</option>
@@ -27,7 +27,7 @@
         </div>
         <div class="form-line clearfix">
             <label for="timePeriod">#springMessage('content.form.caption.timeperiod'):</label>
-            <select name="timePeriod">
+            <select name="timePeriod" onchange="periodChange(this)">
                 <option value="last-qtr">#springMessage('content.form.timeperiod.lastqtr')</option>
                 <option value="last-month">#springMessage('content.form.timeperiod.lastmonth')</option>
                 <option value="last-calendar-year">#springMessage('content.form.timeperiod.lastyear')</option>
@@ -39,6 +39,10 @@
         <input class="btn" type="submit" name="reportSubmit" value="#springMessage('content.form.button.search')"/>
     </form>  
 </div>
+
+<script type="text/javascript">
+    
+</script>
 
 #hint()
   

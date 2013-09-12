@@ -16,7 +16,9 @@ public interface ReportRepository {
     public List<Report> getReportsByPerformer(String performer);
 
     public List<Report> getReports(String performer, Date startDate, Date endDate);
-
+    
+    public List<Report> getReports(Date startDate, Date endDate);
+    
     public Report saveReport(Report report);
 
     public List<String> getPerformers();

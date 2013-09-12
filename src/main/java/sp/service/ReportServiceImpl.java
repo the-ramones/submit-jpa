@@ -65,8 +65,13 @@ public class ReportServiceImpl implements ReportService {
     }
 
     @Override
-    public Boolean hasReport(Long id) {
+    @Transactional
+    public List<Report> getReports(Date startDate, Date endDate) {
+        return reportRepository.getReports(startDate, endDate);
+    }
 
+    @Override
+    public Boolean hasReport(Long id) {
         return reportRepository.hasReport(id);
     }
 }

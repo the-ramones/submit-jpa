@@ -85,6 +85,15 @@ public class ReportRepositoryImpl implements ReportRepository {
     }
 
     @Override
+    public List<Report> getReports(Date startDate, Date endDate) {
+        TypedQuery<Report> query = 
+                entityManager.createNamedQuery("Report.getReportsByPeriod", Report.class);
+        query.setParameter("startDate", startDate);
+        query.setParameter("endDate", endDate);
+        return query.getResultList();
+    }
+    
+    @Override
     public Boolean hasReport(Long id) {
         TypedQuery<Report> query =
                 entityManager.createNamedQuery("Report.hasReport", Report.class);

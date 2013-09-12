@@ -154,7 +154,7 @@ $("form[name='report-request']").validate({
 //  debug: true,
     rules: {
         performer: {},
-//        timePeriod: {},
+        timePeriod: {},
         startDate: {
             required: true,
             reportdate: true
