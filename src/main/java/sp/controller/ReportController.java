@@ -92,6 +92,14 @@ public class ReportController {
             @ModelAttribute("performer")
             @RequestParam(value = "performer", defaultValue = "") String performer,
             Model model) {
+        
+        int init = Math.round((float) Math.random() * (~((int) 1 << 31))) | 1 ;
+        int multiplier = Math.round((float) Math.random() * (~((int) 1 << 31))) | 1;
+        
+        logger.warn("init: {}, multiplier: {}", init, multiplier);
+        logger.error("Hasher: {}", String.valueOf(new HashCodeBuilder(init, multiplier).hashCode()));
+        
+        
         logger.info("pagination.threshold: {}", PAGINATION_THRESHOLD);
         logger.info("startDate: {} of type {}", startDate, startDate.getClass().getConstructors());
         logger.info("endDate: {} of type {}", endDate, endDate.getClass().getConstructors());
@@ -110,7 +118,11 @@ public class ReportController {
             pager = new PagedListHolder(reports, new sp.util.SpSortDefinition());
             pager.setPageSize(PAGINATION_THRESHOLD);
             Integer page = (Integer) model.asMap().get("page");
-            pager.setPage(page);
+            if (page != null) {
+                pager.setPage(page);
+            } else {
+                pager.setPage(1);
+            }
             model.addAttribute("pager", pager);
         }
         logger.info("Reports cardinality: {}", reports.size());
