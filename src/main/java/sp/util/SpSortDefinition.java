@@ -1,16 +1,21 @@
 package sp.util;
 
+import java.io.Serializable;
 import org.springframework.beans.support.SortDefinition;
 
 /**
  * Reports! {@link org.springframework.beans.support.SortDefinition}
  * implementation.
  * Use default constructor for ascending and ignore-case sort by 'id'
- * field
+ * field. Implements {@link java.io.Serializable} for serialization 
+ * as a {@link javax.servlet.http.HttpSession} attribute
  *
  * @author Paul Kulitski
+ * @see Serializable
  */
-public class SpSortDefinition implements SortDefinition {
+public class SpSortDefinition implements SortDefinition, Serializable {
+        
+    public static final long serialVersionUID = 1997002881L;
 
     private String property;
     private boolean ignoreCase;

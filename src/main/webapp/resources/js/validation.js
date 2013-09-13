@@ -150,21 +150,21 @@ $("form[name='search-report']").validate({
     }
 });
 
-$("form[name='report-request']").validate({
-//  debug: true,
-    rules: {
-        performer: {},
-        timePeriod: {},
-        startDate: {
-            required: true,
-            reportdate: true
-        },
-        endDate: {
-            required: true,
-            reportdate: true
-        }
-    }
-});
+//$("form[name='report-request']").validate({
+////  debug: true,
+//    rules: {
+//        performer: {},
+//        timePeriod: {},
+//        startDate: {
+//            required: true,
+//            reportdate: true
+//        },
+//        endDate: {
+//            required: true,
+//            reportdate: true
+//        }
+//    }
+//});
 
 $("form[name='login-form']").validate({
 //  debug: true,

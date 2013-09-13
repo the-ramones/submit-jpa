@@ -1,5 +1,6 @@
 package sp.util;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.sql.Connection;
@@ -37,7 +38,7 @@ public class SpPopulateDb {
     }
     public static int INIT_GENERATE_QUANTITY = 5000;
     public static int RECORDS_PER_TRANSACTION = 100;
-    public static final String DB_PROPERTIES_FILENAME = "report.properties";
+    public static final String DB_PROPERTIES_FILENAME = "src/main/java/sp/util/report-populate.properties";
     private static final int METADATA_PROPERTY_QUANTITY = 5;
     private static final String SELECT_ASTERISK = "SELECT * FROM :database";
     private static final String INSERT_STATEMENT =
@@ -57,6 +58,7 @@ public class SpPopulateDb {
      * as a name
      */
     private static Map<String, String> findMetadata() {
+        logger.info(new File(DB_PROPERTIES_FILENAME).getAbsolutePath());
         InputStream dbPropertiesStream =
                 ClassLoader.getSystemResourceAsStream(DB_PROPERTIES_FILENAME);
         Properties dbProperties = new Properties();
