@@ -66,3 +66,12 @@
         </div>
     </div>  
 #end
+
+#*
+ * Confirmation float window. Renders message is specified as parameter 'msg'
+ *#
+#macro (confirm $msg)
+    <div id="confirm">
+        <p>$msg</p>
+    </div>
+#end

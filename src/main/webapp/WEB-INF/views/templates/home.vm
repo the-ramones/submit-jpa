@@ -12,7 +12,7 @@
 
     <hr />
     <div>
-        <h2><a class="a-nav" href="#springUrl('/report/search')">#springMessage("content.home.usecase2.title")</a></h2>
+        <h2><a class="a-nav" href="#springUrl('/report/search?new_search')">#springMessage("content.home.usecase2.title")</a></h2>
         <p>#springMessage("content.home.usecase2")</p>
     </div>
 

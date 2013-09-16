@@ -19,30 +19,45 @@
 <div class="pagination clearfix">  
     <ul class="clearfix">
         #if( $pages gt $maxOnPager )
+            #* Defines difference between active page and last page.
+             * If $delta > $$maxOnPager, renders: << 2 3 4 5 ... 100 >>
+             * Otherwise: << 96 97 98 99 100 >>
+             *#
+            #set( $delta = $pages - $active )
             ## draw 'spacer' and 'last available page' anchor
-            #set( $prev = $url + '?page=prev' )
-            <li><a href="$prev">«</a></li>
-            #set( $upper_bound = $active + $maxOnPager )
-            #foreach ($page in [$active..$upper_bound] )
-                #set($page_url = $url + '?page=' + $page + '&search_id=' + $search_id )
+            #set( $prev = $url + '?p=prev' )
+            <li><a href="$prev" #if($active eq 1)class="disabled"#end>«</a></li>            
+            #if($active gt 1)
+               #if ( $delta le $maxOnPager )
+                    #set( $lower_bound = ($pages - $maxOnPager))
+                #{else}
+                    #set( $lower_bound = $active - 1 )
+                #end       
+                #set( $upper_bound = $pages )
+            #{else}                
+               #set( $lower_bound = $active )
+               #set( $upper_bound = $active + $maxOnPager )
+            #end
+            #foreach ($page in [$lower_bound..$upper_bound] )
+                #set($page_url = $url + '?p=' + $page + '&search_id=' + $search_id )
                 <li><a href="$page_url" class="#if($page eq $active)current#end active">$page</a></li>
             #end
-            <li class="spacer">…</li>
+            #if($delta gt $maxOnPager)<li class="spacer">…</li>#end
             #set( $last = $pages - 1)
-            #set( $last_url = $url + '?page=' + $last + '&search_id=' + $search_id )
+            #set( $last_url = $url + '?p=' + $last + '&search_id=' + $search_id )
             <li><a href="$last_url">$last</a></li>   
-            #set( $next = $url + '?page=next' + '&search_id=' + $search_id )
-            <li><a href="$next">»</a></li>
+            #set( $next = $url + '?p=next' + '&search_id=' + $search_id )
+            <li><a href="$next" #if($active eq $pages)class="disabled"#end>»</a></li>
         #{else}
             ## draw all page's anchors
-            #set( $prev = $url + '?page=prev' + '&search_id=' + $search_id )
-            <li><a href="$prev">«</a></li>        
+            #set( $prev = $url + '?p=prev' + '&search_id=' + $search_id )
+            <li><a href="$prev" #if($active eq 1)class="disabled"#end>«</a></li>
             #foreach( $page in [1..$pages] )
-                #set($page_url = $url + '?page=' + $page + '&session_id=' +$search_id )
+                #set($page_url = $url + '?p=' + $page + '&search_id=' +$search_id )
                 <li><a href="$page_url" class="#if($page eq $active)current#end active">$page</a></li>
             #end
-            #set( $next = $url + '?page=next' + '&search_id=' + $search_id )
-            <li><a href="$next">»</a></li>
+            #set( $next = $url + '?p=next' + '&search_id=' + $search_id )
+            <li><a href="$next" #if($active eq $pages)class="disabled"#end>»</a></li>
         #end
     </ul>
 </div>

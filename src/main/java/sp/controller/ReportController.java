@@ -97,7 +97,7 @@ public class ReportController {
     }
 
     // TODO: fix select maximum height, css for form
-    @RequestMapping(value = {"", "search"}, method = RequestMethod.GET)
+    @RequestMapping(value = {"", "search"}, method = RequestMethod.GET, params = "new_search")
     public String setupForm(Model model) {
         logger.info("In SetupForm");
         model.addAttribute("view", "search");
@@ -117,7 +117,6 @@ public class ReportController {
             @RequestParam(value = "endDate") Date endDate,
             @ModelAttribute("performer") @Pattern(regexp = "^(?iu)[a-zа-я][ 0-9a-zа-я-#@%&\\$]{1,255}(?<!-)$")
             @RequestParam(value = "performer", defaultValue = "") String performer,
-            @RequestParam(value = "page", required = false) String page,
             @ModelAttribute("pager") PagedListHolder<Report> pager,
             Model model) {
 //        logger.debug("pagination.threshold: {}", PAGINATION_THRESHOLD);
@@ -137,6 +136,7 @@ public class ReportController {
             }
             logger.info("Reports cardinality: {}", reports.size());
             model.addAttribute("search_id", SpHasher.getHash(new Object[]{startDate, endDate}));
+            logger.error("SEARCH_ID {}", SpHasher.getHash(new Object[]{startDate, endDate}));
             pager = new PagedListHolder(reports, new SpSortDefinition());
             pager.setPageSize(PAGINATION_THRESHOLD);
             pager.setPage(0);
@@ -151,10 +151,10 @@ public class ReportController {
         return "redirect:search";
     }
 
-    @RequestMapping(value = "search", method = RequestMethod.GET, params = "search_id")
+    @RequestMapping(value = "search", method = RequestMethod.GET, params = {"search_id"})
     public String exposeList(
             @ModelAttribute("pager") PagedListHolder<Report> pager,
-            @RequestParam(value = "page", required = false) String page,
+            @RequestParam(value = "p", required = false) String page,
             @RequestParam(value = "search_id", required = true) String searchId,
             Model model) {
         logger.debug("Using of PagedListHolder from current session");

@@ -130,54 +130,7 @@ public class SpPopulateDb {
                 performers.add(result.getString("performer"));
                 activity.add(result.getString("activity"));
             }
-            counter = 0;
-            insert = connection.prepareStatement(
-                    INSERT_STATEMENT.replace(":database", DATABASE_NAME));
-            Iterator<String> performersIterator = performers.iterator();
-            connection.setAutoCommit(false);
-            Savepoint savepoint = null;
-            while (performersIterator.hasNext()) {
-                String performerNext = performersIterator.next();
-                Iterator<String> activityIterator = activity.iterator();
-                while (activityIterator.hasNext()) {
-                    Iterator<Date> startDateIterator = startDates.iterator();
-                    String activityNext = activityIterator.next();
-                    while (startDateIterator.hasNext()) {
-                        Iterator<Date> endDatesIterator = endDates.iterator();
-                        Date startDateNext = startDateIterator.next();
-                        while (endDatesIterator.hasNext()) {
-                            try {
-                                counter += 1;                                
-//                                if (counter > INIT_GENERATE_QUANTITY) {
-//                                    connection.commit();
-//                                    break;
-//                                }
-                                logger.info("counter: {}", counter);
-                                savepoint = connection.setSavepoint();
-                                insert.setDate(1, (java.sql.Date) startDateNext);
-                                insert.setDate(2, (java.sql.Date) endDatesIterator.next());
-                                insert.setString(3, performerNext);
-                                insert.setString(4, activityNext);
-                                insert.execute();
-                                if ((counter % RECORDS_PER_TRANSACTION) == 0) {
-                                    connection.commit();
-                                }
-                            } catch (SQLException ex) {
-                                logger.warn("An error has occured while trying to insert a new record. Continuing to insert.", ex);
-                                try {
-                                    connection.rollback(savepoint);
-                                } catch (Exception e) {
-                                    try {
-                                        connection.rollback();
-                                    } catch (SQLException rollEx) {
-                                        logger.warn("cannot rollback after bad insert");
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
+            counter = populate(connection, performers, activity, startDates, endDates);
         } catch (ClassNotFoundException ex) {
             logger.error("Cannot load database driver class.", ex);
         } catch (SQLException ex) {
@@ -208,6 +161,62 @@ public class SpPopulateDb {
                     connection.close();
                 } catch (SQLException ex) {
                     logger.warn("Error has occured, when closing java.sql.Connection instance.", ex);
+                }
+            }
+        }
+        return counter;
+    }
+
+    private static int populate(Connection connection, Set... samples) throws SQLException {
+        int counter = 0;
+        Set<String> performers = samples[0];
+        Set<String> activity = samples[1];
+        Set<Date> startDates = samples[2];
+        Set<Date> endDates = samples[3];
+        PreparedStatement insert = connection.prepareStatement(
+                INSERT_STATEMENT.replace(":database", DATABASE_NAME));
+        Iterator<String> performersIterator = performers.iterator();
+        connection.setAutoCommit(false);
+        Savepoint savepoint = null;
+        while (performersIterator.hasNext()) {
+            String performerNext = performersIterator.next();
+            Iterator<String> activityIterator = activity.iterator();
+            while (activityIterator.hasNext()) {
+                Iterator<Date> startDateIterator = startDates.iterator();
+                String activityNext = activityIterator.next();
+                while (startDateIterator.hasNext()) {
+                    Iterator<Date> endDatesIterator = endDates.iterator();
+                    Date startDateNext = startDateIterator.next();
+                    while (endDatesIterator.hasNext()) {
+                        try {
+                            counter += 1;
+                            if (counter > INIT_GENERATE_QUANTITY) {
+                                connection.commit();
+                                return counter;
+                            }
+                            logger.info("counter: {}", counter);
+                            savepoint = connection.setSavepoint();
+                            insert.setDate(1, (java.sql.Date) startDateNext);
+                            insert.setDate(2, (java.sql.Date) endDatesIterator.next());
+                            insert.setString(3, performerNext);
+                            insert.setString(4, activityNext);
+                            insert.execute();
+                            if ((counter % RECORDS_PER_TRANSACTION) == 0) {
+                                connection.commit();
+                            }
+                        } catch (SQLException ex) {
+                            logger.warn("An error has occured while trying to insert a new record. Continuing to insert.", ex);
+                            try {
+                                connection.rollback(savepoint);
+                            } catch (Exception e) {
+                                try {
+                                    connection.rollback();
+                                } catch (SQLException rollEx) {
+                                    logger.warn("cannot rollback after bad insert");
+                                }
+                            }
+                        }
+                    }
                 }
             }
         }

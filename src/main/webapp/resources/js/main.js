@@ -53,10 +53,10 @@ $(document).ready(function() {
      */
     $('input[name="startDate"]').datepicker({dateFormat: "dd M yy"});
     $('input[name="endDate"]').datepicker({dateFormat: "dd M yy"});
+
     /*
      * Sticky side menu actions 
      */
-
     $("#language").click(function() {
         $("#popup-login").hide(50);
         setTimeout(function() {
@@ -76,3 +76,65 @@ $(document).ready(function() {
     });
 });
 
+/*
+ * Form Date bound filling 
+ */
+/*
+ * Number of month that quarters start with (Jan, Apr, Jul, Sep)
+ */
+var qtr_start = [0, 3, 6, 9];
+/*
+ * Fills in start date and end date inputs rendered above
+ * with corresponding time period bounds
+ */
+function periodChange(select) {
+
+    // gets the index of selected option
+    var idx = select.selectedIndex;
+    // gets the value of selected option
+    var period = select.options[idx].value;
+    var startDate;
+    var endDate;
+    // current time in user agent
+    var timestamp = new Date();
+    switch (period) {
+        case "last-qtr":
+            var quater_number = timestamp.getMonth() % 3;
+            startDate = new Date(timestamp.getFullYear(), qtr_start[quater_number], 1);
+            endDate = new Date(timestamp.getFullYear(), qtr_start[quater_number] + 3, 0);
+            $("input[name='startDate']").datepicker('setDate', startDate);
+            $("input[name='endDate']").datepicker('setDate', endDate);
+            break;
+        case "last-month":
+            var month = timestamp.getMonth();
+            startDate = new Date(timestamp.getFullYear(), month - 1, 1);
+            endDate = new Date(timestamp.getFullYear(), month, 0);
+            $("input[name='startDate']").datepicker('setDate', startDate);
+            $("input[name='endDate']").datepicker('setDate', endDate);
+            break;
+        case "last-calendar-year":
+            var year = timestamp.getFullYear();
+            startDate = new Date(year - 1, 0, 1);
+            endDate = new Date(year, 0, 0);
+            $("input[name='startDate']").datepicker('setDate', startDate);
+            $("input[name='endDate']").datepicker('setDate', endDate);
+            break;
+        case "current-year-to-date":
+            startDate = new Date(timestamp.getFullYear(), 0, 1);
+            $("input[name='startDate']").datepicker('setDate', startDate);
+            $("input[name='endDate']").datepicker('setDate', timestamp);
+            break;
+        case "current-qtr-to-date":
+            var quater_number = timestamp.getMonth() % 3;
+            startDate = new Date(timestamp.getFullYear(), qtr_start[quater_number], 1);
+            $("input[name='startDate']").datepicker('setDate', startDate);
+            $("input[name='endDate']").datepicker('setDate', timestamp);
+            break;
+        case "current-month-to-date":
+            startDate = new Date(timestamp.getFullYear(), timestamp.getMonth(), 1);
+            $("input[name='startDate']").datepicker('setDate', startDate);
+            $("input[name='endDate']").datepicker('setDate', timestamp);
+            break;
+    }
+    console.log("exit");
+}

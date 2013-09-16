@@ -39,7 +39,7 @@ div.pagination a.current {
     background-color: rgb(224, 133, 36);                
 }
 div.pagination a.disabled {
-    display:none;
+    display: none;
 }
 
 div.pagination li.spacer {
