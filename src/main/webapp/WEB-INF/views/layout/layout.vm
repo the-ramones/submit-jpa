@@ -15,6 +15,7 @@
         <link rel="stylesheet" href="#springUrl('/resources/css/main.css')">  
         <link rel="stylesheet" href="#springUrl('/resources/css/search.css')">
         <link rel="stylesheet" href="#springUrl('/resources/css/modal.css')">
+        <link rel="stylesheet" href="#springUrl('/resources/css/pager.css')">
         <link rel="stylesheet" href="#springUrl('/resources/css/jquery-ui-1.10.3.custom.min.css')">
       
         <link href='http://fonts.googleapis.com/css?family=Roboto+Slab:100&subset=latin,cyrillic' rel='stylesheet' type='text/css'>

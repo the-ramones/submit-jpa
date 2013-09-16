@@ -32,6 +32,13 @@
         <!--<parameter name="my.parameter.name" value="my.parameter.value"/>-->
         <class>org.apache.velocity.tools.generic.MathTool</class>
     </tool>
+    
+    <!-- -->
+    <tool>
+        <key>esc</key>
+        <scope>application</scope>
+        <class>org.apache.velocity.tools.generic.EscapeTool</class>
+    </tool>
 </toolbox>
 
 <!-- Old -->

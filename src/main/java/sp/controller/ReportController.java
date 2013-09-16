@@ -3,8 +3,10 @@ package sp.controller;
 import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 import javax.inject.Inject;
@@ -12,13 +14,11 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import javax.validation.constraints.Pattern;
-import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.beans.support.PagedListHolder;
-import org.springframework.beans.support.SortDefinition;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -36,7 +36,6 @@ import sp.model.Report;
 import sp.service.ReportService;
 import sp.util.SpHasher;
 import sp.util.SpSortDefinition;
-import sp.validation.ReportDate;
 
 /**
  * Report controller
@@ -50,8 +49,10 @@ public class ReportController {
 
     private static final Logger logger = LoggerFactory.getLogger(ReportController.class);
     /*
-     * Spring 3+ way
+     * Spring 3+ way. Previously, used @Value(#{systemProperties.pagination.threshold})
      */
+    @Value("${pagination.maxonpager}")
+    private int MAX_ON_PAGER;
     @Value("${pagination.threshold}")
     private int PAGINATION_THRESHOLD;
     @Inject
@@ -63,6 +64,14 @@ public class ReportController {
 
     @PreDestroy
     public void preDestroy() {
+    }
+
+    @ModelAttribute("settings")
+    public Map<String, String> populateReferenceDate() {
+        Map<String, String> settings = new HashMap<String, String>();
+        settings.put("maxOnPager", String.valueOf(MAX_ON_PAGER));
+        settings.put("pagerThreshold", String.valueOf(PAGINATION_THRESHOLD));
+        return settings;
     }
 
     @InitBinder
@@ -90,6 +99,7 @@ public class ReportController {
     // TODO: fix select maximum height, css for form
     @RequestMapping(value = {"", "search"}, method = RequestMethod.GET)
     public String setupForm(Model model) {
+        logger.info("In SetupForm");
         model.addAttribute("view", "search");
         model.addAttribute("performers", reportService.getPerformers());
         model.addAttribute("startDate", new Date());
@@ -98,7 +108,7 @@ public class ReportController {
         return "form";
     }
 
-    // TODO: fix pagination, ix validation
+    // TODO: fix pagination, fix validation
     @RequestMapping(value = "search", method = RequestMethod.POST)
     public String doSearch(
             @Valid @ModelAttribute("startDate") @DateTimeFormat(pattern = "dd MMM yyyy")
@@ -110,12 +120,12 @@ public class ReportController {
             @RequestParam(value = "page", required = false) String page,
             @ModelAttribute("pager") PagedListHolder<Report> pager,
             Model model) {
-        logger.info("pagination.threshold: {}", PAGINATION_THRESHOLD);
-        //        logger.info("startDate: {} of type {}", startDate, startDate.getClass().getConstructors());
-        //        logger.info("endDate: {} of type {}", endDate, endDate.getClass().getConstructors());
-        //        logger.info("performer: {} of type {}", performer, performer.getClass().getConstructors());           
+//        logger.debug("pagination.threshold: {}", PAGINATION_THRESHOLD);
+//        logger.debug("pagination.maxonpager: {}", MAX_ON_PAGER);
+        logger.info("startDate: {} of type {}", startDate, startDate.getClass().getConstructors());
+        logger.info("endDate: {} of type {}", endDate, endDate.getClass().getConstructors());
+        logger.info("performer: {} of type {}", performer, performer.getClass().getConstructors());
         List<Report> reports;
-        //PagedListHolder pager;
         logger.error("Pager characteristics: pager={}, pageCount={}, pageSize={}",
                 pager.toString(), pager.getPageCount(), pager.getPageSize());
         if (pager.getPageList().isEmpty()) {
@@ -127,49 +137,53 @@ public class ReportController {
             }
             logger.info("Reports cardinality: {}", reports.size());
             model.addAttribute("search_id", SpHasher.getHash(new Object[]{startDate, endDate}));
-            long size = reports.size();
-            //if (size > PAGINATION_THRESHOLD) {
-            pager = new PagedListHolder(reports, new sp.util.SpSortDefinition());
+            pager = new PagedListHolder(reports, new SpSortDefinition());
             pager.setPageSize(PAGINATION_THRESHOLD);
             pager.setPage(0);
-            for (Report report: pager.getPageList()) {
-                logger.info("report: {}", report);
-            }
+//            for (Report report : pager.getPageList()) {
+//                logger.info("report: {}", report);
+//            }
             model.addAttribute("pager", pager);
             //}
-        } else {
-            logger.debug("Using of PagedListHolder from current session");
-            logger.info("Current pagination page: {}", page);
+        }
+        logger.error("Pager AFTER characteristics: pager={}, pageCount={}, pageSize={}",
+                pager.toString(), pager.getPageCount(), pager.getPageSize());
+        return "redirect:search";
+    }
+
+    @RequestMapping(value = "search", method = RequestMethod.GET, params = "search_id")
+    public String exposeList(
+            @ModelAttribute("pager") PagedListHolder<Report> pager,
+            @RequestParam(value = "page", required = false) String page,
+            @RequestParam(value = "search_id", required = true) String searchId,
+            Model model) {
+        logger.debug("Using of PagedListHolder from current session");
+        if (page != null) {
             /*
              * Page must be: 'next', 'prev', 'page-number'
              */
-            if (page != null) {
-                if (page.equalsIgnoreCase("next")) {
-                    pager.nextPage();
-                } else if (page.equalsIgnoreCase("prev")) {
-                    pager.previousPage();
-                } else if (page.equalsIgnoreCase("first")) {
-                    pager.setPage(0);
-                } else if (page.equalsIgnoreCase("last")) {
-                    pager.setPage(pager.getPageCount() - 1);
-                } else {
-                    try {
-                        pager.setPage(Integer.valueOf(page) - 1);
-                    } catch (NumberFormatException ex) {
-                        logger.warn("Cannot parse page number from request parameter 'page'={}", page);
-                    }
-                }
-            } else {
-                logger.debug("Setting pager page number 1");
+            logger.debug("Looking up for the requested page: {}", page);
+            if (page.equalsIgnoreCase("next")) {
+                pager.nextPage();
+            } else if (page.equalsIgnoreCase("prev")) {
+                pager.previousPage();
+            } else if (page.equalsIgnoreCase("first")) {
                 pager.setPage(0);
+            } else if (page.equalsIgnoreCase("last")) {
+                pager.setPage(pager.getPageCount() - 1);
+            } else {
+                try {
+                    pager.setPage(Integer.valueOf(page) - 1);
+                } catch (NumberFormatException ex) {
+                    logger.warn("Cannot parse page number from request parameter 'page'={}", page);
+                }
             }
-            logger.info("Pagination page: {}", pager.getPage());
-            //model.addAttribute("pager", pager);
+            logger.debug("Setting pager page {}", page);
+        } else {
+            logger.debug("Setting the first pager page");
+            pager.setPage(0);
         }
-        logger.error("Pager after characteristics: pager={}, pageCount={}, pageSize={}",
-                pager.toString(), pager.getPageCount(), pager.getPageSize());
-        
-//        model.addAttribute("reports", reports);
+        model.addAttribute("search_id", searchId);
         return "list-paged";
     }
 

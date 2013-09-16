@@ -1,6 +1,7 @@
 package sp.util;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.sql.Connection;
@@ -31,14 +32,15 @@ public class SpPopulateDb {
 
     private static final Logger logger = LoggerFactory.getLogger(SpPopulateDb.class);
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws SQLException {
         Map<String, String> metadata = findMetadata();
         int quatity = populateDb(metadata, INIT_GENERATE_QUANTITY);
-        logger.info("Database {} succesfully populated with {} new records", metadata);
+        logger.info("Database {} succesfully populated with {} new records", metadata, quatity);
     }
-    public static int INIT_GENERATE_QUANTITY = 5000;
+    public static int INIT_GENERATE_QUANTITY = 500;
     public static int RECORDS_PER_TRANSACTION = 100;
     public static final String DB_PROPERTIES_FILENAME = "src/main/java/sp/util/report-populate.properties";
+    public static final String DB_PROPERTIES_RESOURCE = "report-populate.properties";
     private static final int METADATA_PROPERTY_QUANTITY = 5;
     private static final String SELECT_ASTERISK = "SELECT * FROM :database";
     private static final String INSERT_STATEMENT =
@@ -58,9 +60,11 @@ public class SpPopulateDb {
      * as a name
      */
     private static Map<String, String> findMetadata() {
-        logger.info(new File(DB_PROPERTIES_FILENAME).getAbsolutePath());
+        File file2 = new File(DB_PROPERTIES_FILENAME);
+        logger.info(file2.getAbsolutePath());
+        logger.info("properties isExists(): {}", file2.exists());
         InputStream dbPropertiesStream =
-                ClassLoader.getSystemResourceAsStream(DB_PROPERTIES_FILENAME);
+                ClassLoader.getSystemResourceAsStream(DB_PROPERTIES_RESOURCE);
         Properties dbProperties = new Properties();
         Map<String, String> metadata = new HashMap<String, String>(METADATA_PROPERTY_QUANTITY);
         try {
@@ -72,6 +76,20 @@ public class SpPopulateDb {
             logger.error("Cannot load properties file.", ex);
         } catch (Exception ex) {
             logger.error("Cannot load properties file.", ex);
+            /*
+             * Fallback to plain Java IO access
+             */
+            try {
+                logger.info("fallback to direct access");
+                File dbPropertiesFile = new File(DB_PROPERTIES_FILENAME);
+                dbProperties.load(new FileInputStream(dbPropertiesFile));
+                logger.info("properties has been loaded");
+                for (String key : METADATA_PROPERTY_NAMES) {
+                    metadata.put(key, dbProperties.getProperty(key));
+                }
+            } catch (IOException fileEx) {
+                logger.warn("Cannot load properties directly from file", fileEx);
+            }
         }
         return metadata;
     }
@@ -83,7 +101,7 @@ public class SpPopulateDb {
      * @param metadata map of metadata
      * @return a number of rows generated
      */
-    public static int populateDb(Map<String, String> metadata, int generateQuantity) {
+    public static int populateDb(Map<String, String> metadata, int generateQuantity) throws SQLException {
         Set<String> performers = new HashSet<String>(INITIAL_QUANTITY);
         Set<String> activity = new HashSet<String>(INITIAL_QUANTITY);
         Set<Date> startDates = new HashSet<Date>(INITIAL_QUANTITY);
@@ -101,7 +119,7 @@ public class SpPopulateDb {
                     metadata.get(METADATA_PROPERTY_NAMES[2]),
                     metadata.get(METADATA_PROPERTY_NAMES[3]));
             String selectAllSql = SELECT_ASTERISK
-                    .replace(":database", metadata.get(METADATA_PROPERTY_NAMES[5]));
+                    .replace(":database", metadata.get(METADATA_PROPERTY_NAMES[4]));
             statement = connection.createStatement(
                     ResultSet.FETCH_FORWARD | ResultSet.TYPE_FORWARD_ONLY,
                     ResultSet.CONCUR_UPDATABLE);
@@ -115,26 +133,31 @@ public class SpPopulateDb {
             counter = 0;
             insert = connection.prepareStatement(
                     INSERT_STATEMENT.replace(":database", DATABASE_NAME));
-            Iterator<Date> startDateIterator = startDates.iterator();
-            Iterator<Date> endDatesIterator = endDates.iterator();
             Iterator<String> performersIterator = performers.iterator();
-            Iterator<String> activityIterator = activity.iterator();
             connection.setAutoCommit(false);
             Savepoint savepoint = null;
             while (performersIterator.hasNext()) {
+                String performerNext = performersIterator.next();
+                Iterator<String> activityIterator = activity.iterator();
                 while (activityIterator.hasNext()) {
+                    Iterator<Date> startDateIterator = startDates.iterator();
+                    String activityNext = activityIterator.next();
                     while (startDateIterator.hasNext()) {
+                        Iterator<Date> endDatesIterator = endDates.iterator();
+                        Date startDateNext = startDateIterator.next();
                         while (endDatesIterator.hasNext()) {
                             try {
-                                counter += 1;
-                                if (counter > INIT_GENERATE_QUANTITY) {
-                                    break;
-                                }
+                                counter += 1;                                
+//                                if (counter > INIT_GENERATE_QUANTITY) {
+//                                    connection.commit();
+//                                    break;
+//                                }
+                                logger.info("counter: {}", counter);
                                 savepoint = connection.setSavepoint();
-                                insert.setDate(1, (java.sql.Date) startDateIterator.next());
+                                insert.setDate(1, (java.sql.Date) startDateNext);
                                 insert.setDate(2, (java.sql.Date) endDatesIterator.next());
-                                insert.setString(3, performersIterator.next());
-                                insert.setString(4, activityIterator.next());
+                                insert.setString(3, performerNext);
+                                insert.setString(4, activityNext);
                                 insert.execute();
                                 if ((counter % RECORDS_PER_TRANSACTION) == 0) {
                                     connection.commit();
@@ -144,7 +167,11 @@ public class SpPopulateDb {
                                 try {
                                     connection.rollback(savepoint);
                                 } catch (Exception e) {
-                                    connection.rollback();
+                                    try {
+                                        connection.rollback();
+                                    } catch (SQLException rollEx) {
+                                        logger.warn("cannot rollback after bad insert");
+                                    }
                                 }
                             }
                         }
@@ -156,6 +183,12 @@ public class SpPopulateDb {
         } catch (SQLException ex) {
             logger.error("Cannot populate database with records.", ex);
         } finally {
+            try {
+                logger.info("commiting..");
+                connection.commit();
+            } catch (SQLException commitEx) {
+                logger.warn("cannot commit at the last action");
+            }
             if (result != null) {
                 try {
                     result.close();

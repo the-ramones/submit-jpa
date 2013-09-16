@@ -1,19 +1,20 @@
 div.pagination {
-    padding:10px;
-    margin:7px; 
-    border: 1px dotted black;
-    position: relative;
+    padding-bottom: 10px;
+    position: relative;        
+    text-align: center;
+    width: 100%;
 }
 
 div.pagination ul {
     position:relative;
     list-style: none;
-    margin: 0 0 0 -155px;
-    left: 50%;                
+    margin: auto;
     padding: 0;
-    border: 1px dotted black;
+    text-align: center;
     display: inline-block;
+    width: auto;
 }
+
 div.pagination li {
     display: inline-block;
     float: left;                                
