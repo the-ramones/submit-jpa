@@ -38,7 +38,7 @@ import sp.util.SpHasher;
 import sp.util.SpSortDefinition;
 
 /**
- * Report controller
+ * Report controller for synchronous actions
  *
  * @author Paul Kulitski
  */
@@ -96,7 +96,6 @@ public class ReportController {
         this.reportService = reportService;
     }
 
-    // TODO: fix select maximum height, css for form
     @RequestMapping(value = {"", "search"}, method = RequestMethod.GET, params = "new_search")
     public String setupForm(Model model) {
         logger.info("In SetupForm");
@@ -119,33 +118,24 @@ public class ReportController {
             @RequestParam(value = "performer", defaultValue = "") String performer,
             @ModelAttribute("pager") PagedListHolder<Report> pager,
             Model model) {
-//        logger.debug("pagination.threshold: {}", PAGINATION_THRESHOLD);
-//        logger.debug("pagination.maxonpager: {}", MAX_ON_PAGER);
-        logger.info("startDate: {} of type {}", startDate, startDate.getClass().getConstructors());
-        logger.info("endDate: {} of type {}", endDate, endDate.getClass().getConstructors());
-        logger.info("performer: {} of type {}", performer, performer.getClass().getConstructors());
+//        logger.info("startDate: {} of type {}", startDate, startDate.getClass().getConstructors());
+//        logger.info("endDate: {} of type {}", endDate, endDate.getClass().getConstructors());
+//        logger.info("performer: {} of type {}", performer, performer.getClass().getConstructors());
         List<Report> reports;
+        logger.debug("In POST");
         logger.error("Pager characteristics: pager={}, pageCount={}, pageSize={}",
                 pager.toString(), pager.getPageCount(), pager.getPageSize());
-        if (pager.getPageList().isEmpty()) {
-            logger.debug("Retrieving reports from service layer");
-            if (performer.isEmpty()) {
-                reports = reportService.getReports(startDate, endDate);
-            } else {
-                reports = reportService.getReports(performer, startDate, endDate);
-            }
-            logger.info("Reports cardinality: {}", reports.size());
-            model.addAttribute("search_id", SpHasher.getHash(new Object[]{startDate, endDate}));
-            logger.error("SEARCH_ID {}", SpHasher.getHash(new Object[]{startDate, endDate}));
-            pager = new PagedListHolder(reports, new SpSortDefinition());
-            pager.setPageSize(PAGINATION_THRESHOLD);
-            pager.setPage(0);
-//            for (Report report : pager.getPageList()) {
-//                logger.info("report: {}", report);
-//            }
-            model.addAttribute("pager", pager);
-            //}
+        if (performer.isEmpty()) {
+            reports = reportService.getReports(startDate, endDate);
+        } else {
+            reports = reportService.getReports(performer, startDate, endDate);
         }
+        logger.info("Reports cardinality: {}", reports.size());
+        model.addAttribute("search_id", SpHasher.getHash(new Object[]{startDate, endDate}));
+        pager = new PagedListHolder(reports, new SpSortDefinition());
+        pager.setPageSize(PAGINATION_THRESHOLD);
+        pager.setPage(0);
+        model.addAttribute("pager", pager);
         logger.error("Pager AFTER characteristics: pager={}, pageCount={}, pageSize={}",
                 pager.toString(), pager.getPageCount(), pager.getPageSize());
         return "redirect:search";

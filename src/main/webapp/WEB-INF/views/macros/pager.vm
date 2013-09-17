@@ -25,15 +25,16 @@
              *#
             #set( $delta = $pages - $active )
             ## draw 'spacer' and 'last available page' anchor
-            #set( $prev = $url + '?p=prev' )
+            #set( $prev = $url + '?p=prev' + '&search_id=' + $search )
             <li><a href="$prev" #if($active eq 1)class="disabled"#end>«</a></li>            
             #if($active gt 1)
+            
                #if ( $delta le $maxOnPager )
                     #set( $lower_bound = ($pages - $maxOnPager))
                 #{else}
                     #set( $lower_bound = $active - 1 )
                 #end       
-                #set( $upper_bound = $pages )
+                #set( $upper_bound = $lower_bound + $maxOnPager - 1 )
             #{else}                
                #set( $lower_bound = $active )
                #set( $upper_bound = $active + $maxOnPager )

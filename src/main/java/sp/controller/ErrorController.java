@@ -20,4 +20,14 @@ public class ErrorController {
     public String missing() {
         return "missing";
     }
+
+    @RequestMapping(value = "/access")
+    public String access() {
+        return "missing";
+    }
+
+    @RequestMapping(value = "/notsupported")
+    public String notssupported() {
+        return "notsupported";
+    }
 }
