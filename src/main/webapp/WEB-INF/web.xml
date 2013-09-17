@@ -82,6 +82,10 @@
         <error-code>500</error-code> 
         <location>/error.html</location> 
     </error-page>
+    <error-page> 
+        <error-code>400</error-code> 
+        <location>/badrequest.html</location> 
+    </error-page>
     <!-- 
         Servlet 2.3/2.4 Filter that allows one to specify a character encoding
      for requests. This is useful because current browsers typically do not set 

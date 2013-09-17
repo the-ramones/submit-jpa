@@ -1,0 +1,2 @@
+#springMessage("content.nothing.title") <br />
+<button class="action delete" onclick="javascript: window.location.href='#springUrl('/report/search?new_search')';">#springMessage('button.action.back')</button>

@@ -30,14 +30,43 @@
         </tbody>
     </table>
     
-    #if($pager.getPageCount() gt 1)
-        #pager()    
+    #if($pager)
+        #if($pager.getPageCount() gt 1)
+            #pager()    
+        #end
     #end
     
     <button class="action add" onclick="modal_add()">#springMessage('content.list.button.addnew')</button>    
+    <button class="action" onclick="add_to_watchlist()">#springMessage('content.list.button.addtowatchlist')</button>    
 </div>
 
 <script type="text/javascript">
+
+    function add_to_watchlist() {
+        var indexes = [];
+        $('tr.selected').each( function(index, value) {            
+            try {
+                indexes.push(parseInt($(value).find('td:first-child').html()));
+            } catch (error){
+                console.log("Error while parsing ID for a elemend beign selected");
+            }
+        });        
+        var url = "#springUrl('/report/ajax/watch')";
+        var indexesData = { "indexes" : indexes };
+        $.ajax( url, {
+                method: "POST",
+                async: true,
+                cache: false,
+                data: indexesData,
+                complete: onWatchComplete,
+                dataType: 'text'
+            }
+        );
+    };
+
+    function onWatchComplete(xhr, status) {
+    function(xhr, status) {console.log(status);}
+    }
 
     function modal_add() {
         var html = '#modal_add( )';        

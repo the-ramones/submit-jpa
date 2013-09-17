@@ -23,11 +23,16 @@ public class ErrorController {
 
     @RequestMapping(value = "/access")
     public String access() {
-        return "missing";
+        return "access";
     }
 
     @RequestMapping(value = "/notsupported")
     public String notssupported() {
         return "notsupported";
+    }
+
+    @RequestMapping(value = "/badrequest")
+    public String badrequest() {
+        return "badrequest";
     }
 }

@@ -1,7 +1,6 @@
 package sp.controller;
 
 import java.text.DateFormat;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -44,7 +43,7 @@ import sp.util.SpSortDefinition;
  */
 @Controller
 @RequestMapping("/report")
-@SessionAttributes(value = {"pager"})
+@SessionAttributes(value = {"pagers"})
 public class ReportController {
 
     private static final Logger logger = LoggerFactory.getLogger(ReportController.class);
@@ -81,12 +80,23 @@ public class ReportController {
         binder.registerCustomEditor(Date.class, new CustomDateEditor(df, true));
     }
 
-    @ModelAttribute("pager")
-    public PagedListHolder<Report> populatePager() {
-        PagedListHolder<Report> pager = new PagedListHolder<Report>();
-        pager.setSort(new SpSortDefinition());
-        pager.setSource(new ArrayList());
-        return pager;
+//    @ModelAttribute("pagers")
+//    public PagedListHolder<Report> populatePager() {
+//        Map<String, PagedListHolder<Report>> pagers = 
+//                new HashMap<String, PagedListHolder<Report>>(1);
+////        PagedListHolder<Report> pager = new PagedListHolder<Report>();
+////        pager.setSort(new SpSortDefinition());
+////        pager.setSource(new ArrayList());
+//        return pagers;
+//    }
+    @ModelAttribute("pagers")
+    public Map<String, PagedListHolder<Report>> populatePager() {
+        Map<String, PagedListHolder<Report>> pagers =
+                new HashMap<String, PagedListHolder<Report>>(1);
+//        PagedListHolder<Report> pager = new PagedListHolder<Report>();
+//        pager.setSort(new SpSortDefinition());
+//        pager.setSource(new ArrayList());
+        return pagers;
     }
 
     public ReportController() {
@@ -98,7 +108,7 @@ public class ReportController {
 
     @RequestMapping(value = {"", "search"}, method = RequestMethod.GET, params = "new_search")
     public String setupForm(Model model) {
-        logger.info("In SetupForm");
+        logger.info("In GET SetupForm");
         model.addAttribute("view", "search");
         model.addAttribute("performers", reportService.getPerformers());
         model.addAttribute("startDate", new Date());
@@ -116,38 +126,53 @@ public class ReportController {
             @RequestParam(value = "endDate") Date endDate,
             @ModelAttribute("performer") @Pattern(regexp = "^(?iu)[a-zа-я][ 0-9a-zа-я-#@%&\\$]{1,255}(?<!-)$")
             @RequestParam(value = "performer", defaultValue = "") String performer,
-            @ModelAttribute("pager") PagedListHolder<Report> pager,
+            @ModelAttribute("pagers") Map<String, PagedListHolder<Report>> pagers,
             Model model) {
+        logger.error("In POST");
 //        logger.info("startDate: {} of type {}", startDate, startDate.getClass().getConstructors());
 //        logger.info("endDate: {} of type {}", endDate, endDate.getClass().getConstructors());
 //        logger.info("performer: {} of type {}", performer, performer.getClass().getConstructors());
+
         List<Report> reports;
-        logger.debug("In POST");
-        logger.error("Pager characteristics: pager={}, pageCount={}, pageSize={}",
-                pager.toString(), pager.getPageCount(), pager.getPageSize());
         if (performer.isEmpty()) {
             reports = reportService.getReports(startDate, endDate);
         } else {
             reports = reportService.getReports(performer, startDate, endDate);
         }
         logger.info("Reports cardinality: {}", reports.size());
-        model.addAttribute("search_id", SpHasher.getHash(new Object[]{startDate, endDate}));
+        if (reports.isEmpty()) {
+            return "redirect:search/nothing";
+        }
+        PagedListHolder<Report> pager;
         pager = new PagedListHolder(reports, new SpSortDefinition());
         pager.setPageSize(PAGINATION_THRESHOLD);
         pager.setPage(0);
-        model.addAttribute("pager", pager);
+
         logger.error("Pager AFTER characteristics: pager={}, pageCount={}, pageSize={}",
                 pager.toString(), pager.getPageCount(), pager.getPageSize());
+
+        String searchId = SpHasher.getHash(new Object[]{startDate, endDate});
+
+        model.addAttribute("search_id", searchId);
+        pagers.put(searchId, pager);
+        model.addAttribute("pagers", pagers);
+
         return "redirect:search";
     }
 
+    // TODO: 'page' param validation
     @RequestMapping(value = "search", method = RequestMethod.GET, params = {"search_id"})
     public String exposeList(
-            @ModelAttribute("pager") PagedListHolder<Report> pager,
+            @ModelAttribute("pagers") Map<String, PagedListHolder<Report>> pagers,
             @RequestParam(value = "p", required = false) String page,
             @RequestParam(value = "search_id", required = true) String searchId,
             Model model) {
-        logger.debug("Using of PagedListHolder from current session");
+        logger.debug("In Redirect GET");
+        boolean reject = false;
+        PagedListHolder<Report> pager = pagers.get(searchId);
+        if (pager == null) {
+            return "redirect:search/nothing";
+        }
         if (page != null) {
             /*
              * Page must be: 'next', 'prev', 'page-number'
@@ -163,18 +188,35 @@ public class ReportController {
                 pager.setPage(pager.getPageCount() - 1);
             } else {
                 try {
-                    pager.setPage(Integer.valueOf(page) - 1);
+                    Integer intPage = Integer.valueOf(page);
+                    //TODO: fix validation                                        
+                    if ((intPage > 0) && (intPage <= pager.getPageCount()))
+                    pager.setPage(intPage - 1);
                 } catch (NumberFormatException ex) {
                     logger.warn("Cannot parse page number from request parameter 'page'={}", page);
+                    reject = true;
                 }
             }
             logger.debug("Setting pager page {}", page);
         } else {
-            logger.debug("Setting the first pager page");
-            pager.setPage(0);
+            if (pager.getPageCount() > 0) {
+                logger.debug("Setting the first pager page");
+                pager.setPage(0);
+            } else {
+                reject = true;
+            }
+        }
+        if (reject) {
+            return "redirect:search/nothing";
         }
         model.addAttribute("search_id", searchId);
+        model.addAttribute("pager", pager);
         return "list-paged";
+    }
+    
+    @RequestMapping(value = "search/nothing", method = RequestMethod.GET) 
+    public String nothingFound(Model model) {
+        return "nothing";
     }
 
     @RequestMapping(value = "/detail", method = RequestMethod.GET)
@@ -199,7 +241,7 @@ public class ReportController {
     public String detailById(@PathVariable("id") Long id, Model model, HttpServletRequest request) {
         model.addAttribute("report", reportService.getReportById(id));
         model.addAttribute("uri", request.getRequestURL());
-        return "detail";
+        return "detail";    
     }
 
     @RequestMapping(value = "add", method = RequestMethod.GET)
