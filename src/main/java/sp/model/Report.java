@@ -34,7 +34,8 @@ import sp.validation.ValidReport;
     @NamedQuery(name = "Report.getReportsByPerformer", query = "select r from Report r where r.performer = :performer"),
     @NamedQuery(name = "Report.getReports", query = "select r from Report r where r.performer = :performer and r.startDate >= :startDate and r.endDate <= :endDate"),
     @NamedQuery(name = "Report.getReportsByPeriod", query = "select r from Report r where r.startDate >= :startDate and r.endDate <= :endDate"),
-    @NamedQuery(name = "Report.hasReport", query = "select r from Report r where r.id = :id")    
+    @NamedQuery(name = "Report.hasReport", query = "select r from Report r where r.id = :id"),
+    @NamedQuery(name = "Report.getReportsByIds", query = "select r from Report r where r.id IN :ids")
 })
 @XmlRootElement
 @ValidReport

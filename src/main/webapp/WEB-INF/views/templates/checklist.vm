@@ -1,10 +1,10 @@
 ## Checklist template. Utilize reports context variable
 <div class="tile-menu-container">
     <h3>#springMessage('content.checklist.title')</h3>
-    <div class="tile-button-menu">
+    <div class="tile-button-menu clearfix">
         <button class="action update">#springMessage('content.checklist.button.statistics')</button>
         <button class="action delete">#springMessage('content.checklist.button.email')</button>
-        <button class="action">#springMessage('content.checklist.button.newsearch')</button>
+        <button class="action" onclick="start_new();">#springMessage('content.checklist.button.newsearch')</button>
     </div>
 </div>
 #foreach ($report in $reports)
@@ -16,11 +16,11 @@
     </dl>
     <dl class="dl-horizontal">
         <dt>#springMessage('content.detail.start')</dt>
-        <dd>${report.startDate}</dd>
+        <dd>$datetool.format('dd MMM yyyy', ${report.startDate})</dd>
     </dl>
     <dl class="dl-horizontal">
-        <dt>#springMessage('content.detail.end')/dt>
-        <dd>${report.endDate}</dd>
+        <dt>#springMessage('content.detail.end')</dt>
+        <dd>$datetool.format('dd MMM yyyy', ${report.endDate})</dd>
     </dl>
     <dl class="dl-horizontal">
         <dt>#springMessage('content.detail.performer')</dt>
@@ -30,12 +30,56 @@
         <dt>#springMessage('content.detail.activity')</dt>
         <dd>${report.activity}</dd>
     </dl>
-    <button class="action">#springMessage('content.checklist.tile.uri')</button>
-    <button class="action delete">#springMessage('content.checklist.tile.away')</button>
+    <button class="action" onclick="get_uri(this);">#springMessage('content.checklist.tile.uri')</button>
+    <button class="action delete" onclick="put_away(this);">#springMessage('content.checklist.tile.away')</button>
 </div>
 #end
+
 <script>
     $(document).ready(function() {
         $(".tile-container").draggable();
     });
+
+    function get_uri(tile) {
+        var id_val = $(tile).parent("dl > dd").filter(":first").text().trim();
+        // jQuery ajax + utilize Promise object
+        $.ajax("#springUrl('/report/ajax/uri')", {
+            method: "GET",
+            async: true,
+            cache: false,   
+            data: "id=" + id_val, 
+        }).done(function(uri) {
+            var html = '#modal_uri( )';        
+            $(html).find("input[type='text']").val(uri);
+            alert(uri);
+            modal.open({ content: html});
+ #[[        $("#close-btn").click(function() {  
+            $("#close").click();                  ]]#
+        });
+        });
+    }; 
+
+    function put_away(tile) {
+        var url = "#springUrl('/checklist/remove')";
+        var id_val = $(tile).parent("div.tile-container").find("dl:first > dd").text().trim();
+        id = "id=" + id_val;
+        $.ajax(url, {
+            method: "POST",
+            async: true,
+            cached: false,
+            data: id
+        });
+        $(tile).parent("div.tile-container").slideUp(1000);
+    }
+
+    function start_new() {
+        var url = "#springUrl('/checklist/empty')";
+        $.ajax(url, {
+            method: "POST",
+            async: false,
+            cache: false
+        }); 
+        window.location.href="#springUrl('/report/search?new_search')";
+    };
+
 </script>

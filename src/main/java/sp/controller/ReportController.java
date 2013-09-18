@@ -3,9 +3,11 @@ package sp.controller;
 import java.text.DateFormat;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Set;
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 import javax.inject.Inject;
@@ -43,7 +45,7 @@ import sp.util.SpSortDefinition;
  */
 @Controller
 @RequestMapping("/report")
-@SessionAttributes(value = {"pagers"})
+@SessionAttributes(value = {"pagers", "checklist"})
 public class ReportController {
 
     private static final Logger logger = LoggerFactory.getLogger(ReportController.class);
@@ -54,6 +56,8 @@ public class ReportController {
     private int MAX_ON_PAGER;
     @Value("${pagination.threshold}")
     private int PAGINATION_THRESHOLD;
+    private int CHECKLIST_INITIAL_CAPACITY = 32;
+    
     @Inject
     private ReportService reportService;
 
@@ -98,6 +102,13 @@ public class ReportController {
 //        pager.setSource(new ArrayList());
         return pagers;
     }
+    
+    @ModelAttribute("checklist")
+    public Set<Long> createChecklist() {
+        logger.error("CREATE CHECKLIST INIT");
+        Set<Long> checklist = new HashSet<Long>(CHECKLIST_INITIAL_CAPACITY);
+        return checklist;
+    }
 
     public ReportController() {
     }
@@ -114,6 +125,9 @@ public class ReportController {
         model.addAttribute("startDate", new Date());
         model.addAttribute("endDate", new Date());
         model.addAttribute("performer", new String());
+        
+        logger.error("CHECKLIST: {}", model.asMap().get("checklist") );
+        
         return "form";
     }
 
@@ -150,7 +164,10 @@ public class ReportController {
 
         logger.error("Pager AFTER characteristics: pager={}, pageCount={}, pageSize={}",
                 pager.toString(), pager.getPageCount(), pager.getPageSize());
-
+        
+        logger.error("CHECKLIST IN POST: {}", model.asMap().get("checklist"));
+        //TODO: add checlkist to the model anfd to the session;
+        
         String searchId = SpHasher.getHash(new Object[]{startDate, endDate});
 
         model.addAttribute("search_id", searchId);
@@ -281,8 +298,8 @@ public class ReportController {
         System.out.println("Session id :" + req.getRequestedSessionId());
         return mav;
     }
-
-    @RequestMapping(value = "/ajax", method = RequestMethod.GET)
+    
+    @RequestMapping(value = "/suggest", method = RequestMethod.GET)
     public String realTimeSearch(Model model) {
         model.addAttribute("view", "ajax");
         return "search";

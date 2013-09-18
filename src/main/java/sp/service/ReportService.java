@@ -2,6 +2,7 @@ package sp.service;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 import sp.model.Report;
 
 /**
@@ -17,7 +18,9 @@ public interface ReportService {
 
     public List<Report> getReports(String performer, Date startDate, Date endDate);
 
-    public List<Report> getReports(Date startDate, Date endDate);    
+    public List<Report> getReports(Date startDate, Date endDate);   
+    
+    public List<Report> getReports(Set<Long> ids);
 
     public Report getReportById(Long id);
 

@@ -13,7 +13,7 @@
                         <li><a href="#springUrl('/registry')">#springMessage("menu.report.build.registry")</a></li>
                     </ul>
                 </li>
-                <li><a href="#springUrl('/report/ajax')">#springMessage("menu.report.ajax")</a></li>                                
+                <li><a href="#springUrl('/report/suggest')">#springMessage("menu.report.ajax")</a></li>                                
             </ul>
         </li>
         <li><a  href="#springUrl('/contact')">#springMessage("menu.contact")</a>

@@ -2,6 +2,7 @@ package sp.repository;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
@@ -9,8 +10,11 @@ import org.springframework.stereotype.Repository;
 import sp.model.Report;
 
 /**
+ * Implementation of {@link ReportRepository}
  *
  * @author Paul Kulitski
+ * @see ReportRepository
+ * @see Repository
  */
 @Repository
 public class ReportRepositoryImpl implements ReportRepository {
@@ -86,13 +90,21 @@ public class ReportRepositoryImpl implements ReportRepository {
 
     @Override
     public List<Report> getReports(Date startDate, Date endDate) {
-        TypedQuery<Report> query = 
+        TypedQuery<Report> query =
                 entityManager.createNamedQuery("Report.getReportsByPeriod", Report.class);
         query.setParameter("startDate", startDate);
         query.setParameter("endDate", endDate);
         return query.getResultList();
     }
-    
+
+    @Override
+    public List<Report> getReports(Set<Long> ids) {
+        TypedQuery<Report> query = 
+                entityManager.createNamedQuery("Report.getReportsByIds", Report.class);
+        query.setParameter("ids", ids);
+        return query.getResultList();
+    }
+
     @Override
     public Boolean hasReport(Long id) {
         TypedQuery<Report> query =

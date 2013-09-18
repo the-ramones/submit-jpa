@@ -1,22 +1,29 @@
 /* Confirmation float window */
 #confirm {
-    background-color: rgba(204, 103, 26, 0.95);
-    border: 3px solid rgba(184, 83, 36, 0.95);
+    color: #222;
+    background-color: rgb(224, 133, 36) ;
     box-shadow: 0 0 5px black;
     border-radius: 8px;
-    padding: 0 20px;
+    padding: 20px 20px;
     position: fixed;
     right: 20px;
-    bottom: 24px;
+    top: 24px;
     z-index: 999;
-    color: #222;
     font-weight: bold;
     font-style: italic;
     text-align: center;
 }
 
 /* Checklist tiles */
-.tile-container {
+.tile-container {    
+    box-shadow: 0 5px 10px #aaa;
+    padding: 6px 20px; 
+    border-radius: 8px; 
+    display:block-inline;
+    border-top: 30px solid rgba(224, 133, 36, 1);        
+    position: relative;
+    background-color: #FEFEFA;
+    background-color: rgba(255,255,255,0.5);    
     float: left; 
     width: 200px;
     margin-right: 10px;
@@ -27,7 +34,14 @@
     padding: 0;
     margin: 0;
 }
-.tile-container h2 {
+
+.tile-container h2 {        
+    margin: 0 auto;
+    padding: 20px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    text-align: center;
+    color: rgb(204, 103, 26);    
     padding: 0;
     margin: 0;
 }
@@ -44,13 +58,15 @@
     position: relative;
     width: 100%;
     height: 100px;
+    text-align: center;
 }
 
 .tile-button-menu {
     position: relative;
-    width: 60%;
-    display: block;
-    margin: 0 auto;
+    /*width: 50%;*/
+    display: inline-block; 
+    text-align: center;
+    /*margin: 0 auto;*/
 }
 /*
  * Main template css rules
@@ -315,6 +331,10 @@ button.action:active {
 
 .selected {
     background: rgba(204, 103, 26, 0.95);    /*crimson;*/
+}
+
+.selected-added {
+    background: rgba(204, 103, 26, 0.5);   
 }
 
 .table tbody tr:hover {

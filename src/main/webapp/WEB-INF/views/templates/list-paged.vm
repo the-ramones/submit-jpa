@@ -37,10 +37,19 @@
     #end
     
     <button class="action add" onclick="modal_add()">#springMessage('content.list.button.addnew')</button>    
-    <button class="action" onclick="add_to_watchlist()">#springMessage('content.list.button.addtowatchlist')</button>    
+    <button class="action" onclick="add_to_watchlist()">#springMessage('content.list.button.addtowatchlist')</button>
+
 </div>
 
+
 <script type="text/javascript">
+#[[  //TODO: l10n
+    $(document).ready(function() {
+       $(document.createElement("div"))
+                .attr("id", "confirm")
+                .appendTo($("body"))
+                .hide();      
+    });
 
     function add_to_watchlist() {
         var indexes = [];
@@ -50,13 +59,11 @@
             } catch (error){
                 console.log("Error while parsing ID for a elemend beign selected");
             }
-        });   
-        for (var i in indexes) {
-            alert(indexes[i]);
-        }
-        var url = "#springUrl('/report/ajax/watch')";
-        var indexesData = { "indexes" : indexes };
-        $.ajax( url, {
+        });    
+        if (indexes.length > 0) {
+            var url = ]]#"#springUrl('/report/ajax/watch')";#[[
+            var indexesData = { "indexes" : indexes };
+            $.ajax( url, {
                 method: "POST",
                 async: true,
                 cache: false,
@@ -64,13 +71,29 @@
                 complete: onWatchComplete,
                 dataType: 'text'
             }
-        );
+            );
+        } else {
+            $("#confirm").finish().html("Select at least one element. <br />Just click on it")  
+                .fadeIn(600)
+                .delay(3000)
+                .fadeOut(1200);
+        }
     };
 
     function onWatchComplete(xhr, status) {
-        console.log(status);
-        alert(status);
+        if (status === "success") {
+            $("#confirm").finish().html("Selected elements has been <br />added to your checklist");
+            $(".selected").removeClass("selected").addClass("selected-added");
+            //alert(status);
+        } else {
+            $("#confirm").finish().html("Cannot add selected elements.<br />Please, try later");
+            console.log("Cannot fulfil request to the server: " + status);
+        }       
+        $("#confirm").fadeIn(600)
+            .delay(3000)
+            .fadeOut(1200);
     }
+]]#
 
     function modal_add() {
         var html = '#modal_add( )';        

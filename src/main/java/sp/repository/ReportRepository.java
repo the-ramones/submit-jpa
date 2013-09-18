@@ -2,6 +2,7 @@ package sp.repository;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 import sp.model.Report;
 
 /**
@@ -18,6 +19,8 @@ public interface ReportRepository {
     public List<Report> getReports(String performer, Date startDate, Date endDate);
     
     public List<Report> getReports(Date startDate, Date endDate);
+    
+    public List<Report> getReports(Set<Long> ids);
     
     public Report saveReport(Report report);
 
