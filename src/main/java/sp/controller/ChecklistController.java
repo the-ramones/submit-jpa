@@ -29,32 +29,62 @@ public class ChecklistController {
     @Inject
     private ReportService reportService;
 
+    /**
+     * Checks User session for 'checklist' set with IDs of checked-for-later
+     * reports. Retrieves reports from the service layer and put it to the model
+     * for rendering in view
+     *
+     * @param session current user session object
+     * @param model model object
+     * @return view name
+     */
     @RequestMapping(value = "", method = RequestMethod.GET)
     public String checklist(HttpSession session, Model model) {
         Set<Long> checklist = (Set<Long>) session.getAttribute("checklist");
-        List<Report> reports;
-        if (!checklist.isEmpty()) {
+        List<Report> reports = null;
+        if ((checklist != null) && !checklist.isEmpty()) {
             reports = reportService.getReports(checklist);
+            /*
+             * Check for null was leaved for view
+             */
             model.addAttribute("reports", reports);
-        } else {
-            return "redirect:nothing";
-        }        
-        for (Long id : checklist) {
-            logger.info("ID added to checklist: {}", id);
+
+            StringBuilder sb = new StringBuilder(1024);
+            for (Long id : checklist) {
+                sb.append(id).append(' ');
+            }
+            logger.info("ID added to checklist: {}", sb.toString());
         }
         return "checklist";
     }
 
+    /**
+     * Empties User checklist.
+     *
+     * @param session current user session object
+     * @param model model object
+     * @return view name
+     */
     @RequestMapping(value = "empty", method = RequestMethod.POST)
     public String emptyChecklist(HttpSession session, Model model) {
         session.removeAttribute("checklist");
         model.addAttribute("new_search", "");
         return "redirect:/report/search";
     }
-    
-    @RequestMapping(value = "remove/{id}", method = RequestMethod.GET) 
-    public @ResponseBody String removeFromChecklist(@PathVariable Long id, 
-        HttpSession session, Model model) {
+
+    /**
+     * Removes an report with specified ID as a part of request URL.
+     *
+     * @param id an ID of report being removed
+     * @param session current user session object
+     * @param model model object
+     * @return string 'success' if was removed, 'missing' - if report with
+     * specified ID wasn't found in user's checklist
+     */
+    @RequestMapping(value = "remove/{id}", method = RequestMethod.GET)
+    public @ResponseBody
+    String removeFromChecklist(@PathVariable Long id,
+            HttpSession session, Model model) {
         Set<Long> checklist = (Set<Long>) session.getAttribute("checklist");
         if (checklist != null && !checklist.isEmpty()) {
             checklist.remove(id);
@@ -63,16 +93,30 @@ public class ChecklistController {
         }
         return "success";
     }
-    
+
+    /**
+     * Removes an report with specified ID as a request parameter.
+     *
+     * @param id an ID of report being removed
+     * @param session current user session object
+     * @param model model object
+     * @return string 'success' if was removed, 'missing' - if report with
+     * specified ID wasn't found in user's checklist
+     */
     //TODO: validation, Validator @NotNull or right in controller
     @RequestMapping(value = "remove", method = RequestMethod.POST)
-    public @ResponseBody String removeFromChecklistById(@RequestParam Long id,
-        HttpSession session, Model model) {
+    public @ResponseBody
+    String removeFromChecklistById(@RequestParam("id") Long id,
+            HttpSession session, Model model) {
         logger.error("IN REMOVE: {}", id);
+
         Set<Long> checklist = (Set<Long>) session.getAttribute("checklist");
-        if ((checklist != null) && (checklist.isEmpty())) {
+        if ((checklist != null) && !checklist.isEmpty()) {
             checklist.remove(id);
-            session.setAttribute("checklist", checklist);
+            /*
+             * TODO: Put back to the model or not?
+             */
+            logger.error("CHECKLIST:{}", checklist);            
         } else {
             return "missing";
         }

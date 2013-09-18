@@ -7,6 +7,7 @@
         <button class="action" onclick="start_new();">#springMessage('content.checklist.button.newsearch')</button>
     </div>
 </div>
+#if($reports)
 #foreach ($report in $reports)
 <div class="tile-container">
     <h2>Details of activity №${report.id}</h2>
@@ -33,6 +34,9 @@
     <button class="action" onclick="get_uri(this);">#springMessage('content.checklist.tile.uri')</button>
     <button class="action delete" onclick="put_away(this);">#springMessage('content.checklist.tile.away')</button>
 </div>
+#end
+#{else}
+    <p>#springMessage('content.checklist.nothing')</p>
 #end
 
 <script>
@@ -67,7 +71,9 @@
             method: "POST",
             async: true,
             cached: false,
-            data: id
+            data: id,
+            dataType: 'text',
+            success: function(data) {alert(data);}
         });
         $(tile).parent("div.tile-container").slideUp(1000);
     }

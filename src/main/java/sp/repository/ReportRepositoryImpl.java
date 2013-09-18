@@ -1,5 +1,6 @@
 package sp.repository;
 
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.Set;
@@ -99,7 +100,7 @@ public class ReportRepositoryImpl implements ReportRepository {
 
     @Override
     public List<Report> getReports(Set<Long> ids) {
-        TypedQuery<Report> query = 
+        TypedQuery<Report> query =
                 entityManager.createNamedQuery("Report.getReportsByIds", Report.class);
         query.setParameter("ids", ids);
         return query.getResultList();
@@ -111,5 +112,24 @@ public class ReportRepositoryImpl implements ReportRepository {
                 entityManager.createNamedQuery("Report.hasReport", Report.class);
         query.setParameter("id", id);
         return !query.getResultList().isEmpty();
+    }
+
+    @Override
+    public Long[] hasReports(Long[] ids) {
+        TypedQuery<Long> query =
+                entityManager.createNamedQuery("Report.hasReports", Long.class);
+        query.setParameter("ids", Arrays.asList(ids));
+        Long count = query.getSingleResult();
+        if (count == ids.length) {
+            return ids;
+        } else {
+            Long[] consistIds = new Long[ids.length];
+            for (Long id : ids) {
+                if (hasReport(id)) {
+                    consistIds[consistIds.length] = id;
+                }
+            }
+            return consistIds;
+        }
     }
 }

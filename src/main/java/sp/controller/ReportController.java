@@ -49,6 +49,7 @@ import sp.util.SpSortDefinition;
 public class ReportController {
 
     private static final Logger logger = LoggerFactory.getLogger(ReportController.class);
+    private static final int PAGERS_INITIAL_CAPACITY = 4;
     /*
      * Spring 3+ way. Previously, used @Value(#{systemProperties.pagination.threshold})
      */
@@ -57,7 +58,6 @@ public class ReportController {
     @Value("${pagination.threshold}")
     private int PAGINATION_THRESHOLD;
     private int CHECKLIST_INITIAL_CAPACITY = 32;
-    
     @Inject
     private ReportService reportService;
 
@@ -70,7 +70,7 @@ public class ReportController {
     }
 
     @ModelAttribute("settings")
-    public Map<String, String> populateReferenceDate() {
+    public Map<String, String> populateReferenceData() {
         Map<String, String> settings = new HashMap<String, String>();
         settings.put("maxOnPager", String.valueOf(MAX_ON_PAGER));
         settings.put("pagerThreshold", String.valueOf(PAGINATION_THRESHOLD));
@@ -84,25 +84,13 @@ public class ReportController {
         binder.registerCustomEditor(Date.class, new CustomDateEditor(df, true));
     }
 
-//    @ModelAttribute("pagers")
-//    public PagedListHolder<Report> populatePager() {
-//        Map<String, PagedListHolder<Report>> pagers = 
-//                new HashMap<String, PagedListHolder<Report>>(1);
-////        PagedListHolder<Report> pager = new PagedListHolder<Report>();
-////        pager.setSort(new SpSortDefinition());
-////        pager.setSource(new ArrayList());
-//        return pagers;
-//    }
     @ModelAttribute("pagers")
     public Map<String, PagedListHolder<Report>> populatePager() {
         Map<String, PagedListHolder<Report>> pagers =
-                new HashMap<String, PagedListHolder<Report>>(1);
-//        PagedListHolder<Report> pager = new PagedListHolder<Report>();
-//        pager.setSort(new SpSortDefinition());
-//        pager.setSource(new ArrayList());
+                new HashMap<String, PagedListHolder<Report>>(PAGERS_INITIAL_CAPACITY);
         return pagers;
     }
-    
+
     @ModelAttribute("checklist")
     public Set<Long> createChecklist() {
         logger.error("CREATE CHECKLIST INIT");
@@ -117,6 +105,12 @@ public class ReportController {
         this.reportService = reportService;
     }
 
+    /**
+     * Set up 'search report' form.
+     *
+     * @param model model object
+     * @return view name
+     */
     @RequestMapping(value = {"", "search"}, method = RequestMethod.GET, params = "new_search")
     public String setupForm(Model model) {
         logger.info("In GET SetupForm");
@@ -125,12 +119,23 @@ public class ReportController {
         model.addAttribute("startDate", new Date());
         model.addAttribute("endDate", new Date());
         model.addAttribute("performer", new String());
-        
-        logger.error("CHECKLIST: {}", model.asMap().get("checklist") );
-        
+
+        logger.error("CHECKLIST: {}", model.asMap().get("checklist"));
+        logger.error("PAGERS: {}", model.asMap().get("pagers"));
+
         return "form";
     }
 
+    /**
+     * POST request for searching for reports in the database.
+     *
+     * @param startDate start date
+     * @param endDate end date
+     * @param performer performer
+     * @param pagers session-scope pagers
+     * @param model model object
+     * @return view name
+     */
     // TODO: fix pagination, fix validation
     @RequestMapping(value = "search", method = RequestMethod.POST)
     public String doSearch(
@@ -164,10 +169,10 @@ public class ReportController {
 
         logger.error("Pager AFTER characteristics: pager={}, pageCount={}, pageSize={}",
                 pager.toString(), pager.getPageCount(), pager.getPageSize());
-        
+
         logger.error("CHECKLIST IN POST: {}", model.asMap().get("checklist"));
         //TODO: add checlkist to the model anfd to the session;
-        
+
         String searchId = SpHasher.getHash(new Object[]{startDate, endDate});
 
         model.addAttribute("search_id", searchId);
@@ -177,6 +182,16 @@ public class ReportController {
         return "redirect:search";
     }
 
+    /**
+     * Retrieve request page from the current user session for the specified
+     * search ID and populate model with the list of reports.
+     *
+     * @param pagers session-scoped pagers
+     * @param page requested page
+     * @param searchId an ID of current search
+     * @param model model object
+     * @return view name
+     */
     // TODO: 'page' param validation
     @RequestMapping(value = "search", method = RequestMethod.GET, params = {"search_id"})
     public String exposeList(
@@ -185,10 +200,11 @@ public class ReportController {
             @RequestParam(value = "search_id", required = true) String searchId,
             Model model) {
         logger.debug("In Redirect GET");
+
         boolean reject = false;
         PagedListHolder<Report> pager = pagers.get(searchId);
         if (pager == null) {
-            return "redirect:search/nothing";
+            reject = true;
         }
         if (page != null) {
             /*
@@ -202,13 +218,14 @@ public class ReportController {
             } else if (page.equalsIgnoreCase("first")) {
                 pager.setPage(0);
             } else if (page.equalsIgnoreCase("last")) {
-                pager.setPage(pager.getPageCount() - 1);
+                pager.setPage(pager.getPageCount() - PAGERS_INITIAL_CAPACITY);
             } else {
                 try {
                     Integer intPage = Integer.valueOf(page);
                     //TODO: fix validation                                        
-                    if ((intPage > 0) && (intPage <= pager.getPageCount()))
-                    pager.setPage(intPage - 1);
+                    if ((intPage > 0) && (intPage <= pager.getPageCount())) {
+                        pager.setPage(intPage - PAGERS_INITIAL_CAPACITY);
+                    }
                 } catch (NumberFormatException ex) {
                     logger.warn("Cannot parse page number from request parameter 'page'={}", page);
                     reject = true;
@@ -230,18 +247,38 @@ public class ReportController {
         model.addAttribute("pager", pager);
         return "list-paged";
     }
-    
-    @RequestMapping(value = "search/nothing", method = RequestMethod.GET) 
+
+    /**
+     * Renders 'nothing found' page for search criteria.
+     *
+     * @param model model object
+     * @return view name
+     */
+    @RequestMapping(value = "search/nothing", method = RequestMethod.GET)
     public String nothingFound(Model model) {
         return "nothing";
     }
 
+    /**
+     * Set up of 'detail' form.
+     *
+     * @param model model object
+     * @return view name
+     */
     @RequestMapping(value = "/detail", method = RequestMethod.GET)
     public String setupDetailForm(Model model) {
         model.addAttribute("view", "byid");
         return "byid";
     }
 
+    /**
+     * POST request for details of report with specified ID as a request
+     * parameter.
+     *
+     * @param id
+     * @param model
+     * @return view name
+     */
     @RequestMapping(value = "/detail", method = RequestMethod.POST)
     public String setupDetailForm(@RequestParam Long id, Model model) {
         if (reportService.hasReport(id)) {
@@ -254,20 +291,46 @@ public class ReportController {
         }
     }
 
+    /**
+     * REST-like request for details of report with specified ID as a request
+     * path part.
+     *
+     * @param id report's ID being searched for
+     * @param model model object
+     * @param request HTTP request object
+     * @return view name
+     */
     @RequestMapping(value = "detail/{id}", method = RequestMethod.GET)
     public String detailById(@PathVariable("id") Long id, Model model, HttpServletRequest request) {
         model.addAttribute("report", reportService.getReportById(id));
         model.addAttribute("uri", request.getRequestURL());
-        return "detail";    
+        return "detail";
     }
 
+    /**
+     * Set up of 'add new report' form.
+     *
+     * @param model model object
+     * @param response HTTP response object
+     * @return view name
+     */
     @RequestMapping(value = "add", method = RequestMethod.GET)
-    public String setupAddForm(Model model, HttpServletResponse res) {
+    public String setupAddForm(Model model, HttpServletResponse response) {
         model.addAttribute("view", "add");
         model.addAttribute("report", new Report());
         return "add";
     }
 
+    /**
+     * POST request for adding a new report to the database.
+     *
+     * @param report a new report
+     * @param result binding result object
+     * @param model model object
+     * @param req HTTP request object
+     * @param res HTTP response object
+     * @return {@link ModelAndView} object
+     */
     @RequestMapping(value = "add", method = RequestMethod.POST)
     public ModelAndView add(@Valid @ModelAttribute("report") Report report,
             BindingResult result, Model model, HttpServletRequest req, HttpServletResponse res) {
@@ -298,7 +361,8 @@ public class ReportController {
         System.out.println("Session id :" + req.getRequestedSessionId());
         return mav;
     }
-    
+
+    //TODO: implement it
     @RequestMapping(value = "/suggest", method = RequestMethod.GET)
     public String realTimeSearch(Model model) {
         model.addAttribute("view", "ajax");

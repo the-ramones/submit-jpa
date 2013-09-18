@@ -78,4 +78,9 @@ public class ReportServiceImpl implements ReportService {
     public Boolean hasReport(Long id) {
         return reportRepository.hasReport(id);
     }
+
+    @Override
+    public Long[] hasReports(Long[] ids) {
+        return reportRepository.hasReports(ids);
+    }
 }
