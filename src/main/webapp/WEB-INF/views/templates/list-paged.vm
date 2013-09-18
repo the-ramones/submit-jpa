@@ -50,7 +50,10 @@
             } catch (error){
                 console.log("Error while parsing ID for a elemend beign selected");
             }
-        });        
+        });   
+        for (var i in indexes) {
+            alert(indexes[i]);
+        }
         var url = "#springUrl('/report/ajax/watch')";
         var indexesData = { "indexes" : indexes };
         $.ajax( url, {
@@ -65,7 +68,8 @@
     };
 
     function onWatchComplete(xhr, status) {
-    function(xhr, status) {console.log(status);}
+        console.log(status);
+        alert(status);
     }
 
     function modal_add() {

@@ -64,21 +64,29 @@ public class AjaxController {
     public @ResponseBody
     String watchAll2(@RequestBody String indexes, Model model) {
         logger.info("In watch2");
-//        for (String id : indexes) {
-//            logger.info("id: {}", id);
-//        }
         return "success: " + indexes;
     }
 
-    @RequestMapping(value = "watc3")
+    private class R {
+
+        String i;
+        String g;
+    }
+
+    @RequestMapping(value = "watch3")   
     public @ResponseBody
-    //String watchAll(@RequestParam(value = "indexes", required = false) String[] indexes, Model model) {
-    String watchAll3(@RequestParam("indexes[]") String[] indexes, Model model) {
+    String watchAll3(@RequestParam("indexes") R indexes, Model model) {
         logger.info("In watch");
-        for (String id : indexes) {
-            logger.info("id: {}", id);
-        }
-        return "success:";
+        logger.error(indexes.toString());
+        return "success: " + indexes.toString();
+    }
+
+    @RequestMapping(value = "watch4")
+    public @ResponseBody
+    String watchAll4(@RequestBody R indexes, Model model) {
+        logger.info("In watch");
+        logger.error(indexes.toString());
+        return "success: " + indexes.toString();
     }
 
     @RequestMapping(value = "watch/{id}")
