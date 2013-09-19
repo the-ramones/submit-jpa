@@ -68,6 +68,8 @@ public class ChecklistController {
     @RequestMapping(value = "empty", method = RequestMethod.POST)
     public String emptyChecklist(HttpSession session, Model model) {
         session.removeAttribute("checklist");
+        // TODO: should or not?
+        session.removeAttribute("pagers");
         model.addAttribute("new_search", "");
         return "redirect:/report/search";
     }

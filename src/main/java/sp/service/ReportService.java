@@ -29,4 +29,6 @@ public interface ReportService {
     public Boolean hasReport(Long id);
 
     public Long[] hasReports(Long[] ids);
+    
+    public void removeReport(Long id);
 }

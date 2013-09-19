@@ -1,6 +1,9 @@
 package sp.controller;
 
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import javax.inject.Inject;
@@ -8,6 +11,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.support.PagedListHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -16,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import sp.model.Report;
 import sp.service.ReportService;
 
 /**
@@ -31,20 +36,58 @@ public class AjaxController {
     @Inject
     ReportService reportService;
 
-    @RequestMapping(value = "/delete", method = RequestMethod.POST)
+    /**
+     * Return an report object with specified ID.
+     *
+     * @param id an ID of report being requested
+     * @param model model object
+     * @return report object - if was found, null - otherwise
+     */
+    @RequestMapping(value = "", method = RequestMethod.GET)
     public @ResponseBody
-    String deleteReport(@RequestParam("id") Long id,
-            Model model) {
-        return "success";
+    Report getReport(@RequestParam Long id, Model model) {
+        logger.debug("IN GET REPORT AJAX");
+        logger.debug("Requested ID:", id);
+
+        if (id > 0) {
+            Report report = reportService.getReportById(id);
+            if (report != null) {
+                return report;
+            }
+        }
+        return null;
     }
 
-    @RequestMapping(value = "update")
+    /**
+     * Removes an report with specified ID from the database. Does nothing, if
+     * report with that ID wasn't found.
+     *
+     * @param id an ID of report being removed
+     * @param model model object
+     * @return string 'success' if removed from database, 'missing' - otherwise
+     */
+    @RequestMapping(value = "remove", method = RequestMethod.POST)
+    public @ResponseBody
+    String removeReport(@RequestParam("id") Long id,
+            Model model) {
+        logger.debug("IN GET REPORT AJAX");
+        logger.debug("Requested ID:", id);
+
+        if (reportService.hasReport(id)) {
+            reportService.removeReport(id);
+            return "success";
+        } else {
+            return "missing";
+        }
+    }
+
+    @RequestMapping(value = "update", method = RequestMethod.POST)
     public @ResponseBody
     String update(@RequestBody String report, Model model) {
         return "success";
     }
 
-    @RequestMapping(value = "add")
+    @RequestMapping(value = "add", method = RequestMethod.POST)
     public @ResponseBody
     String add(@RequestBody String report, Model model) {
         return "success";
@@ -62,7 +105,7 @@ public class AjaxController {
     @RequestMapping(value = "watch/{id}")
     public @ResponseBody
     String watchReportById(@PathVariable("id") Long id, HttpSession session, Model model) {
-        logger.info("In watchReportById");
+        logger.debug("In watchReportById");
 
         if (reportService.hasReport(id)) {
             Set<Long> checklist = (Set<Long>) session.getAttribute("checklist");
@@ -72,7 +115,7 @@ public class AjaxController {
             }
         }
 
-        logger.info("recieved ID: {}", id);
+        logger.debug("recieved ID: {}", id);
         return "";
     }
 
@@ -89,7 +132,7 @@ public class AjaxController {
     public @ResponseBody
     String watchAll(@RequestParam("indexes[]") Long[] indexes,
             HttpSession session, Model model) {
-        logger.info("In watch");
+        logger.debug("In watch");
 
         Set<Long> checklist = (Set<Long>) session.getAttribute("checklist");
         if (checklist != null) {
@@ -100,16 +143,16 @@ public class AjaxController {
             } else if (check.length != 0) {
                 checklist.addAll(Arrays.asList(check));
                 StringBuilder sb = new StringBuilder(check.length * 4);
-                for (Long id: check) {
+                for (Long id : check) {
                     sb.append(id).append(',');
                 }
                 return sb.toString();
             }
         }
-        
-        logger.info("AJAX: checklist {}", checklist);
+
+        logger.debug("AJAX: checklist {}", checklist);
         Map pagers = (Map) session.getAttribute("pagers");
-        logger.info("AJAX: pagers {}", pagers);
+        logger.debug("AJAX: pagers {}", pagers);
 
         return "";
     }
@@ -174,23 +217,59 @@ public class AjaxController {
     public @ResponseBody
     String getUri(@RequestParam("id") Long id,
             HttpServletRequest request, Model model) {
-        logger.error("IN URL AJAX: {}", id);
+        logger.debug("IN URL AJAX: {}", id);
 
         if (reportService.hasReport(id)) {
             StringBuffer url = request.getRequestURL();
             StringBuilder server = new StringBuilder(url.length());
             server.append(url.substring(0, url.indexOf(request.getRequestURI())));
             server.append(request.getContextPath()).append("/report/detail/").append(id);
-            
-            logger.error("URL: {}", request.getRequestURL());
-            logger.error("URI: {}", request.getRequestURI());
-            logger.error("index of URI in URL: {}", url.indexOf(request.getRequestURI()));
 
-            logger.error("IN AJAX URL: {}", url.toString());
+            logger.debug("URL: {}", request.getRequestURL());
+            logger.debug("URI: {}", request.getRequestURI());
+            logger.debug("index of URI in URL: {}", url.indexOf(request.getRequestURI()));
+            logger.debug("IN AJAX URL: {}", server.toString());
 
             return server.toString();
         } else {
             return "";
         }
+    }
+
+    /**
+     * Removes an report with specified index from the pager, so it still
+     * up-to-date with the User actions.
+     *
+     * @param id an report's ID being looking for
+     * @param searchId search id
+     * @param session session object
+     * @param model model object
+     * @return string 'success' - if successfully removed, empty string -
+     * otherwise
+     */
+    @RequestMapping(value = "pager/remove", method = RequestMethod.POST)
+    public @ResponseBody
+    String removeFromPager(@RequestParam("id") Long id,
+            @RequestParam("search_id") String searchId,
+            HttpSession session, Model model) {
+        PagedListHolder<Report> pager = ((Map<String, PagedListHolder<Report>>) session.getAttribute("pagers")).get(searchId);
+        if (pager != null) {
+            List<Report> list = pager.getSource();
+            Report idReport = new Report();
+            idReport.setId(id);
+            int pos = Collections.binarySearch(list, id, new Comparator() {
+                @Override
+                public int compare(Object report1, Object report2) {
+                    if (((Report) report1).getId() == (((Report) report2)).getId()) {
+                        return 0;
+                    } else {
+                        return -1;
+                    }
+                }
+            });
+            list.remove(pos);
+            return "success";
+        }
+        return "";
     }
 }

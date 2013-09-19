@@ -83,4 +83,10 @@ public class ReportServiceImpl implements ReportService {
     public Long[] hasReports(Long[] ids) {
         return reportRepository.hasReports(ids);
     }
+
+    @Override
+    @Transactional
+    public void removeReport(Long id) {
+        reportRepository.removeReport(id);
+    }
 }

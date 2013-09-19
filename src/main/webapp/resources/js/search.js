@@ -57,7 +57,7 @@ $(document).ready(function() {
         });
     });
     /*
-     * On-click modal apзearing
+     * On-click modal appearing
      */
     $(".table tbody tr").click(function(event) {
         if (!$(event.target).is(".button-block, .action")) {
@@ -73,6 +73,11 @@ $(document).ready(function() {
             top: $(this).position().top + $(this).height(),
             right: "20px"//$(this).position().left + $(this).width()
         });
+        // storing ID of clicked report for use with Ajax CRUD operations
+        var id_val = tr.find("td:first").text().trim();
+        buttons.data("id", id_val);
+        tr.addClass("active-row");
+        // append buttons to the row
         $(this).append(buttons);
         buttons.removeClass("hidden");
     });

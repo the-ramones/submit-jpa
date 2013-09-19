@@ -76,6 +76,7 @@
         <property name="basenames">
             <util:list>
                 <value>/WEB-INF/i18n/messages</value>
+                <value>/WEB-INF/i18n/messages-frontend</value>
                 <value>/WEB-INF/i18n/jslibs</value>
                 <value>/WEB-INF/i18n/validation_messages</value>                
             </util:list>                

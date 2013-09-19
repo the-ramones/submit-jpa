@@ -218,13 +218,13 @@ public class ReportController {
             } else if (page.equalsIgnoreCase("first")) {
                 pager.setPage(0);
             } else if (page.equalsIgnoreCase("last")) {
-                pager.setPage(pager.getPageCount() - PAGERS_INITIAL_CAPACITY);
+                pager.setPage(pager.getPageCount() - 1);
             } else {
                 try {
                     Integer intPage = Integer.valueOf(page);
                     //TODO: fix validation                                        
-                    if ((intPage > 0) && (intPage <= pager.getPageCount())) {
-                        pager.setPage(intPage - PAGERS_INITIAL_CAPACITY);
+                    if ((intPage > 0) && (intPage < pager.getPageCount())) {
+                        pager.setPage(intPage - 1);
                     }
                 } catch (NumberFormatException ex) {
                     logger.warn("Cannot parse page number from request parameter 'page'={}", page);

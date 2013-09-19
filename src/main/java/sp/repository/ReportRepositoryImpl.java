@@ -120,7 +120,7 @@ public class ReportRepositoryImpl implements ReportRepository {
                 entityManager.createNamedQuery("Report.hasReports", Long.class);
         query.setParameter("ids", Arrays.asList(ids));
         Long count = query.getSingleResult();
-        if (count == ids.length) {
+        if (count == ids.length) { 
             return ids;
         } else {
             Long[] consistIds = new Long[ids.length];
@@ -128,8 +128,13 @@ public class ReportRepositoryImpl implements ReportRepository {
                 if (hasReport(id)) {
                     consistIds[consistIds.length] = id;
                 }
-            }
+            } 
             return consistIds;
         }
+    }
+
+    @Override
+    public void removeReport(Long id) {        
+        entityManager.remove(getReportById(id));
     }
 }
