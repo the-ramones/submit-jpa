@@ -178,12 +178,17 @@ public class AjaxController {
 
         if (reportService.hasReport(id)) {
             StringBuffer url = request.getRequestURL();
-            url.substring(0, url.indexOf(request.getRequestURI()));
-            url.append("/report/detail/").append(id);
+            StringBuilder server = new StringBuilder(url.length());
+            server.append(url.substring(0, url.indexOf(request.getRequestURI())));
+            server.append(request.getContextPath()).append("/report/detail/").append(id);
+            
+            logger.error("URL: {}", request.getRequestURL());
+            logger.error("URI: {}", request.getRequestURI());
+            logger.error("index of URI in URL: {}", url.indexOf(request.getRequestURI()));
 
             logger.error("IN AJAX URL: {}", url.toString());
 
-            return url.toString();
+            return server.toString();
         } else {
             return "";
         }
