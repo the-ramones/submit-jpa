@@ -1,123 +1,49 @@
-
-//TODO: l10n
-$(document).ready(function() {
-    $(document.createElement("div"))
-            .attr("id", "confirm")
-            .appendTo($("body"))
-            .hide();
-});
-
-function add_to_watchlist() {
-    var indexes = [];
-    $('tr.selected').each(function(index, value) {
-        try {
-            indexes.push(parseInt($(value).find('td:first-child').html()));
-        } catch (error) {
-            console.log("Error while parsing ID for a elemend beign selected");
-        }
-    });
-    if (indexes.length > 0) {
-        var url = "#springUrl('/report/ajax/watch')"; 
-                var indexesData = {"indexes": indexes};
-        $.ajax(url, {
-            method: "POST",
-            async: true,
-            cache: false,
-            data: indexesData,
-            complete: onWatchComplete,
-            dataType: 'text'
-        }
-        );
-    } else {
-        $("#confirm").finish().html("Select at least one element. <br />Just click on it")
-                .fadeIn(600)
-                .delay(3000)
-                .fadeOut(1200);
-    }
-}
-;
-
-function onWatchComplete(xhr, status) {
-    if (status === "success") {
-        $("#confirm").finish().html("Selected elements has been <br />added to your checklist");
-        $(".selected").removeClass("selected").addClass("selected-added");
-        //alert(status);
-    } else {
-        $("#confirm").finish().html("Cannot add selected elements.<br />Please, try later");
-        console.log("Cannot fulfil request to the server: " + status);
-    }
-    $("#confirm").fadeIn(600)
-            .delay(3000)
-            .fadeOut(1200);
-}
-
-
-function modal_add() {
-    var html = '#modal_add( )';
-    modal.open({content: html});
-    $("#close-btn").click(function() {
-        $("#close").click();
-    });
-}
-;
-
 function modal_update() {
-    var html = '#modal_update( )';
-    modal.open({content: html});
-    $("#close-btn").click(function() {
-        $("#close").click();
-    });
-}
-;
-
-function modal_delete(delete_button) {
-    // modal form HTML template
-    var html = '#modal_delete( )';
-    // template processing
+    // getting a ajax backing object
     var url = "#springUrl('/report/ajax')";
+    var html = '#modal_update( )';
+    html = $(html);
     var id_val = $(delete_button).parent(".button-block").data("id").trim();
-    $.get(url,
+            $.get(url,
             {id: id_val},
     function(report) {
-        alert($(html).html());
         html = $(html).find("#id").text(report.id).end()
-                .find("#startDate").text(report.startDate).end()
-                .find("#endDate").text(report.startDate).end()
+                .find("#startDate").text((new Date(report.startDate)).toString()).end()
+                .find("#endDate").text((new Date(report.endDate)).toString()).end()
                 .find("#performer").text(report.performer).end()
                 .find("#activity").text(report.activity).end();
+        html.find("span").text(report.id);
         html = html.get(0).outerHTML;
-        alert(html);
         modal.open({content: html});
+        $("#close-btn").click(function() {
+            $("#close").click();
+        });
     },
-            'json');
-
-    $("#close-btn").click(function() {
-        $("#close").click();
-    });
-    $("#confirm-btn").click(function() {
-        var url = "#springUrl('/report/ajax/remove')";
-        $.post(url,
-                {id: id_val},
-        function(data) {
-            if (data === 'success') {
-                $("#confirm").finish().html("Selected element has been <br />removed from the database");
-                $("#close").click();
-            } else {
-                $("#confirm").finish().html("Cannot remove selected element<br />cause it doesn't exist.<br /> Please, refresh the page");
-                $("#close").click();
-            }
+            'json'
+            );
+    var url_update = "#springUrl('/report/ajax/update')";
+    var serial_report = $("form[name='report-update']").serialize();
+    $("update-btn").click(function() {
+        $.ajax(url_update, {
+        method: "POST",
+                async: true,
+                cache: false,
+                data: serial_report,
+                success: function(data) {
+            $("#confirm").finish().html("Report has been successfully updated<br />in the database");
+            $("#confirm").fadeIn(600)
+                    .delay(3000)
+                    .fadeOut(1200);
+            $("close-btn").click();
         },
-                'text'
-                );
+                error: function() {
+            $("#confirm").finish().html("Report cannot be updated<br />in the database");
+            $("#confirm").fadeIn(600)
+                    .delay(3000)
+                    .fadeOut(1200);
+            $("close-btn").click();
+        }        
     });
-}
-;
-
-function modal_action() {
-    var html = '#modal_action( )';
-    modal.open({content: html});
-    $("#close-btn").click(function() {
-        $("#close").click();
+    return false;
     });
-}
-;
+};

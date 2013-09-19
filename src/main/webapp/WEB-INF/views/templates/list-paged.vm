@@ -25,7 +25,7 @@
             #end
             <div class="button-block clearfix hidden">
                 <button class="action" onclick="modal_action(this);">#springMessage('button.action.get')</button>
-                <button class="action update" onclick="modal_update()">#springMessage('button.action.update')</button>          
+                <button class="action update" onclick="modal_update(this);">#springMessage('button.action.update')</button>          
                 <button class="action delete" onclick="modal_delete(this);">#springMessage('button.action.delete')</button>
             </div>            
         </tbody>
@@ -106,27 +106,48 @@
 ]]#
 
     function modal_add() {
+        var url = "#springUrl('/report/ajax/add')";  
         var html = '#modal_add( )';        
         modal.open({ content: html });
-        $("#close-btn").click(function() {
+#[[     $("#close-btn").click(function() {
             $("#close").click();
+        });
+        $("#add-btn").click(function(event) {
+            var  $confirm = $("#confirm");
+            var serial_report = $(this).parent("form[name='report-add']").serialize();
+            $.post(url,
+                serial_report,
+                function(data, status, jxhr) {
+                    if (data === 'success') {
+                        $confirm.html("Report has been successfully added<br />to the database");
+                    } else {
+                        $confirm.html("Report hasn't been added.<br />Please, try later");
+                    }
+                    $confirm.finish().fadeIn(600).delay(2800).fadeOut(1200);
+                    $("#close-btn").click();
+                },
+            'text'
+            );            
+            return false;
         });
     }; 
 
-    function modal_update() {
+]]#
+
+    function modal_update(update_button) {
         // getting a ajax backing object
         var url = "#springUrl('/report/ajax')";          
         var html = '#modal_update( )';        
         html = $(html);
-        var id_val = $(delete_button).parent(".button-block").data("id").trim();
+#[[     var id_val = $(update_button).parent(".button-block").data("id").trim();
         $.get(url, 
             {id: id_val},
             function(report) {
-                html = $(html).find("#id").text(report.id).end()
-                       .find("#startDate").text((new Date(report.startDate)).toString()).end()
-                       .find("#endDate").text((new Date(report.endDate)).toString()).end()
-                       .find("#performer").text(report.performer).end()
-                       .find("#activity").text(report.activity).end();
+                html.find("#startDate").attr("value", (new Date(report.startDate)).toString());
+                html.find("#endDate").attr("value", (new Date(report.endDate)).toString());
+                html.find("#performer").attr("value", report.performer);
+                html.find("#activity").attr("value", report.activity);
+                html.find("#activity").val(report.activity);
                 html.find("span").text(report.id);
                 html = html.get(0).outerHTML;
                 modal.open({content: html});
@@ -135,10 +156,13 @@
                 });
             },
             'json'
-        );        
-        var url_update = "#springUrl('/report/ajax/update')";
-        var serial_report = $("form[name='report-update']").serialize();
-        $("update-btn").click(function() {
+        );    
+        //alert("Here");
+]]#        var url_update = "#springUrl('/report/ajax/update')";  #[[
+        $("#update-btn").click(function(e) {
+            // before ajax call cause defaul action will be fired up
+            e.preventDefault();           
+            var serial_report = $("form[name='report-update']").serialize();
             $.ajax(url_update, {
                 method: "POST",
                 async: true,
@@ -157,11 +181,14 @@
                         .delay(3000)
                         .fadeOut(1200);                      
                     $("close-btn").click();
-                }
-            );
+                }        
+            }); 
+            //alert("Watch out!");            
+            return false;
         });
-    };
-
+        //alert("Here");
+};
+]]#
     function modal_delete(delete_button) {
         // modal form HTML template
         var html = '#modal_delete( )'; 
@@ -177,6 +204,7 @@
                        .find("#endDate").text((new Date(report.endDate)).toString()).end()
                        .find("#performer").text(report.performer).end()
                        .find("#activity").text(report.activity).end();
+                html.find("span").text(report.id);
                 // TODO: remove additional <div>
                 html = html.get(0).outerHTML;
                 modal.open({ content: html });
@@ -209,7 +237,17 @@
              },
              'json');        
  ]]#
-    };
+     //      var remove_from_checklist_url = "#springUrl('/checklist/remove/')" + id_val;
+#[[  //      $.post(remove_from_checklist_url, 
+     //       {},
+     //      function(data) {
+     //           if (data !== "success") {
+     //               console.log("Cannot remove report from checklist.");
+     //           }
+     //       },
+     //       'text'
+     //      );
+    }; ]]#
 
     function modal_action(action_button) {
         var id_val = $(action_button).parent(".button-block").data("id").trim();        
@@ -227,6 +265,7 @@
                        .find("#endDate").text((new Date(report.endDate)).toString()).end()
                        .find("#performer").text(report.performer).end()
                        .find("#activity").text(report.activity).end();
+                html.find("span").text(report.id);
                 // TODO: remove additional <div>                          
                // html = html.get(0).outerHTML;      
              },
