@@ -24,9 +24,9 @@
             </tr>
             #end
             <div class="button-block clearfix hidden">
-                <button class="action" onclick="modal_action(this);">#springMessage('button.action.get')</button>
-                <button class="action update" onclick="modal_update(this);">#springMessage('button.action.update')</button>          
-                <button class="action delete" onclick="modal_delete(this);">#springMessage('button.action.delete')</button>
+                <button class="action" onclick="modalAction(this);">#springMessage('button.action.get')</button>
+                <button class="action update" onclick="modalUpdate(this);">#springMessage('button.action.update')</button>          
+                <button class="action delete" onclick="modalDelete(this);">#springMessage('button.action.delete')</button>
             </div>            
         </tbody>
     </table>
@@ -40,19 +40,60 @@
         #end
     #end
     
-    <button class="action add" onclick="modal_add(this);">#springMessage('content.list.button.addnew')</button>    
-    <button class="action" onclick="add_to_watchlist()">#springMessage('content.list.button.addtowatchlist')</button>
+    <button class="action add" onclick="modalAdd(this);">#springMessage('content.list.button.addnew')</button>    
+    <button class="action" onclick="addToChecklist()">#springMessage('content.list.button.addtowatchlist')</button>
 
 </div>
 
 
 <script type="text/javascript">
 
-    var searchId = $search_id;
-
-#[[ //TODO: l10n with Velocity L10n capabilities
     /*
-     * Add pop-up hint on the page. Make it invisible
+     * Constants
+     */
+    var searchId = $search_id;
+    
+    /*
+     * URLs  
+     */
+    var addToChecklistUrl = "#springUrl('/report/ajax/watch')";
+    var addReportUrl = "#springUrl('/report/ajax/add')";  
+    var updateReportUrl = "#springUrl('/report/ajax/update')";
+    var deleteReportUrl = #springUrl('/report/ajax/remove')";
+    var getReportUrl = "#springUrl('/report/ajax')";
+    var deleteFromChecklistUrl = "#springUrl('/checklist/remove/')";
+    var getReportUriUrl = "#springUrl('/report/ajax/uri')";
+
+    /*
+     * Messages
+     */
+    var SELECT_ONE_MSG = "#springMessage('checklist.selectone')";
+    var ADDED_TO_CHECKLIST_MSG = "#springMessage('checklist.added')";
+    var NOTADDED_TO_CHECKLIST_MSG = "#springessage('checklist.notadded')";     
+    var ADDED_MSG = "#springMessage('add.added')";
+    var NOTADDED_MSG = "#springMessage('add.notadded')";
+    var UPDATED_MSG = "#springMessage('update.updated')";
+    var NOTUPDATE_MSG = "#springMessage('update.notupdated')";
+    var DELETED_MSG = "#springMessage('delete.deleted')";
+    var NOTDELETED_MSG = "#springMessage('delete.notdeleted')";
+    var URI_GOTTEN_MSG = "#springUrl('geturi.gotten')";
+
+    /*
+     * Modal window HTML templates
+     */
+    var modalAddHtml = '#modal_add()';
+    var modalUpdateHtml = '#modal_update()';
+    var modalDeleteHtml = '#modal_delete()'; 
+    var modalActionHtml = '#modal_action()';
+
+    /*
+     * Utilizes: 
+     *    1. modal - modal.js
+     */
+      
+#[[ 
+    /*
+     * Pop-up hint 
      */
     $(document).ready(function() {
        $(document.createElement("div"))
@@ -61,7 +102,10 @@
                 .hide();      
     });
 
-    function add_to_watchlist() {
+    /*
+     * Add to checklist handler 
+     */
+    function addToChecklist() {
         var indexes = [];
         $('tr.selected').each( function(index, value) {            
             try {
@@ -71,272 +115,263 @@
             }
         });    
         if (indexes.length > 0) {
-            var url = ]]#"#springUrl('/report/ajax/watch')";#[[
             var indexesData = { "indexes" : indexes };
-            $.ajax( url, {
-                method: "POST",
-                async: true,
-                cache: false,
-                data: indexesData,
-                complete: onWatchComplete,
-                dataType: 'text'
-            }
-            );
+            $.ajax( addToChecklistUrl, 
+                   {method: "POST",
+                    async: true,
+                    cache: false,
+                    data: indexesData,
+                    complete: onWatchComplete,
+                    dataType: 'text' });
         } else {
-            $("#confirm").finish().html("Select at least one element. <br />Just click on it")  
+            $("#confirm").finish().html(SELECT_ONE_MSG)  
                 .fadeIn(600)
                 .delay(3000)
                 .fadeOut(1200);
         }
     };
 
+    /*
+     * Callback for addToChecklist Ajax request
+     */
     function onWatchComplete(xhr, status) {
         if (status === "success") {
-            $("#confirm").finish().html("Selected elements has been <br />added to your checklist");
+            $("#confirm").finish().html(ADDED_TO_CHECKLIST_MSG);
             $(".selected").removeClass("selected").addClass("selected-added");
-            //alert(status);
         } else {
-            $("#confirm").finish().html("Cannot add selected elements.<br />Please, try later");
+            $("#confirm").finish().html(NOTADDED_TO_CHECKLIST_MSG);
             console.log("Cannot fulfil request to the server: " + status);
         }       
         $("#confirm").fadeIn(600)
-            .delay(3000)
-            .fadeOut(1200);
-    }
-]]#
+                     .delay(3000)
+                     .fadeOut(1200);
+    };
 
-    function modal_add(add_button) {
-        var url = "#springUrl('/report/ajax/add')";  
-        var html = '#modal_add( )';        
+    /*
+     * Adding new report handler
+     */
+    function modalAdd(addButton) {
+        var url = addReportUrl;  
+        var html = modalAddHtml;       
         modal.open({ content: html });
-#[[     $("#close-btn").click(function() {
-            $("#close").click();
-        });
-        $("form[name='report-add']").validate({
-//  debug: true,
-    rules: {
-        startDate: {
-            required: true,
-            reportdate: true
-        },
-        endDate: {
-            reportdate: true
-        },
-        performer: {
-            required: true,
-            rangelength: [1, 255],
-            regexp: performer_regexp
-        },
-        activity: {
-            required: true,
-            rangelength: [1, 255],
-            regexp: activity_regexp
-        }
-    }
-});
-        $("#add-btn").click(function(event) {
-       // if ($("form[name='report-add']").valid()) {
-            var  $confirm = $("#confirm");
-            var serial_report = $(add_button).parent("form[name='report-add']").serialize();
-            serial_report = $('form[name="report-add"]').serialize();
-            $.post(url,
-                serial_report,
-                function(data, status, jxhr) {
-                    if (data.status === 'success') {
-                        $confirm.html("Report has been successfully added<br />to the database");
-                    } else {
-                        $confirm.html("Report hasn't been added.<br />Please, try later");
-                    }                    
-                    $confirm.finish().fadeIn(600).delay(2800).fadeOut(1200);
-                },
-            'text'
-            );   
-            $("#close-btn").click();         
-            return false;
-         //   } //if
-        });
-    }; 
-
-]]#
-
-    function modal_update(update_button) {
-        // getting a ajax backing object
-        var url = "#springUrl('/report/ajax')";   
-        var url_update = "#springUrl('/report/ajax/update')";         
-        var html = '#modal_update( )';        
-        html = $(html);
-#[[     var id_val = $(update_button).parent(".button-block").data("id").trim();
-        $.get(url, 
-            {id: id_val},
-            function(report) {
-                html.find("#startDate").attr("value", (new Date(report.startDate)).toString());
-                html.find("#endDate").attr("value", (new Date(report.endDate)).toString());
-                html.find("#performer").attr("value", report.performer);
-                html.find("#activity").attr("value", report.activity);
-                html.find("#activity").val(report.activity);
-                html.find("span").text(report.id);
-                html = html.get(0).outerHTML;
-                modal.open({content: html});
-                $("#close-btn").click(function() {
-                    $("#close").click();
-                });
-
-
-$("form[name='report-update']").validate({
-//  debug: true,
-    rules: {
-        startDate: {
-            required: true,
-            reportdate: true
-        },
-        endDate: {
-            reportdate: true
-        },
-        performer: {
-            required: true,
-            rangelength: [1, 255],
-            regexp: performer_regexp
-        },
-        activity: {
-            required: true,
-            rangelength: [1, 255],
-            regexp: activity_regexp
-        }
-    }
-});
-
-
-                $("#update-btn").click(function(e) {
- // before ajax call cause defaul action will be fired up
-            e.preventDefault();
-
-            if($("form[name='report-update']").valid()) {
-      
-            alert("Watch out!"); 
-            var id_val = $(update_button).parent(".button-block").data("id").trim();                
-            var serial_report = $("form[name='report-update']").serialize();
-            serial_report = serial_report + "&id=" + encodeURI(id_val);
-            $.ajax(url_update, {
-                method: "POST",
-                async: true,
-                cache: false,
-                data: serial_report,
-                success: function(data) {
-                    $("#confirm").finish().html("Report has been successfully updated<br />in the database");                         
-                    $("#confirm").fadeIn(600)
-                        .delay(3000)
-                        .fadeOut(1200);                      
-                },
-                error: function() {
-                    $("#confirm").finish().html("Report cannot be updated<br />in the database");                                                                 
-                    $("#confirm").fadeIn(600)
-                        .delay(3000)
-                        .fadeOut(1200);                      
-                }        
-            }); 
-            alert("Watch out!");            
-            $("#close-btn").click();
-            } //#if
-            return false;
-                });
-            },
-            'json' 
-        );           
-]]#      
-};
-
-    function modal_delete(delete_button) {
-        // modal form HTML template
-        var html = '#modal_delete( )'; 
-        // template processing
-        var url = "#springUrl('/report/ajax')";  
-//      var deleted_row = $('.table tr > td:first')
-        var id_val = $(delete_button).parent(".button-block").data("id").trim();
-#[[        $.get(url, 
-             {id: id_val},
-             function(report) {
-                html = $(html).find("#id").text(report.id).end()
-                       .find("#startDate").text((new Date(report.startDate)).toString()).end()
-                       .find("#endDate").text((new Date(report.endDate)).toString()).end()
-                       .find("#performer").text(report.performer).end()
-                       .find("#activity").text(report.activity).end();
-                html.find("span").text(report.id);
-                // TODO: remove additional <div>
-                html = html.get(0).outerHTML;
-                modal.open({ content: html });
         $("#close-btn").click(function() {
             $("#close").click();
         });
-        $("#confirm-btn").click(function() {   
-            var url = ]]#"#springUrl('/report/ajax/remove')";#[[
-            $.post(url, 
-                   {id: id_val},
-                   function(data) {
-                      if (data === 'success') {                        
-                        $("#close").click(); 
-                        // remove table row from DOM                        
-                        $(".button-block").addClass(".hidden").appendTo(".table");
-                        $(".active-row").remove();
-                        // remove from checklist? and pager? URL: '/report/ajax/pager/remove'
-                        $("#confirm").finish().html("Selected element has been <br />removed from the database"); 
-                      } else {
-                        $("#close").click(); 
-                        $("#confirm").finish().html("Cannot remove selected element<br />cause it doesn't exist.<br /> Please, refresh the page");                         
-                      }
-                      $("#confirm").fadeIn(600)
-                        .delay(3000)
-                        .fadeOut(1200);
-                   },
-                   'text'
-            );
+        $("form[name='report-add']").validate({
+        //  debug: true,
+            rules: {
+               startDate: {
+                    required: true,
+                    reportdate: true
+                },
+                endDate: {
+                    reportdate: true
+                },
+                performer: {
+                    required: true,
+                    rangelength: [1, 255],
+                    regexp: performer_regexp
+                },
+                activity: {
+                    required: true,
+                    rangelength: [1, 255],
+                    regexp: activity_regexp
+                }
+            }
         });
-             },
-             'json');        
- ]]#
-     //      var remove_from_checklist_url = "#springUrl('/checklist/remove/')" + id_val;
-#[[  //      $.post(remove_from_checklist_url, 
-     //       {},
-     //      function(data) {
-     //           if (data !== "success") {
-     //               console.log("Cannot remove report from checklist.");
-     //           }
-     //       },
-     //       'text'
-     //      );
-    }; ]]#
+        $("#add-btn").click(function(e) {
+            e.preventDefault();
+        //  if ($("form[name='report-add']").valid()) {
+            var  $confirm = $("#confirm");
+            var serial_report = $(addButton).parent("form[name='report-add']").serialize();
+            serialReport = $('form[name="report-add"]').serialize();
+            $.post(url,
+                   serialReport,
+                   function(data, status, jxhr) {
+                       if (data.status === 'success') {
+                           $confirm.html(ADDED_MSG);
+                        } else {
+                           $confirm.html(NOTADDED_MSG);
+                        }                    
+                        $confirm.finish().fadeIn(600).delay(3000).fadeOut(1200);
+                    },
+                    'text'
+            );   
+            $("#close-btn").click();         
+            return false;
+        //  } //#if
+        });
+    } 
 
-    function modal_action(action_button) {
-        var id_val = $(action_button).parent(".button-block").data("id").trim();        
-        var html = '#modal_action( )';
-        html = $(html);
-        var error = false;
-////////
-           var url = "#springUrl('/report/ajax')"; 
-#[[        $.get(url, 
-             {id: id_val},
-             function(report) {
-                //alert("SUCCESS 1");
-                html.find("#id").text(report.id).end()
-                       .find("#startDate").text((new Date(report.startDate)).toString()).end()
-                       .find("#endDate").text((new Date(report.endDate)).toString()).end()
-                       .find("#performer").text(report.performer).end()
-                       .find("#activity").text(report.activity).end();
-                html.find("span").text(report.id);
-                // TODO: remove additional <div>                          
-               // html = html.get(0).outerHTML;      
+    /*
+     * Updating report handler
+     */
+    function modalUpdate(updateButton) {
+        var url = getReportUrl;   
+        var urlUpdate = updateReportUrl;         
+        var html = $(modalUpdateUrl);        
+        var idVal = $(update_button).parent(".button-block").data("id").trim();
+        $.get(url, 
+              {id: idVal},
+              function(report) {
+                  // populate form with returned report fields
+                  html.find("#startDate").attr("value", (new Date(report.startDate)).toString());
+                  html.find("#endDate").attr("value", (new Date(report.endDate)).toString());
+                  html.find("#performer").attr("value", report.performer);
+                  html.find("#activity").attr("value", report.activity);
+                  html.find("#activity").val(report.activity);
+                  html.find("span").text(report.id);
+                  html = html.get(0).outerHTML;
+                  
+                  modal.open({content: html});
+                  $("#close-btn").click(function() {
+                      $("#close").click();
+                  });
+                  
+                  // validate the form
+                  $("form[name='report-update']").validate({
+                  //  debug: true,
+                      rules: {
+                        startDate: {
+                            required: true,
+                            reportdate: true
+                        },
+                        endDate: {
+                            reportdate: true
+                        },
+                        performer: {
+                            required: true,
+                            rangelength: [1, 255],
+                            regexp: performer_regexp
+                        },
+                        activity: {
+                            required: true,
+                            rangelength: [1, 255],
+                            regexp: activity_regexp
+                        }
+                      }
+                  });
+
+                $("#update-btn").click(function(e) {
+                    // before ajax call cause defaul action will be fired up
+                    e.preventDefault();
+                    if($("form[name='report-update']").valid()) {      
+                        var idVal = $(updateButton).parent(".button-block").data("id").trim();                
+                        var serialReport = $("form[name='report-update']").serialize();
+                        serialReport = serialReport + "&id=" + encodeURI(idVal);
+                        $.ajax(urlUpdate, {
+                               method: "POST",
+                               async: true,
+                               cache: false,
+                               data: serialReport,
+                               success: function(data) {
+                                 $("#confirm").finish().html(UPDATED_MSG);
+                                 $("#confirm").fadeIn(600)
+                                              .delay(3000)
+                                              .fadeOut(1200);                      
+                                 },
+                               error: function() {
+                                 $("#confirm").finish().html(NOTUPDATE_MSG);                                                                 
+                                 $("#confirm").fadeIn(600)
+                                              .delay(3000)
+                                              .fadeOut(1200);                      
+                                 }        
+                        });
+                        $("#close-btn").click();
+                    } //#if
+                    return false;
+                });
+            },
+            'json' 
+        );            
+    }
+
+    /*
+     * Delete report handler
+     */
+    function modalDelete(deleteButton) {
+        var html = modelDeleteHtml; 
+        var url = getReportUrl;  
+        var idVal = $(deleteButton).parent(".button-block").data("id").trim();
+           $.get(url, 
+                 {id: idVal},
+                 function(report) {
+                   html = $(html).find("#id").text(report.id).end()
+                                 .find("#startDate").text((new Date(report.startDate)).toString()).end()
+                                 .find("#endDate").text((new Date(report.endDate)).toString()).end()
+                                 .find("#performer").text(report.performer).end()
+                                 .find("#activity").text(report.activity).end();
+                  html.find("span").text(report.id);                  
+                  html = html.get(0).outerHTML;
+                  modal.open({ content: html });
+                  $("#close-btn").click(function() {
+                      $("#close").click();
+                  });
+                  $("#confirm-btn").click(function() {   
+                      var url = deleteReportUrl;
+                      $.post(url, 
+                             {id: idVal},
+                             function(data) {
+                                 if (data === 'success') {                        
+                                     $("#close").click(); 
+                                     // remove table row from DOM                        
+                                     $(".button-block").addClass(".hidden").appendTo(".table");
+                                     $(".active-row").remove();
+                                     // remove from checklist? and pager? URL: '/report/ajax/pager/remove'
+                                     $("#confirm").finish().html(DELETED_MSG); 
+                                 } else {
+                                     $("#close").click(); 
+                                     $("#confirm").finish().html(NOTDELETED_MSG);                         
+                                 }
+                                 $("#confirm").fadeIn(600)
+                                              .delay(3000)
+                                              .fadeOut(1200);
+                             },
+                             'text'
+                      );
+                  });
              },
-             'json');     
-]]#
-//////// FIX chain of call OR MAKE SYNCHRONOUS
-        var url = "#springUrl('/report/ajax/uri')";
-#[[        $.ajax(url, {
+             'json'
+           );         
+  //      var cleanChecklistUrl = deleteFromChecklistUrl + idVal;
+  //      $.post(cleanChecklistUrl, 
+  //         {},
+  //         function(data) {
+  //            if (data !== "success") {
+  //               console.log("Cannot remove report from checklist.");
+  //             }
+  //         },
+  //         'text'
+  //      );
+    };
+
+    /*
+     * Report details handler
+     */
+    function modalAction(actionButton) {
+        var idVal = $(actionButton).parent(".button-block").data("id").trim();        
+        var html = $(modalActionHtml);
+        var error = false;
+        var url = getReportUrl; 
+        $.get(url, 
+              {id: id_val},
+              function(report) {                 
+                 html.find("#id").text(report.id).end()
+                     .find("#startDate").text((new Date(report.startDate)).toString()).end()
+                     .find("#endDate").text((new Date(report.endDate)).toString()).end()
+                     .find("#performer").text(report.performer).end()
+                     .find("#activity").text(report.activity).end();
+                 html.find("span").text(report.id);                
+              },
+              'json'
+        );     
+        $.ajax(getReportUriUrl, {
             method: "GET",
             async: false,
             cache: false,
-            data: "id=" + id_val,
+            data: "id=" + idVal,
             dataType: 'text',
             success: function(data) {      
-                //alert("SUCCESS 2");
                 html.find("input[type='text']").val(data);                
             },
             error: function() {
@@ -346,14 +381,14 @@ $("form[name='report-update']").validate({
             }
         });
         if (error) {
-                $("#confirm").finish().html("Cannot retrive an URL of report<br />Please, try it later");                         
-                $("#confirm").fadeIn(600)
-                        .delay(3000)
-                        .fadeOut(1200);
+            $("#confirm").finish().html(URI_GOTTEN_MSG);                         
+            $("#confirm").fadeIn(600)
+                         .delay(3000)
+                         .fadeOut(1200);
         } else {
             modal.open({ content: html });
             $("#close-btn").click(function() {
-              $("#close").click();
+                $("#close").click();
             }); 
         }
     }; 

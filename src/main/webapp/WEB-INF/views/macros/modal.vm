@@ -14,8 +14,7 @@
 #end
 
 #*
- * Uses 'report' and 'uri' variable from the context was called to construct
- * detailed information 
+ * Detailed information information
  *#
 #macro ( modal_action )
 <div> \
@@ -50,30 +49,28 @@
 #end
 
 #*
- * Utilizes 'report' variable from the context to fill in entered fields if
- * validation fails
+ * Add form template
  *#
 #macro ( modal_add )
-<h2>#springMessage('content.add.title')</h2> \
- \##springBind("report") \
+<h2>#springMessage('content.add.title')</h2> \ 
 <p class="error error-block">#springShowErrors("<br/>" "")</p> \
-<form name="report-add"> \    ##springBind("report.startDate")       \
+<form name="report-add"> \
     <div class="form-line clearfix"> \
         <label for="startDate">#springMessage('content.add.caption.start'):</label> \
         <input id="startDate" name="startDate" value="" type="text" placeholder="#springMessage('content.add.placeholder.start')" autocomplete="off"> \
         <label for="startDate" class="error">#springShowErrors("<br/>" "")</label> \
-    </div> \    ##springBind("report.endDate")   \
+    </div> \
     <div class="form-line clearfix"> \
         <label for="endDate">#springMessage('content.add.caption.end'):</label> \
         <input id="endDate" name="endDate" value="" type="text" placeholder="#springMessage('content.add.placeholder.end')" autocomplete="off"> \
         <label for="endDate" class="error">#springShowErrors("<br/>" "")</label> \
-    </div> \     ##springBind("report.performer") \
+    </div> \
     <div class="form-line clearfix"> \
         <label for="performer">#springMessage('content.add.caption.performer'):</label> \
         <input id="performer" name="performer" value="" type="text" placeholder="#springMessage('content.add.placeholder.performer')"> \
         <label for="performer" class="error">#springShowErrors("<br/>" "")</label> \
     </div>  \
- \    ##springBind("report.activity") \
+ \
     <div class="form-line clearfix"> \
         <label for="activity">#springMessage('content.add.caption.activity'):</label> \
         <input id="activity" name="activity" value="" type="text" placeholder="#springMessage('content.add.placeholder.activity')">      \
@@ -89,32 +86,31 @@
 #end
 
 #*
- * Utilizes 'report' variable from the context to fill in field values based 
- * on current report values
+ * Update form template
  *#
 #macro ( modal_update ) 
 <div> \
 <h2>#springMessage('content.update.title')</h2> \
 <h2>#springMessage('content.activity') №<span></span></h2> \
- \##springBind("report") \
+ \
 <p class="error error-block">#springShowErrors("<br/>" "")</p> \
-<form name="report-update"> \    ##springBind("report.startDate")       \
+<form name="report-update"> \
     <div class="form-line clearfix"> \
         <label for="startDate">#springMessage('content.add.caption.start'):</label> \
         <input id="startDate" name="startDate" value="" type="text" placeholder="#springMessage('content.add.placeholder.start')" autocomplete="off"> \
         <label for="startDate" class="error">#springShowErrors("<br/>" "")</label> \
-    </div> \    ##springBind("report.endDate")   \
+    </div> \
     <div class="form-line clearfix"> \
         <label for="endDate">#springMessage('content.add.caption.end'):</label> \
         <input id="endDate" name="endDate" value="" type="text" placeholder="#springMessage('content.add.placeholder.end')" autocomplete="off"> \
         <label for="endDate" class="error">#springShowErrors("<br/>" "")</label> \
-    </div> \     ##springBind("report.performer") \
+    </div> \
     <div class="form-line clearfix"> \
         <label for="performer">#springMessage('content.add.caption.performer'):</label> \
         <input id="performer" name="performer" value="" type="text" placeholder="#springMessage('content.add.placeholder.performer')"> \
         <label for="performer" class="error">#springShowErrors("<br/>" "")</label> \
     </div>  \
- \    ##springBind("report.activity") \
+ \
     <div class="form-line clearfix"> \
         <label for="activity">#springMessage('content.add.caption.activity'):</label> \
         <input id="activity" name="activity" value="" type="text" placeholder="#springMessage('content.add.placeholder.activity')">      \
@@ -131,7 +127,7 @@
 #end
 
 #*
- * Utilizes 'report' variable from the context to show detailed information 
+ * Delete form template
  *#
 #macro ( modal_delete )
 <div> \

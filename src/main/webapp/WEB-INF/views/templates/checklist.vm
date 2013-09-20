@@ -4,7 +4,7 @@
     <div class="tile-button-menu clearfix">
         <button class="action update">#springMessage('content.checklist.button.statistics')</button>
         <button class="action delete">#springMessage('content.checklist.button.email')</button>
-        <button class="action" onclick="start_new();">#springMessage('content.checklist.button.newsearch')</button>
+        <button class="action" onclick="startNew();">#springMessage('content.checklist.button.newsearch')</button>
     </div>
 </div>
 #if($reports)
@@ -31,8 +31,8 @@
         <dt>#springMessage('content.detail.activity')</dt>
         <dd>${report.activity}</dd>
     </dl>
-    <button class="action" onclick="get_uri(this);">#springMessage('content.checklist.tile.uri')</button>
-    <button class="action delete" onclick="put_away(this);">#springMessage('content.checklist.tile.away')</button>
+    <button class="action" onclick="getUri(this);">#springMessage('content.checklist.tile.uri')</button>
+    <button class="action delete" onclick="putAway(this);">#springMessage('content.checklist.tile.away')</button>
 </div>
 #end
 #{else}
@@ -40,33 +40,46 @@
 #end
 
 <script>
+
+    /*
+     * URLs
+     */
+    var getReportUriUrl = "#springUrl('/report/ajax/uri')";
+    var removeFromChecklistUrl = "#springUrl('/checklist/remove')";
+    var cleanUpChecklistUrl = "#springUrl('/checklist/empty')";
+    var newSearchRedirectUrl = "#springUrl('/report/search?new_search')";
+
+    /*
+     * Modal window HTML templates
+     */
+    var modalUriHtml = '#modal_uri()';
+
+#[[
     $(document).ready(function() {
         $(".tile-container").draggable();
     });
 
-    function get_uri(tile) {
-        var id_val = $(tile).parent("div.tile-container").find("dl:first > dd").text().trim();
-        // jQuery ajax + utilize Promise object
-        $.ajax("#springUrl('/report/ajax/uri')", {
-            method: "GET",
-            async: true,
-            cache: false,   
-            data: "id=" + id_val, 
+    function getUri(tile) {
+        var idVal = $(tile).parent("div.tile-container").find("dl:first > dd").text().trim();
+        // jQuery ajax + utilize of Promise object
+        $.ajax(getReportUriUrl, {
+               method: "GET",
+               async: true,
+               cache: false,   
+               data: "id=" + idVal, 
         }).done(function(uri) {
-            var html = '#modal_uri( )';  
-            modal.open({ content: html});
-            $("#modal").find('input[type="text"]').val( uri );
- #[[        $("#close-btn").click(function() {  
-            $("#close").click();                  ]]#
+               modal.open({ content: modalUriHtml});
+               $("#modal").find('input[type="text"]').val(uri);
+               $("#close-btn").click(function() {  
+                   $("#close").click();
+               });
         });
-        });
-    }; 
+    } 
 
-    function put_away(tile) {
-        var url = "#springUrl('/checklist/remove')";
-        var id_val = $(tile).parent("div.tile-container").find("dl:first > dd").text().trim();
-        id = "id=" + id_val;
-        $.ajax(url, {
+    function putAway(tile) {
+        var idVal = $(tile).parent("div.tile-container").find("dl:first > dd").text().trim();
+        id = "id=" + idVal;
+        $.ajax(removeFromChecklistUrl, {
             method: "POST",
             async: true,
             cached: false,
@@ -77,14 +90,13 @@
         $(tile).parent("div.tile-container").slideUp(1000);
     }
 
-    function start_new() {
-        var url = "#springUrl('/checklist/empty')";
-        $.ajax(url, {
+    function startNew() {
+        $.ajax(cleanUpChecklistUrl, {
             method: "POST",
             async: false,
             cache: false
         }); 
-        window.location.href="#springUrl('/report/search?new_search')";
-    };
-
+        window.location.href=newSearchRedirectUrl;
+    }
+]]#
 </script>

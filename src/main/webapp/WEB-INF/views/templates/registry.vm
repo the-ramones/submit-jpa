@@ -11,6 +11,7 @@
                 <th>#springMessage('registry.table.time')</th>
             </tr>
         <tbody>
+        #if($registry)
             #foreach($register in $registry)
             <tr>
                 <td>${registry.id}</td>
@@ -19,6 +20,7 @@
                 <td>${report.recordTime}</td>
             </tr>        
             #end
+        #end
         </tbody>
         </thead>
     </table>

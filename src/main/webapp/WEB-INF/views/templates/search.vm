@@ -26,15 +26,8 @@
                 <th>#springMessage('content.detail.activity')</th>
             </tr>
         <tbody>
+        #if($reports)
             #foreach($report in $reports)
-
-            <tr>
-                <td>${report.id}</td>
-                <td>${report.startDate}</td>
-                <td>${report.endDate}</td>
-                <td>${report.performer}</td>
-                <td>${report.activity}</td>
-            </tr>
             <tr>
                 <td>${report.id}</td>
                 <td>${report.startDate}</td>
@@ -42,12 +35,13 @@
                 <td>${report.performer}</td>
                 <td>${report.activity}</td>
                 <!--button group-->
-        <div class="button-block clearfix hidden">
-            <button class="action">#springMessage('button.action.get')</button>
-            <button class="action update">#springMessage('button.action.update')</button>          
-            <button class="action delete">#springMessage('button.action.delete')</button>
-        </div>
-        </tr>
+                <div class="button-block clearfix hidden">
+                    <button class="action">#springMessage('button.action.get')</button>
+                    <button class="action update">#springMessage('button.action.update')</button>          
+                    <button class="action delete">#springMessage('button.action.delete')</button>
+                </div>
+            </tr>
+            #end
         #end
         </tbody>
         </thead>

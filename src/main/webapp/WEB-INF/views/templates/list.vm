@@ -13,6 +13,7 @@
             </tr>
         </thead>
         <tbody>
+        #if($reports)
             #foreach($report in $reports)
             <tr>
                 <td>${report.id}</td>
@@ -27,6 +28,7 @@
                 <button class="action update" onclick="modal_update()">#springMessage('button.action.update')</button>          
                 <button class="action delete" onclick="modal_delete()">#springMessage('button.action.delete')</button>
             </div>
+        #end
         </tbody>        
     </table>
     <button class="action add" onclick="modal_add()">#springMessage('content.list.button.addnew')</button>    
@@ -35,34 +37,14 @@
 <script type="text/javascript">
 
     function modal_add() {
-        var html = '#modal_add( )';        
-        modal.open({ content: html });
-        $("#close-btn").click(function() {
-            $("#close").click();
-        });
     }; 
 
     function modal_update() {
-        var html = '#modal_update( )';        
-        modal.open({ content: html });
-        $("#close-btn").click(function() {
-            $("#close").click();
-        });
     };
 
     function modal_delete() {
-        var html = '#modal_delete( )';        
-        modal.open({ content: html });
-        $("#close-btn").click(function() {
-            $("#close").click();
-        });
     };
 
     function modal_action() {
-        var html = '#modal_action( )';        
-        modal.open({ content: html});
-        $("#close-btn").click(function() {
-            $("#close").click();
-        });
     }; 
 </script>    

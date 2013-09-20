@@ -1,3 +1,4 @@
+## Search bi ID template
 <div class="form-container">
     <h2>#springMessage('content.byid.title')</h2>
     <form name="search-report" method="POST" action="#springUrl('/report/detail')">
