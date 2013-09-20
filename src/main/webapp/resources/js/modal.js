@@ -33,6 +33,7 @@ var modal = (function() {
             height: settings.height || 'auto'
         });
 
+        // What to do with vertical resize, when window height is large?
         method.center();
 
         /* use event namespacing */

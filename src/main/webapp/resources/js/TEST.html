@@ -1,0 +1,966 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <title></title>
+        <meta name="description" content="Spring-based application's Reports!">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <link rel="stylesheet" href="/sp/resources/css/normalize.min.css">
+        <link rel="stylesheet" href="/sp/resources/css/main.css">  
+        <link rel="stylesheet" href="/sp/resources/css/search.css">
+        <link rel="stylesheet" href="/sp/resources/css/modal.css">
+        <link rel="stylesheet" href="/sp/resources/css/pager.css">
+        <link rel="stylesheet" href="/sp/resources/css/jquery-ui-1.10.3.custom.min.css">
+
+        <link href='http://fonts.googleapis.com/css?family=Roboto+Slab:100&subset=latin,cyrillic' rel='stylesheet' type='text/css'>
+
+        <script src="/sp/resources/js/vendor/modernizr-2.6.2-respond-1.1.0.min.js"></script>      
+        <script src="/sp/resources/js/libs/jquery-1.10.2.js"></script>
+        <script src="/sp/resources/js/libs/jquery-ui-1.10.3.custom.min.js"></script>
+
+    </head>
+    <body>
+        <!--[if lt IE 7]>
+            <p class="chromeframe">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> or <a href="http://www.google.com/chromeframe/?redirect=true">activate Google Chrome Frame</a> to improve your experience.</p>
+        <![endif]-->
+        <div class="page-wrap">
+            <div class="header-container">
+                <div class="wrapper clearfix">
+
+                    <a href="/sp/home"><div id="logo"></div></a>
+                    <h1 class="title">Track your activities</h1>   
+                    <div id="nav">
+                        <ul>
+                            <li><a href="/sp/home">Home  </a></li>
+                            <li><a href="/sp/report">Reports!</a>
+                                <ul>
+                                    <li><a href="/sp/report/add">Add activity</a></li>
+                                    <li><a href="/sp/report/search?new_search">Build report</a>
+                                        <ul>
+                                            <li><a href="/sp/report/search?new_search">Search activity</a></li>
+                                            <li><a href="/sp/report/detail">Activity details</a></li>
+                                            <li><a href="/sp/registry">Check registry</a></li>
+                                        </ul>
+                                    </li>
+                                    <li><a href="/sp/report/suggest">Ajax search</a></li>                                
+                                </ul>
+                            </li>
+                            <li><a  href="/sp/contact">Contact</a>
+                                <ul>
+                                    <li><a href="/sp/instruction">Instruction</a></li>
+                                    <li><a href="/sp/contact">Contacts</a></li>
+                                    <li><a href="/sp/about">About</a></li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </div>
+
+                </div>
+            </div>
+            <!-- content -->
+            <div class="main-container">
+                <div class="main wrapper clearfix">
+
+                    <div class="login-wrap">
+                        <div class="login-stick">
+                            <ul>
+                                <li id="login">
+                                    <a href="#" data-icon="&#128101;"></a>
+                                </li>
+                                <li id="language">
+                                    <a href="#" data-icon="&#127758;"></a>
+                                </li>
+                                <li id="checklist">
+                                    <a href="/sp/checklist" data-icon="&#59197;"></a>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="popup" id="popup-login">
+                            <div class="arrow"></div>
+                            <ul>
+                                <li><a href="/sp/login?login=true">Anonymous User</a></li>
+                                <li><a href="/sp/login?login=true">Login</a></li>
+                            </ul>
+                        </div>                        
+                        <div class="popup" id="popup-language">
+                            <div class="arrow"></div>
+                            <ul>
+                                <li><a href="?lang=en">English</a></li>
+                                <li><a href="?lang=ru">Russian</a></li>
+                            </ul>
+                        </div>
+                    </div>  
+
+                    <div class="form-container" style="width: 100%">
+                        <h2>List of activities</h2>
+                        <table class="table">
+                            <caption>Reports! records</caption>
+                            <thead>
+                                <tr>
+                                    <th>id</th>
+                                    <th>start of activity</th>
+                                    <th>end of activity</th>
+                                    <th>performer</th>
+                                    <th>activity</th>
+                                </tr>
+                            </thead>
+                            <tbody> current page (-1): 0 isEmpty()?: false search ID: 2801303, pageCount: 3
+                                <tr>
+                                    <td>8</td>
+                                    <td>30 Mar 2013</td>
+                                    <td>22 May 2013</td>
+                                    <td>Ben Affleck</td>
+                                    <td>acting</td>
+                                </tr>
+                                <tr>
+                                    <td>9</td>
+                                    <td>30 Jan 2013</td>
+                                    <td>12 Feb 2013</td>
+                                    <td>Ben Affleck</td>
+                                    <td>scripting</td>
+                                </tr>
+                                <tr>
+                                    <td>23</td>
+                                    <td>11 Jan 2013</td>
+                                    <td>11 Jan 2013</td>
+                                    <td>Brad Pitt</td>
+                                    <td>scripting</td>
+                                </tr>
+                                <tr>
+                                    <td>24</td>
+                                    <td>23 Jan 2013</td>
+                                    <td>15 Feb 2013</td>
+                                    <td>Brad Pitt</td>
+                                    <td>acting</td>
+                                </tr>
+                                <tr>
+                                    <td>25</td>
+                                    <td>23 Feb 2013</td>
+                                    <td>16 Mar 2013</td>
+                                    <td>Brad Pitt</td>
+                                    <td>scoring</td>
+                                </tr>
+                                <tr>
+                                    <td>26</td>
+                                    <td>02 Mar 2013</td>
+                                    <td>17 Apr 2013</td>
+                                    <td>Brad Pitt</td>
+                                    <td>promoting</td>
+                                </tr>
+                                <tr>
+                                    <td>27</td>
+                                    <td>12 Jan 2013</td>
+                                    <td>25 Feb 2013</td>
+                                    <td>Denzel Washington</td>
+                                    <td>acting</td>
+                                </tr>
+                                <tr>
+                                    <td>28</td>
+                                    <td>13 Jan 2013</td>
+                                    <td>26 Feb 2013</td>
+                                    <td>Denzel Washington</td>
+                                    <td>acting</td>
+                                </tr>
+                                <tr>
+                                    <td>29</td>
+                                    <td>14 Feb 2013</td>
+                                    <td>27 Apr 2013</td>
+                                    <td>Denzel Washington</td>
+                                    <td>producing</td>
+                                </tr>
+                                <tr>
+                                    <td>30</td>
+                                    <td>15 Mar 2013</td>
+                                    <td>28 May 2013</td>
+                                    <td>Denzel Washingtom</td>
+                                    <td>promoting</td>
+                                </tr>
+                                <tr>
+                                    <td>31</td>
+                                    <td>16 Apr 2013</td>
+                                    <td>29 Jun 2013</td>
+                                    <td>Zooye Dechannel</td>
+                                    <td>acting</td>
+                                </tr>
+                                <tr>
+                                    <td>32</td>
+                                    <td>17 May 2013</td>
+                                    <td>30 Jun 2013</td>
+                                    <td>Zooye Dechannel</td>
+                                    <td>singing</td>
+                                </tr>
+                                <tr>
+                                    <td>33</td>
+                                    <td>18 Jun 2013</td>
+                                    <td>30 Jun 2013</td>
+                                    <td>Zooye Dechannel</td>
+                                    <td>acting</td>
+                                </tr>
+                                <tr>
+                                    <td>34</td>
+                                    <td>19 Jan 2013</td>
+                                    <td>30 Jun 2013</td>
+                                    <td>Robert De Niro</td>
+                                    <td>acting</td>
+                                </tr>
+                                <tr>
+                                    <td>35</td>
+                                    <td>16 Feb 2013</td>
+                                    <td>29 Mar 2013</td>
+                                    <td>Robert De Niro</td>
+                                    <td>chilling</td>
+                                </tr>
+                                <tr>
+                                    <td>36</td>
+                                    <td>13 Mar 2013</td>
+                                    <td>28 Apr 2013</td>
+                                    <td>Al Pachino</td>
+                                    <td>acting</td>
+                                </tr>
+                                <tr>
+                                    <td>37</td>
+                                    <td>12 Apr 2013</td>
+                                    <td>27 May 2013</td>
+                                    <td>Al Pachino</td>
+                                    <td>acting</td>
+                                </tr>
+                                <tr>
+                                    <td>38</td>
+                                    <td>11 May 2013</td>
+                                    <td>26 Jun 2013</td>
+                                    <td>Dustin Hoffman</td>
+                                    <td>producing</td>
+                                </tr>
+                                <tr>
+                                    <td>39</td>
+                                    <td>02 Jun 2013</td>
+                                    <td>25 Jun 2013</td>
+                                    <td>Dustin Hoffman</td>
+                                    <td>acting</td>
+                                </tr>
+                                <tr>
+                                    <td>40</td>
+                                    <td>05 Jan 2013</td>
+                                    <td>24 Feb 2013</td>
+                                    <td>Tom Hanks</td>
+                                    <td>acting</td>
+                                </tr>
+                                <tr>
+                                    <td>41</td>
+                                    <td>06 Feb 2013</td>
+                                    <td>23 Mar 2013</td>
+                                    <td>Tom Hanks</td>
+                                    <td>acting</td>
+                                </tr>
+                                <tr>
+                                    <td>42</td>
+                                    <td>07 Mar 2013</td>
+                                    <td>22 Apr 2013</td>
+                                    <td>Bruce Willis</td>
+                                    <td>acting</td>
+                                </tr>
+                                <tr>
+                                    <td>43</td>
+                                    <td>03 Apr 2013</td>
+                                    <td>14 May 2013</td>
+                                    <td>Bruce Willis</td>
+                                    <td>producing</td>
+                                </tr>
+                                <tr>
+                                    <td>44</td>
+                                    <td>11 May 2013</td>
+                                    <td>15 Jun 2013</td>
+                                    <td>Kevin Costner</td>
+                                    <td>scripting</td>
+                                </tr>
+                                <tr>
+                                    <td>45</td>
+                                    <td>14 Jun 2013</td>
+                                    <td>16 Jun 2013</td>
+                                    <td>Kevin Costner</td>
+                                    <td>actinging</td>
+                                </tr>
+                                <tr>
+                                    <td>46</td>
+                                    <td>16 Jan 2013</td>
+                                    <td>17 Feb 2013</td>
+                                    <td>John Travolta</td>
+                                    <td>laundering</td>
+                                </tr>
+                                <tr>
+                                    <td>47</td>
+                                    <td>19 Feb 2013</td>
+                                    <td>18 Mar 2013</td>
+                                    <td>Will Smith</td>
+                                    <td>scripting</td>
+                                </tr>
+                                <tr>
+                                    <td>48</td>
+                                    <td>21 Mar 2013</td>
+                                    <td>19 Apr 2013</td>
+                                    <td>Will Smith</td>
+                                    <td>acting</td>
+                                </tr>
+                                <tr>
+                                    <td>49</td>
+                                    <td>03 Mar 2013</td>
+                                    <td>13 May 2013</td>
+                                    <td>Will Smith</td>
+                                    <td>producing</td>
+                                </tr>
+                                <tr>
+                                    <td>50</td>
+                                    <td>23 Apr 2013</td>
+                                    <td>24 May 2013</td>
+                                    <td>Will Smith</td>
+                                    <td>promoting</td>
+                                </tr>
+                                <tr>
+                                    <td>51</td>
+                                    <td>12 Jul 2013</td>
+                                    <td>16 Jul 2013</td>
+                                    <td>Machael Douglas</td>
+                                    <td>playing</td>
+                                </tr>
+                                <tr>
+                                    <td>52</td>
+                                    <td>12 Jul 2013</td>
+                                    <td>16 Jul 2013</td>
+                                    <td>Machael Douglas</td>
+                                    <td>playing</td>
+                                </tr>
+                                <tr>
+                                    <td>53</td>
+                                    <td>12 Jul 2013</td>
+                                    <td>16 Jul 2013</td>
+                                    <td>Machael Douglas</td>
+                                    <td>playing</td>
+                                </tr>
+                                <tr>
+                                    <td>54</td>
+                                    <td>12 Jul 2013</td>
+                                    <td>16 Jul 2013</td>
+                                    <td>Machael Douglas</td>
+                                    <td>playing</td>
+                                </tr>
+                                <tr>
+                                    <td>56</td>
+                                    <td>01 Aug 2013</td>
+                                    <td>02 Aug 2013</td>
+                                    <td>Michael Douglas</td>
+                                    <td>acting</td>
+                                </tr>
+                                <tr>
+                                    <td>60</td>
+                                    <td>01 Aug 2013</td>
+                                    <td>02 Aug 2013</td>
+                                    <td>Michael Douglas</td>
+                                    <td>acting</td>
+                                </tr>
+                                <tr>
+                                    <td>61</td>
+                                    <td>01 Sep 2013</td>
+                                    <td>02 Sep 2013</td>
+                                    <td>Den</td>
+                                    <td>fevering</td>
+                                </tr>
+                                <tr>
+                                    <td>62</td>
+                                    <td>01 Sep 2013</td>
+                                    <td>02 Sep 2013</td>
+                                    <td>Michell</td>
+                                    <td>eating</td>
+                                </tr>
+                                <tr>
+                                    <td>63</td>
+                                    <td>01 Sep 2013</td>
+                                    <td>02 Sep 2013</td>
+                                    <td>dd</td>
+                                    <td>ddd</td>
+                                </tr>
+                                <tr>
+                                    <td>64</td>
+                                    <td>02 Sep 2013</td>
+                                    <td>09 Sep 2013</td>
+                                    <td>Danny</td>
+                                    <td>joking</td>
+                                </tr>
+                                <tr>
+                                    <td>65</td>
+                                    <td>02 Sep 2013</td>
+                                    <td>19 Sep 2013</td>
+                                    <td>Samuel Li Jackson</td>
+                                    <td>acting</td>
+                                </tr>
+                                <tr>
+                                    <td>66</td>
+                                    <td>03 Sep 2013</td>
+                                    <td>18 Sep 2013</td>
+                                    <td>Delite</td>
+                                    <td>coding</td>
+                                </tr>
+                                <tr>
+                                    <td>75</td>
+                                    <td>01 Sep 2013</td>
+                                    <td>02 Sep 2013</td>
+                                    <td>ffdsf</td>
+                                    <td>fsfsd</td>
+                                </tr>
+                                <tr>
+                                    <td>76</td>
+                                    <td>01 Sep 2013</td>
+                                    <td>02 Sep 2013</td>
+                                    <td>Michelle Obama</td>
+                                    <td>gardening</td>
+                                </tr>
+                                <tr>
+                                    <td>77</td>
+                                    <td>01 Sep 2013</td>
+                                    <td>02 Sep 2013</td>
+                                    <td>ffdsf</td>
+                                    <td>fsfsd</td>
+                                </tr>
+                                <tr>
+                                    <td>79</td>
+                                    <td>01 Sep 2013</td>
+                                    <td>02 Sep 2013</td>
+                                    <td>Mark Samuels</td>
+                                    <td>dansing</td>
+                                </tr>
+                                <tr>
+                                    <td>80</td>
+                                    <td>01 Sep 2013</td>
+                                    <td>02 Sep 2013</td>
+                                    <td>ffdsf</td>
+                                    <td>fsfsd</td>
+                                </tr>
+                                <tr>
+                                    <td>81</td>
+                                    <td>01 Sep 2013</td>
+                                    <td>02 Sep 2013</td>
+                                    <td>ffdsf</td>
+                                    <td>fsfsd</td>
+                                </tr>
+                                <tr>
+                                    <td>82</td>
+                                    <td>01 Sep 2013</td>
+                                    <td>02 Sep 2013</td>
+                                    <td>ffdsf</td>
+                                    <td>fsfsd</td>
+                                </tr>
+                                <tr>
+                                    <td>83</td>
+                                    <td>01 Sep 2013</td>
+                                    <td>02 Sep 2013</td>
+                                    <td>Dan</td>
+                                    <td>digging</td>
+                                </tr>
+                            <div class="button-block clearfix hidden">
+                                <button class="action" onclick="modal_action(this);">Get URI</button>
+                                <button class="action update" onclick="modal_update(this);">Update</button>          
+                                <button class="action delete" onclick="modal_delete(this);">Delete</button>
+                            </div>            
+                            </tbody>
+                        </table>
+
+
+                        <div class="pagination clearfix">  
+                            <ul class="clearfix">
+                                <li><a href="http://localhost:8091/sp/report/search?p=prev&search_id=2801303" class="disabled">«</a></li>
+                                <li><a href="http://localhost:8091/sp/report/search?p=1&search_id=2801303" class="current active">1</a></li>
+                                <li><a href="http://localhost:8091/sp/report/search?p=2&search_id=2801303" class=" active">2</a></li>
+                                <li><a href="http://localhost:8091/sp/report/search?p=3&search_id=2801303" class=" active">3</a></li>
+                                <li><a href="http://localhost:8091/sp/report/search?p=next&search_id=2801303" >»</a></li>
+                            </ul>
+                        </div>
+
+                        <button class="action add" onclick="modal_add(this);">add new</button>    
+                        <button class="action" onclick="add_to_watchlist()">Add to Watchlist</button>
+
+                    </div>
+
+
+                    <script type="text/javascript">
+
+                                        var searchId = 2801303;
+
+                                        //TODO: l10n with Velocity L10n capabilities
+                                        /*
+                                         * Add pop-up hint on the page. Make it invisible
+                                         */
+                                        $(document).ready(function() {
+                                            $(document.createElement("div"))
+                                                    .attr("id", "confirm")
+                                                    .appendTo($("body"))
+                                                    .hide();
+                                        });
+
+                                        function add_to_watchlist() {
+                                            var indexes = [];
+                                            $('tr.selected').each(function(index, value) {
+                                                try {
+                                                    indexes.push(parseInt($(value).find('td:first-child').html()));
+                                                } catch (error) {
+                                                    console.log("Error while parsing ID for a elemend beign selected");
+                                                }
+                                            });
+                                            if (indexes.length > 0) {
+                                                var url = "/sp/report/ajax/watch";
+                                                var indexesData = {"indexes": indexes};
+                                                $.ajax(url, {
+                                                    method: "POST",
+                                                    async: true,
+                                                    cache: false,
+                                                    data: indexesData,
+                                                    complete: onWatchComplete,
+                                                    dataType: 'text'
+                                                }
+                                                );
+                                            } else {
+                                                $("#confirm").finish().html("Select at least one element. <br />Just click on it")
+                                                        .fadeIn(600)
+                                                        .delay(3000)
+                                                        .fadeOut(1200);
+                                            }
+                                        }
+                                        ;
+
+                                        function onWatchComplete(xhr, status) {
+                                            if (status === "success") {
+                                                $("#confirm").finish().html("Selected elements has been <br />added to your checklist");
+                                                $(".selected").removeClass("selected").addClass("selected-added");
+                                                //alert(status);
+                                            } else {
+                                                $("#confirm").finish().html("Cannot add selected elements.<br />Please, try later");
+                                                console.log("Cannot fulfil request to the server: " + status);
+                                            }
+                                            $("#confirm").fadeIn(600)
+                                                    .delay(3000)
+                                                    .fadeOut(1200);
+                                        }
+
+
+                                        function modal_add(add_button) {
+                                            var url = "/sp/report/ajax/add";
+                                            var html = '<h2>Reports! add form</h2> \
+                     \<p class="error error-block">    </p> \
+                    <form name="report-add"> \        <div class="form-line clearfix"> \
+                            <label for="startDate">Start date:</label> \
+                            <input id="startDate" name="startDate" value="" type="text" placeholder="Input a start date" autocomplete="off"> \
+                            <label for="startDate" class="error">    </label> \
+                        </div> \        <div class="form-line clearfix"> \
+                            <label for="endDate">End date:</label> \
+                            <input id="endDate" name="endDate" value="" type="text" placeholder="Input an end date" autocomplete="off"> \
+                            <label for="endDate" class="error">    </label> \
+                        </div> \         <div class="form-line clearfix"> \
+                            <label for="performer">Performer:</label> \
+                            <input id="performer" name="performer" value="" type="text" placeholder="Input a performer"> \
+                            <label for="performer" class="error">    </label> \
+                        </div>  \
+                     \        <div class="form-line clearfix"> \
+                            <label for="activity">Activity:</label> \
+                            <input id="activity" name="activity" value="" type="text" placeholder="Input an activity">      \
+                            <label for="activity" class="error">    </label> \
+                        </div> \
+                        <div class="clearfix"> \
+                            <div class="button-block-modal"> \
+                                <button id="add-btn" class="action" name="report-submit" type="submit">Add</button> \
+                                <button id="close-btn" class="action delete">Close</button> \
+                            </div> \
+                        </div> \
+                    </form>        \
+                    ';
+                                            modal.open({content: html});
+                                            $("#close-btn").click(function() {
+                                                $("#close").click();
+                                            });
+                                            alert($("form[name='report-add']").html());
+                                            $("form[name='report-add']").validate({
+                    //  debug: true,
+                                                rules: {
+                                                    startDate: {
+                                                        required: true,
+                                                        reportdate: true
+                                                    },
+                                                    endDate: {
+                                                        reportdate: true
+                                                    },
+                                                    performer: {
+                                                        required: true,
+                                                        rangelength: [1, 255],
+                                                        regexp: performer_regexp
+                                                    },
+                                                    activity: {
+                                                        required: true,
+                                                        rangelength: [1, 255],
+                                                        regexp: activity_regexp
+                                                    }
+                                                }
+                                            });
+                                            $("#add-btn").click(function(event) {
+                                                if ($("form[name='report-add']").valid()) {
+                                                    var $confirm = $("#confirm");
+                                                    var serial_report = $(add_button).parent("form[name='report-add']").serialize();
+                                                    serial_report = $('form[name="report-add"]').serialize();
+                                                    $.post(url,
+                                                            serial_report,
+                                                            function(data, status, jxhr) {
+                                                                if (data === 'success') {
+                                                                    $confirm.html("Report has been successfully added<br />to the database");
+                                                                } else {
+                                                                    $confirm.html("Report hasn't been added.<br />Please, try later");
+                                                                }
+                                                                $confirm.finish().fadeIn(600).delay(2800).fadeOut(1200);
+                                                            },
+                                                            'text'
+                                                            );
+                                                    $("#close-btn").click();
+                                                    return false;
+                                                } //if
+                                            });
+                                        }
+                                        ;
+
+
+
+                                        function modal_update(update_button) {
+                                            // getting a ajax backing object
+                                            var url = "/sp/report/ajax";
+                                            var url_update = "/sp/report/ajax/update";
+                                            var html = '<div> \
+                    <h2>Reports! update form</h2> \
+                    <h2>Activity №<span></span></h2> \
+                     \<p class="error error-block">    </p> \
+                    <form name="report-update"> \        <div class="form-line clearfix"> \
+                            <label for="startDate">Start date:</label> \
+                            <input id="startDate" name="startDate" value="" type="text" placeholder="Input a start date" autocomplete="off"> \
+                            <label for="startDate" class="error">    </label> \
+                        </div> \        <div class="form-line clearfix"> \
+                            <label for="endDate">End date:</label> \
+                            <input id="endDate" name="endDate" value="" type="text" placeholder="Input an end date" autocomplete="off"> \
+                            <label for="endDate" class="error">    </label> \
+                        </div> \         <div class="form-line clearfix"> \
+                            <label for="performer">Performer:</label> \
+                            <input id="performer" name="performer" value="" type="text" placeholder="Input a performer"> \
+                            <label for="performer" class="error">    </label> \
+                        </div>  \
+                     \        <div class="form-line clearfix"> \
+                            <label for="activity">Activity:</label> \
+                            <input id="activity" name="activity" value="" type="text" placeholder="Input an activity">      \
+                            <label for="activity" class="error">    </label> \
+                        </div> \
+                        <div class="clearfix"> \
+                            <div class="button-block-modal"> \
+                                <button id="update-btn" class="action" name="report-submit" type="submit">Update</button> \
+                                <button id="close-btn" class="action delete">Close</button> \
+                            </div> \
+                        </div> \
+                    </form>        \
+                    </div> \
+                    ';
+                                            html = $(html);
+                                            var id_val = $(update_button).parent(".button-block").data("id").trim();
+                                            $.get(url,
+                                                    {id: id_val},
+                                            function(report) {
+                                                html.find("#startDate").attr("value", (new Date(report.startDate)).toString());
+                                                html.find("#endDate").attr("value", (new Date(report.endDate)).toString());
+                                                html.find("#performer").attr("value", report.performer);
+                                                html.find("#activity").attr("value", report.activity);
+                                                html.find("#activity").val(report.activity);
+                                                html.find("span").text(report.id);
+                                                html = html.get(0).outerHTML;
+                                                modal.open({content: html});
+                                                $("#close-btn").click(function() {
+                                                    $("#close").click();
+                                                });
+                                                
+                                                $("form[name='report-add']").validate({
+//  debug: true,
+    rules: {
+        startDate: {
+            required: true,
+            reportdate: true
+        },
+        endDate: {
+            reportdate: true
+        },
+        performer: {
+            required: true,
+            rangelength: [1, 255],
+            regexp: performer_regexp
+        },
+        activity: {
+            required: true,
+            rangelength: [1, 255],
+            regexp: activity_regexp
+        }
+    }
+});
+                                                
+                                                $("#update-btn").click(function(e) {
+                                                    
+                                                    if($("form[name='report-update']").valid()) {
+                                                    
+                                                    // before ajax call cause defaul action will be fired up
+                                                    e.preventDefault();
+                                                    alert("Watch out!");
+                                                    var id_val = $(update_button).parent(".button-block").data("id").trim();
+                                                    var serial_report = $("form[name='report-update']").serialize();
+                                                    serial_report = serial_report + "&id=" + encodeURI(id_val);
+                                                    $.ajax(url_update, {
+                                                        method: "POST",
+                                                        async: true,
+                                                        cache: false,
+                                                        data: serial_report,
+                                                        success: function(data) {
+                                                            $("#confirm").finish().html("Report has been successfully updated<br />in the database");
+                                                            $("#confirm").fadeIn(600)
+                                                                    .delay(3000)
+                                                                    .fadeOut(1200);
+                                                        },
+                                                        error: function() {
+                                                            $("#confirm").finish().html("Report cannot be updated<br />in the database");
+                                                            $("#confirm").fadeIn(600)
+                                                                    .delay(3000)
+                                                                    .fadeOut(1200);
+                                                        }
+                                                    });
+                                                    alert("Watch out!");
+                                                    $("#close-btn").click();
+                                                    }
+                                                    return false;
+                                                });
+                                            },
+                                                    'json'
+                                                    );
+
+                                        }
+                                        ;
+
+                                        function modal_delete(delete_button) {
+                                            // modal form HTML template
+                                            var html = '<div> \
+                    <h2>Remove activity</h2> \
+                    <h2>Activity №<span></span></h2> \
+                    <dl class="dl-horizontal"> \
+                        <dt>id</dt> \
+                        <dd id="id"></dd> \
+                    </dl> \
+                    <dl class="dl-horizontal"> \
+                        <dt>start of activity</dt> \
+                        <dd id="startDate"></dd> \
+                    </dl>  \
+                    <dl class="dl-horizontal"> \
+                        <dt>end of activity</dt> \
+                        <dd id="endDate"></dd> \
+                    </dl> \
+                    <dl class="dl-horizontal"> \
+                        <dt>performer</dt> \
+                        <dd id="performer"></dd> \
+                    </dl> \
+                    <dl class="dl-horizontal"> \
+                        <dt>activity</dt> \
+                        <dd id="activity"></dd> \
+                    </dl> \
+                    <div class="clearfix"> \
+                        <span class="modal-span">Are you sure to delete activity?</span> \
+                        <div class="button-block-modal"> \
+                            <button id="confirm-btn" class="action">Yes</button> \
+                            <button id="close-btn" class="action delete">No</button> \
+                        </div> \
+                    </div> \
+                    </div> \
+                    ';
+                                            // template processing
+                                            var url = "/sp/report/ajax";
+                    //      var deleted_row = $('.table tr > td:first')
+                                            var id_val = $(delete_button).parent(".button-block").data("id").trim();
+                                            $.get(url,
+                                                    {id: id_val},
+                                            function(report) {
+                                                html = $(html).find("#id").text(report.id).end()
+                                                        .find("#startDate").text((new Date(report.startDate)).toString()).end()
+                                                        .find("#endDate").text((new Date(report.endDate)).toString()).end()
+                                                        .find("#performer").text(report.performer).end()
+                                                        .find("#activity").text(report.activity).end();
+                                                html.find("span").text(report.id);
+                                                // TODO: remove additional <div>
+                                                html = html.get(0).outerHTML;
+                                                modal.open({content: html});
+                                                $("#close-btn").click(function() {
+                                                    $("#close").click();
+                                                });
+                                                $("#confirm-btn").click(function() {
+                                                    var url = "/sp/report/ajax/remove";
+                                                    $.post(url,
+                                                            {id: id_val},
+                                                    function(data) {
+                                                        if (data === 'success') {
+                                                            $("#close").click();
+                                                            // remove table row from DOM                        
+                                                            $(".button-block").addClass(".hidden").appendTo(".table");
+                                                            $(".active-row").remove();
+                                                            // remove from checklist? and pager? URL: '/report/ajax/pager/remove'
+                                                            $("#confirm").finish().html("Selected element has been <br />removed from the database");
+                                                        } else {
+                                                            $("#close").click();
+                                                            $("#confirm").finish().html("Cannot remove selected element<br />cause it doesn't exist.<br /> Please, refresh the page");
+                                                        }
+                                                        $("#confirm").fadeIn(600)
+                                                                .delay(3000)
+                                                                .fadeOut(1200);
+                                                    },
+                                                            'text'
+                                                            );
+                                                });
+                                            },
+                                                    'json');
+
+                                            //      var remove_from_checklist_url = "/sp/checklist/remove/" + id_val;
+                                            //      $.post(remove_from_checklist_url, 
+                                            //       {},
+                                            //      function(data) {
+                                            //           if (data !== "success") {
+                                            //               console.log("Cannot remove report from checklist.");
+                                            //           }
+                                            //       },
+                                            //       'text'
+                                            //      );
+                                        }
+                                        ;
+
+                                        function modal_action(action_button) {
+                                            var id_val = $(action_button).parent(".button-block").data("id").trim();
+                                            var html = '<div> \
+                    <h2>Activity №<span></span></h2> \
+                    <dl class="dl-horizontal"> \
+                        <dt>id</dt> \
+                        <dd id="id"></dd> \
+                    </dl> \
+                    <dl class="dl-horizontal"> \
+                        <dt>start of activity</dt> \
+                        <dd id="startDate"></dd> \
+                    </dl> \
+                    <dl class="dl-horizontal"> \
+                        <dt>end of activity</dt> \
+                        <dd id="endDate"></dd> \
+                    </dl> \
+                    <dl class="dl-horizontal"> \
+                        <dt>performer</dt> \
+                        <dd id="performer"></dd> \
+                    </dl> \
+                    <dl class="dl-horizontal"> \
+                        <dt>activity</dt> \
+                        <dd id="activity"></dd> \
+                    </dl> \
+                    <input type="text" value="" name="uri" style="width:320px;"><br /> \
+                    <div class="modal-block"> \
+                        <div class="button-block-modal"> \
+                            <button id="close-btn" class="action delete">Close</button> \
+                        </div> \
+                    </div> \
+                    </div> \
+                    ';
+                                            html = $(html);
+                                            var error = false;
+                    ////////
+                                            var url = "/sp/report/ajax";
+                                            $.get(url,
+                                                    {id: id_val},
+                                            function(report) {
+                                                //alert("SUCCESS 1");
+                                                html.find("#id").text(report.id).end()
+                                                        .find("#startDate").text((new Date(report.startDate)).toString()).end()
+                                                        .find("#endDate").text((new Date(report.endDate)).toString()).end()
+                                                        .find("#performer").text(report.performer).end()
+                                                        .find("#activity").text(report.activity).end();
+                                                html.find("span").text(report.id);
+                                                // TODO: remove additional <div>                          
+                                                // html = html.get(0).outerHTML;      
+                                            },
+                                                    'json');
+
+                    //////// FIX chain of call OR MAKE SYNCHRONOUS
+                                            var url = "/sp/report/ajax/uri";
+                                            $.ajax(url, {
+                                                method: "GET",
+                                                async: false,
+                                                cache: false,
+                                                data: "id=" + id_val,
+                                                dataType: 'text',
+                                                success: function(data) {
+                                                    //alert("SUCCESS 2");
+                                                    html.find("input[type='text']").val(data);
+                                                },
+                                                error: function() {
+                                                    error = true;
+                                                },
+                                                complete: function() {
+                                                }
+                                            });
+                                            if (error) {
+                                                $("#confirm").finish().html("Cannot retrive an URL of report<br />Please, try it later");
+                                                $("#confirm").fadeIn(600)
+                                                        .delay(3000)
+                                                        .fadeOut(1200);
+                                            } else {
+                                                modal.open({content: html});
+                                                $("#close-btn").click(function() {
+                                                    $("#close").click();
+                                                });
+                                            }
+                                        }
+                                        ;
+
+                    </script>    
+
+
+                    <div class="sticky">
+                        <a href="#"><i class="icon-briefcase"></i>Get a hint!</a>
+                    </div>
+
+                </div> <!-- #main -->
+            </div> <!-- #main-container -->
+        </div> <!-- #page_wrap -->
+        <div class="footer-container">
+            <div class="wrapper clearfix">
+
+                <a href="/sp/home"><div id="logo_small"></div></a>
+                <a href="/sp/contact"><h3 style="float:left; text-decoration: none; color: #dddddd;">Paul Kulitski 2013</h3></a>
+                <h3 id="facebook" class="image-replacement facebook-dark"><a href="https://www.facebook.com/pavel.kulicki"><span>Facebook Profile</span></a></h3>
+                <h3 id="google" class="image-replacement google-dark"><a href="mailto:p.kulitski@gmail.com"><span>Google Mail</span></a></h3>
+                <h3 id="twitter" class="image-replacement twitter-dark"><a href="https://twitter.com/PaulKulitski"><span>Twitter Profile</span></a></h3>
+
+            </div>
+        </div>
+
+        <script src="/sp/resources/js/libs/jquery.validate.js"></script>        
+        <script src="/sp/resources/js/validation.js"></script>
+        <script type="text/javascript" src="/sp/resources/js/search.js"></script>
+        <script type="text/javascript" src="/sp/resources/js/modal.js"></script>
+        <script src="/sp/resources/js/main.js"></script>
+
+
+
+        <script type="text/javascript" src="/sp/resources/js/localization/messages_en.js"></script>
+
+
+        <script type="text/javascript">
+                $.datepicker.setDefaults(
+                        {'dateFormat': 'dd M yy'}
+                );
+        </script>
+
+
+        <script type="text/javascript">
+        </script>
+
+    </body>
+</html>

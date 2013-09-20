@@ -40,7 +40,7 @@
         #end
     #end
     
-    <button class="action add" onclick="modal_add()">#springMessage('content.list.button.addnew')</button>    
+    <button class="action add" onclick="modal_add(this);">#springMessage('content.list.button.addnew')</button>    
     <button class="action" onclick="add_to_watchlist()">#springMessage('content.list.button.addtowatchlist')</button>
 
 </div>
@@ -105,16 +105,40 @@
     }
 ]]#
 
-    function modal_add() {
+    function modal_add(add_button) {
         var url = "#springUrl('/report/ajax/add')";  
         var html = '#modal_add( )';        
         modal.open({ content: html });
 #[[     $("#close-btn").click(function() {
             $("#close").click();
         });
+        $("form[name='report-add']").validate({
+//  debug: true,
+    rules: {
+        startDate: {
+            required: true,
+            reportdate: true
+        },
+        endDate: {
+            reportdate: true
+        },
+        performer: {
+            required: true,
+            rangelength: [1, 255],
+            regexp: performer_regexp
+        },
+        activity: {
+            required: true,
+            rangelength: [1, 255],
+            regexp: activity_regexp
+        }
+    }
+});
         $("#add-btn").click(function(event) {
+        if ($("form[name='report-add']").valid()) {
             var  $confirm = $("#confirm");
-            var serial_report = $(this).parent("form[name='report-add']").serialize();
+            var serial_report = $(add_button).parent("form[name='report-add']").serialize();
+            serial_report = $('form[name="report-add"]').serialize();
             $.post(url,
                 serial_report,
                 function(data, status, jxhr) {
@@ -122,13 +146,14 @@
                         $confirm.html("Report has been successfully added<br />to the database");
                     } else {
                         $confirm.html("Report hasn't been added.<br />Please, try later");
-                    }
+                    }                    
                     $confirm.finish().fadeIn(600).delay(2800).fadeOut(1200);
-                    $("#close-btn").click();
                 },
             'text'
-            );            
+            );   
+            $("#close-btn").click();         
             return false;
+            } //if
         });
     }; 
 
@@ -136,7 +161,8 @@
 
     function modal_update(update_button) {
         // getting a ajax backing object
-        var url = "#springUrl('/report/ajax')";          
+        var url = "#springUrl('/report/ajax')";   
+        var url_update = "#springUrl('/report/ajax/update')";         
         var html = '#modal_update( )';        
         html = $(html);
 #[[     var id_val = $(update_button).parent(".button-block").data("id").trim();
@@ -154,15 +180,42 @@
                 $("#close-btn").click(function() {
                     $("#close").click();
                 });
-            },
-            'json'
-        );    
-        //alert("Here");
-]]#        var url_update = "#springUrl('/report/ajax/update')";  #[[
-        $("#update-btn").click(function(e) {
-            // before ajax call cause defaul action will be fired up
-            e.preventDefault();           
+
+
+$("form[name='report-update']").validate({
+//  debug: true,
+    rules: {
+        startDate: {
+            required: true,
+            reportdate: true
+        },
+        endDate: {
+            reportdate: true
+        },
+        performer: {
+            required: true,
+            rangelength: [1, 255],
+            regexp: performer_regexp
+        },
+        activity: {
+            required: true,
+            rangelength: [1, 255],
+            regexp: activity_regexp
+        }
+    }
+});
+
+
+                $("#update-btn").click(function(e) {
+ // before ajax call cause defaul action will be fired up
+            e.preventDefault();
+
+            if($("form[name='report-update']").valid()) {
+      
+            alert("Watch out!"); 
+            var id_val = $(update_button).parent(".button-block").data("id").trim();                
             var serial_report = $("form[name='report-update']").serialize();
+            serial_report = serial_report + "&id=" + encodeURI(id_val);
             $.ajax(url_update, {
                 method: "POST",
                 async: true,
@@ -172,23 +225,26 @@
                     $("#confirm").finish().html("Report has been successfully updated<br />in the database");                         
                     $("#confirm").fadeIn(600)
                         .delay(3000)
-                        .fadeOut(1200);  
-                    $("close-btn").click();
+                        .fadeOut(1200);                      
                 },
                 error: function() {
-                    $("#confirm").finish().html("Report cannot be updated<br />in the database");                                             
+                    $("#confirm").finish().html("Report cannot be updated<br />in the database");                                                                 
                     $("#confirm").fadeIn(600)
                         .delay(3000)
                         .fadeOut(1200);                      
-                    $("close-btn").click();
                 }        
             }); 
-            //alert("Watch out!");            
+            alert("Watch out!");            
+            $("#close-btn").click();
+            } //#if
             return false;
-        });
-        //alert("Here");
+                });
+            },
+            'json' 
+        );           
+]]#      
 };
-]]#
+
     function modal_delete(delete_button) {
         // modal form HTML template
         var html = '#modal_delete( )'; 

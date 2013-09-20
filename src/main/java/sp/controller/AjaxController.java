@@ -85,26 +85,33 @@ public class AjaxController {
 
     @RequestMapping(value = "update", method = RequestMethod.POST)
     public @ResponseBody
-    String update(@RequestBody @Valid Report report, 
+    String update(@Valid Report report, 
         BindingResult result, Model model) {
+        logger.error("IN AJAX UPDATE:");
+        
         if (!result.hasErrors()) {
             reportService.updateReport(report);
+            return "success";
         } else {
-            return "error";
+            logger.error(result.toString());            
         }
-        return "success";
+        return "error";
     }
 
     @RequestMapping(value = "add", method = RequestMethod.POST)
     public @ResponseBody
-    String add(@RequestBody @Valid Report report,
+    String add(@Valid Report report,
         BindingResult result, Model model) {
+        logger.error("IN AJAX ADD:");
+        
         if (!result.hasErrors()) {
             reportService.addReport(report);
+            return "success";            
         } else {
-            return "error";
+            logger.error(result.toString());
+            
         }
-        return "success";
+        return "error";
     }
 
     /**
