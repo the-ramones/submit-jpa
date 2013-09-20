@@ -31,4 +31,6 @@ public interface ReportRepository {
     public Long[] hasReports(Long[] ids);
 
     public void removeReport(Long id);
+
+    public void updateReport(Report report);
 }

@@ -89,4 +89,10 @@ public class ReportServiceImpl implements ReportService {
     public void removeReport(Long id) {
         reportRepository.removeReport(id);
     }
+
+    @Override
+    @Transactional
+    public void updateReport(Report report) {
+        reportRepository.updateReport(report);
+    }
 }
