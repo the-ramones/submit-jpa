@@ -135,14 +135,14 @@
     }
 });
         $("#add-btn").click(function(event) {
-        if ($("form[name='report-add']").valid()) {
+       // if ($("form[name='report-add']").valid()) {
             var  $confirm = $("#confirm");
             var serial_report = $(add_button).parent("form[name='report-add']").serialize();
             serial_report = $('form[name="report-add"]').serialize();
             $.post(url,
                 serial_report,
                 function(data, status, jxhr) {
-                    if (data === 'success') {
+                    if (data.status === 'success') {
                         $confirm.html("Report has been successfully added<br />to the database");
                     } else {
                         $confirm.html("Report hasn't been added.<br />Please, try later");
@@ -153,7 +153,7 @@
             );   
             $("#close-btn").click();         
             return false;
-            } //if
+         //   } //if
         });
     }; 
 

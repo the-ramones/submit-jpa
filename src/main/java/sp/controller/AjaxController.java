@@ -4,18 +4,23 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.support.PagedListHolder;
+import org.springframework.context.MessageSource;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -23,6 +28,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import sp.model.Report;
+import sp.model.ajax.AjaxResponse;
 import sp.service.ReportService;
 
 /**
@@ -37,6 +43,10 @@ public class AjaxController {
     private static final Logger logger = LoggerFactory.getLogger(AjaxController.class);
     @Inject
     ReportService reportService;
+    
+    //@Resource
+    @Inject
+    MessageSource messageSource;
 
     /**
      * Return an report object with specified ID.
@@ -85,33 +95,56 @@ public class AjaxController {
 
     @RequestMapping(value = "update", method = RequestMethod.POST)
     public @ResponseBody
-    String update(@Valid Report report, 
-        BindingResult result, Model model) {
+    String update(@Valid Report report,
+            BindingResult result, Model model) {
         logger.error("IN AJAX UPDATE:");
-        
+
         if (!result.hasErrors()) {
             reportService.updateReport(report);
             return "success";
         } else {
-            logger.error(result.toString());            
+            logger.error(result.toString());
         }
         return "error";
     }
 
-    @RequestMapping(value = "add", method = RequestMethod.POST)
+    @RequestMapping(value = "add", method = RequestMethod.POST, produces = "text/plain;charset=utf-8")
     public @ResponseBody
-    String add(@Valid Report report,
-        BindingResult result, Model model) {
+    Object add(@Valid Report report,
+            BindingResult result, HttpServletRequest request, HttpServletResponse response, Locale locale, Model model) {
         logger.error("IN AJAX ADD:");
+        logger.error("Report: {}", report);
+        /*
+         * Force encoding for mapped AjaxResponse
+         */
+////        response.setCharacterEncoding("UTF-8");
+////        response.setHeader("Content-Type", "application/json;charset=UTF-8");
+////        response.setHeader("Accept", "application/json");
+////        response.setHeader("Accept-Charset", "UTF-8");
         
+        AjaxResponse<Report> res;        
         if (!result.hasErrors()) {
             reportService.addReport(report);
-            return "success";            
-        } else {
+            res = new AjaxResponse<Report>(AjaxResponse.SUCCESS);
             logger.error(result.toString());
-            
+            logger.error(res.toString());
+            //return "{\"status\":\"success\"}";
+            return res;
+        } else {
+            res = new AjaxResponse<Report>(AjaxResponse.ERROR);
+            for (FieldError error : result.getFieldErrors()) {
+                String message = messageSource.getMessage(error, locale);
+                res.addError(new AjaxResponse.ErrorDetails(
+                        AjaxResponse.ErrorDetails.FIELD_ERROR,
+                        error.getField(),
+                        error.getRejectedValue(),
+                        message));
+            }
+            logger.error(result.toString());
+            logger.error(res.toString());
+            //return "{\"status\": \"error\"}";
+            return result;
         }
-        return "error";
     }
 
     /**
