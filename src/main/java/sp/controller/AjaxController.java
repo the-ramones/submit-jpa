@@ -101,16 +101,17 @@ public class AjaxController {
 
         if (!result.hasErrors()) {
             reportService.updateReport(report);
-            return "success";
+            //return "success";
         } else {
             logger.error(result.toString());
         }
-        return "error";
+        //return "error";
+        return "success";
     }
 
-    @RequestMapping(value = "add", method = RequestMethod.POST, produces = "text/plain;charset=utf-8")
+    @RequestMapping(value = "add", method = RequestMethod.POST)
     public @ResponseBody
-    Object add(@Valid Report report,
+    String add(@Valid Report report,
             BindingResult result, HttpServletRequest request, HttpServletResponse response, Locale locale, Model model) {
         logger.error("IN AJAX ADD:");
         logger.error("Report: {}", report);
@@ -118,7 +119,7 @@ public class AjaxController {
          * Force encoding for mapped AjaxResponse
          */
 ////        response.setCharacterEncoding("UTF-8");
-////        response.setHeader("Content-Type", "application/json;charset=UTF-8");
+            response.setHeader("Content-Type", "text/plain;charset=UTF-8");
 ////        response.setHeader("Accept", "application/json");
 ////        response.setHeader("Accept-Charset", "UTF-8");
         
@@ -129,7 +130,7 @@ public class AjaxController {
             logger.error(result.toString());
             logger.error(res.toString());
             //return "{\"status\":\"success\"}";
-            return res;
+            //return report;
         } else {
             res = new AjaxResponse<Report>(AjaxResponse.ERROR);
             for (FieldError error : result.getFieldErrors()) {
@@ -143,8 +144,9 @@ public class AjaxController {
             logger.error(result.toString());
             logger.error(res.toString());
             //return "{\"status\": \"error\"}";
-            return result;
+            //return report;
         }
+        return "success";
     }
 
     /**
