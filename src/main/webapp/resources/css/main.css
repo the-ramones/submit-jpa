@@ -461,7 +461,9 @@ input[type="checkbox"] {
     margin: 0 auto;
     display: block;
     width: 100%;
-    text-align: center;
+    text-align: center;    
+    clear: both;
+    padding-right: 0;
 }
 
 .hor-center {

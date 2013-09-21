@@ -22,6 +22,7 @@
         min: $.validator.format("Please enter a value greater than or equal to {0}."),
         reportdate: "Please enter a date in DD M YYYY format (12 Jan 2013)",
         reportusername: "Please enter a correct username/email (a-Z0-9!@#$* signs allowed)",
-        reportpassword: "Please enter a correct password (a-zA-Z0-9_!@#-$^*, 6-18 characters)"
+        reportpassword: "Please enter a correct password (a-zA-Z0-9_!@#-$^*, 6-18 characters)",
+        regexp: "Please enter a value according to {0} regular expression"
     });
 }(jQuery));

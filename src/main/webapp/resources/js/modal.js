@@ -41,6 +41,13 @@ var modal = (function() {
 
         $modal.show();
         $overlay.show();
+        
+        /*
+         * Stop resizing of modal width
+         */
+        $modal.css({
+            width: $modal.css("width")
+        });
     };
 
     // Close the modal

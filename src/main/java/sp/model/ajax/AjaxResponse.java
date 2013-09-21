@@ -41,6 +41,12 @@ public class AjaxResponse<T> {
 
     public AjaxResponse(String status) {
         this.status = status;
+        /*
+         * Need to  be instantiated for the successfull serialization by Jackson,
+         * instead '500. Internal Server Error'  is throwed.
+         */
+        this.results = new ArrayList(0);
+        this.errors = new ArrayList(0);
     }
 
     public AjaxResponse(String status, List results, List errors) {

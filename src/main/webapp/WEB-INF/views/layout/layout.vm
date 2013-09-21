@@ -59,10 +59,11 @@
         </div>
 
         <script src="#springUrl('/resources/js/libs/jquery.validate.js')"></script>        
+        <script src="#springUrl('/resources/js/main.js')"></script>
         <script src="#springUrl('/resources/js/validation.js')"></script>
         <script type="text/javascript" src="#springUrl('/resources/js/search.js')"></script>
         <script type="text/javascript" src="#springUrl('/resources/js/modal.js')"></script>
-        <script src="#springUrl('/resources/js/main.js')"></script>
+        <script src="#springUrl('/resources/js/dates.js')"></script>
         
         #* 
          * l10n 

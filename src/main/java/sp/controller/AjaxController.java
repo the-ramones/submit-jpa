@@ -1,38 +1,37 @@
 package sp.controller;
 
-import java.util.ArrayList;
+import java.text.DateFormat;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.beans.support.PagedListHolder;
 import org.springframework.context.MessageSource;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
+import org.springframework.validation.ObjectError;
+import org.springframework.web.bind.WebDataBinder;
+import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import sp.model.Report;
 import sp.model.ajax.AjaxResponse;
-import sp.model.ajax.AjaxResponse2;
-import sp.model.ajax.AjaxResponse3;
 import sp.model.ajax.ErrorDetails;
 import sp.service.ReportService;
 
@@ -51,6 +50,13 @@ public class AjaxController {
     //@Resource
     @Inject
     MessageSource messageSource;
+
+    @InitBinder
+    public void initReportDateEditor(WebDataBinder binder, Locale locale) {
+        DateFormat df;
+        df = sp.util.SpDateFormatFactory.getDateFormat("dd MMM yyyy", locale, null);
+        binder.registerCustomEditor(Date.class, new CustomDateEditor(df, true));
+    }
 
     /**
      * Return an report object with specified ID.
@@ -117,55 +123,50 @@ public class AjaxController {
         logger.error("IN AJAX UPDATE:");
         logger.error("Report: {}", report);
 
-//        AjaxResponse<Report> res;
-//        if (reportService.hasReport(report.getId())) {
-//            if (!result.hasErrors()) {
-//                reportService.updateReport(report);
-//                logger.debug("Report ({}) has been successfully updated", report);
-//                return new AjaxResponse<Report>(AjaxResponse.SUCCESS);
-//            } else {
-//                res = new AjaxResponse(AjaxResponse.ERROR);
-//                logger.debug("Report ({}) cannot be updated in the database", report);
-//
-//                logger.error("BindingResult: {}", result);
-//
-//                for (FieldError error : result.getFieldErrors()) {
-//                    String message = messageSource.getMessage(error, locale);
-//
-//                    logger.error("Error: {}", error);
-//                    logger.error("Message: {}", message);
-//                    logger.error("Field: {}", error.getField());
-//                    logger.error("RejectedValue: {}", error.getRejectedValue());
-//
-//                    ErrorDetails details = new ErrorDetails(ErrorDetails.FIELD_ERROR,
-//                            error.getField(),
-//                            error.getRejectedValue(),
-//                            message);
-//                    res.addError(details);
-//                    return res;
-//                }
-//            }
-//        }
-//        return new AjaxResponse(AjaxResponse.ERROR);
-        //return new AjaxResponse(AjaxResponse.SUCCESS, new Object(), new ErrorDetails(ErrorDetails.FIELD_ERROR));
-        //return report;
-        //return new AjaxResponse2(AjaxResponse2.SUCCESS, new Object(), new ErrorDetails(ErrorDetails.FIELD_ERROR));
-        //return new AjaxResponse2(AjaxResponse2.SUCCESS);
-        List l = new ArrayList();
-        List m = new ArrayList();
-        List k = new ArrayList();
-        l.add(new String("test1"));
-        l.add(new String("test2"));
-        l.add(new String("test3"));
-        m.add(report);
-        m.add(report);
-        m.add(report);
-        ErrorDetails ed = new ErrorDetails(ErrorDetails.FIELD_ERROR, "performer", new String("dannie"), "cannot be verified");
-        k.add(ed);
-        k.add(ed);
-        k.add(ed);
-        //return new AjaxResponse3(AjaxResponse3.SUCCESS, l, k);
-        return new AjaxResponse<Report>(AjaxResponse.SUCCESS, l, k);
+        AjaxResponse<Report> res;
+        if (reportService.hasReport(report.getId())) {
+            if (!result.hasErrors()) {
+                reportService.updateReport(report);
+                logger.debug("Report ({}) has been successfully updated", report);
+                return new AjaxResponse<Report>(AjaxResponse.SUCCESS);
+            } else {
+                res = new AjaxResponse(AjaxResponse.ERROR);
+                logger.debug("Report ({}) cannot be updated in the database", report);
+
+                logger.error("BindingResult: {}", result);
+
+                for (FieldError error : result.getFieldErrors()) {
+                    String message = messageSource.getMessage(error, locale);
+
+                    logger.error("Error: {}", error);
+                    logger.error("Message: {}", message);
+                    logger.error("Field: {}", error.getField());
+                    logger.error("RejectedValue: {}", error.getRejectedValue());
+
+                    ErrorDetails details = new ErrorDetails(ErrorDetails.FIELD_ERROR,
+                            error.getField(),
+                            error.getRejectedValue(),
+                            message);
+                    res.addError(details);
+                }
+
+                for (ObjectError error : result.getGlobalErrors()) {
+                    String message = messageSource.getMessage(error, locale);
+
+                    logger.error("Error: {}", error);
+                    logger.error("Message: {}", message);
+                    logger.error("Field: {}", error.getObjectName());
+
+                    ErrorDetails details = new ErrorDetails(ErrorDetails.OBJECT_ERROR,
+                            error.getObjectName(),
+                            "",
+                            message);
+                    res.addError(details);
+                }
+                return res;
+            }
+        }
+        return new AjaxResponse(AjaxResponse.ERROR);
     }
 
     /**
@@ -189,30 +190,43 @@ public class AjaxController {
         logger.error("IN AJAX ADD:");
         logger.error("Report: {}", report);
 
-//        AjaxResponse<Report> res = null;
-//        if (!result.hasErrors()) {
-//            reportService.addReport(report); 
-//            res = new AjaxResponse<Report>(AjaxResponse.SUCCESS);
-//        } else {
-//            res = new AjaxResponse<Report>(AjaxResponse.ERROR);
-//            logger.error("BindingResult: {}", result);
-//            for (FieldError error : result.getFieldErrors()) {
-//                String message = messageSource.getMessage(error, locale);
-//
-//                logger.error("Error: {}", error);
-//                logger.error("Message: {}", message);
-//                logger.error("Field: {}", error.getField());
-//                logger.error("RejectedValue: {}", error.getRejectedValue());
-//
-//                ErrorDetails details = new ErrorDetails(ErrorDetails.FIELD_ERROR,
-//                        error.getField(),
-//                        error.getRejectedValue(),
-//                        message);
-//                res.addError(details);
-//            }
-//        }
-//        return res;
-        return new AjaxResponse(AjaxResponse.SUCCESS);
+        AjaxResponse<Report> res;
+        if (!result.hasErrors()) {
+            reportService.addReport(report);
+            res = new AjaxResponse<Report>(AjaxResponse.SUCCESS);
+        } else {
+            res = new AjaxResponse<Report>(AjaxResponse.ERROR);
+            logger.error("BindingResult: {}", result);
+            for (FieldError error : result.getFieldErrors()) {
+                String message = messageSource.getMessage(error, locale);
+
+                logger.error("Error: {}", error);
+                logger.error("Message: {}", message);
+                logger.error("Field: {}", error.getField());
+                logger.error("RejectedValue: {}", error.getRejectedValue());
+
+                ErrorDetails details = new ErrorDetails(ErrorDetails.FIELD_ERROR,
+                        error.getField(),
+                        error.getRejectedValue(),
+                        message);
+                res.addError(details);
+            }
+
+            for (ObjectError error : result.getGlobalErrors()) {
+                String message = messageSource.getMessage(error, locale);
+
+                logger.error("Error: {}", error);
+                logger.error("Message: {}", message);
+                logger.error("Field: {}", error.getObjectName());
+
+                ErrorDetails details = new ErrorDetails(ErrorDetails.OBJECT_ERROR,
+                        error.getObjectName(),
+                        "",
+                        message);
+                res.addError(details);
+            }
+        }
+        return res;
     }
 
     /**

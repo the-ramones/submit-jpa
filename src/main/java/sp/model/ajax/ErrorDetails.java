@@ -28,7 +28,7 @@ public class ErrorDetails {
     /**
      * Target field name, where validation constraint fails
      */
-    private String target;
+    private String field;
     
     /**
      * Field value that failed under validation constraint
@@ -45,12 +45,12 @@ public class ErrorDetails {
         return type;
     }
 
-    public String getError() {
-        return target;
+    public String getField() {
+        return field;
     }
 
-    public void setError(String target) {
-        this.target = target;
+    public void setField(String target) {
+        this.field = target;
     }
 
     public String getMessage() {
@@ -72,15 +72,15 @@ public class ErrorDetails {
     public ErrorDetails(String type) {
     }
 
-    public ErrorDetails(String type, String target, Object value, String message) {
+    public ErrorDetails(String type, String field, Object value, String message) {
         this.type = type;
-        this.target = target;
+        this.field = field;
         this.message = message;
         this.value = value;
     }
 
     @Override
     public String toString() {
-        return "ErrorDetails{" + "type=" + type + ", target=" + target + ", value=" + value + ", message=" + message + '}';
+        return "ErrorDetails{" + "type=" + type + ", field=" + field + ", value=" + value + ", message=" + message + '}';
     }
 }

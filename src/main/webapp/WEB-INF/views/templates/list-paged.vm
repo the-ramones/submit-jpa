@@ -4,7 +4,7 @@
     #if($pager)
     <table class="table">
         <caption>#springMessage('content.list.table.caption')</caption>
-        <thead>
+        <thead> 
             <tr>
                 <th>id</th>
                 <th>#springMessage('content.detail.start')</th>
@@ -157,7 +157,9 @@
         modal.open({ content: html });
         $("#close-btn").click(function() {
             $("#close").click();
-        });
+        });        
+        $('input[name="startDate"]').datepicker({dateFormat: "dd M yy"});
+        $('input[name="endDate"]').datepicker({dateFormat: "dd M yy"});
         $("form[name='report-add']").validate({
         //  debug: true,
             rules: {
@@ -182,25 +184,29 @@
         });
         $("#add-btn").click(function(e) {
             e.preventDefault();
-        //  if ($("form[name='report-add']").valid()) {
+            if ($("form[name='report-add']").valid()) {
             var  $confirm = $("#confirm");
             var serial_report = $(addButton).parent("form[name='report-add']").serialize();
             serialReport = $('form[name="report-add"]').serialize();
             $.post(url,
                    serialReport,
-                   function(data, status, jxhr) {
-                       if (data.status === 'success') {
+                   function(result, status, jxhr) {
+                       if (result.status === 'success') {
                            $confirm.html(ADDED_MSG);
+                           $("#close-btn").click();
+                        } else if (result.status === 'error') {
+                           fillUpViolations($('form[name="report-add"]'), $('.error-block'), result);
+                           $confirm.html(NOTADDED_MSG);
                         } else {
                            $confirm.html(NOTADDED_MSG);
-                        }                    
+                           $("#close-btn").click();
+                        }
                         $confirm.finish().fadeIn(600).delay(3000).fadeOut(1200);
                     },
                     'json'
             );   
-            $("#close-btn").click();         
             return false;
-        //  } //#if
+            } //#if
         });
     } 
 
@@ -220,7 +226,6 @@
                   html.find("#endDate").attr("value", (new Date(report.endDate)).toString());
                   html.find("#performer").attr("value", report.performer);
                   html.find("#activity").attr("value", report.activity);
-                  html.find("#activity").val(report.activity);
                   html.find("span").text(report.id);
                   html = html.get(0).outerHTML;
                   
@@ -228,7 +233,10 @@
                   $("#close-btn").click(function() {
                       $("#close").click();
                   });
-                  
+                  $('input[name="startDate"]').datepicker({dateFormat: "dd M yy"});
+                  $('input[name="endDate"]').datepicker({dateFormat: "dd M yy"});
+                  $("#endDate").datepicker('setDate', new Date(report.endDate));                  
+                  $("#startDate").datepicker('setDate', new Date(report.startDate));
                   // validate the form
                   $("form[name='report-update']").validate({
                   //  debug: true,
@@ -256,7 +264,7 @@
                 $("#update-btn").click(function(e) {
                     // before ajax call cause defaul action will be fired up
                     e.preventDefault();
-                    // if($("form[name='report-update']").valid()) {      
+                    if($("form[name='report-update']").valid()) {      
                         var idVal = $(updateButton).parent(".button-block").data("id").trim();                
                         var serialReport = $("form[name='report-update']").serialize();
                         serialReport = serialReport + "&id=" + encodeURI(idVal);
@@ -268,8 +276,13 @@
                                success: function(result) {
                                  if (result.status === 'success') {
                                     $("#confirm").finish().html(UPDATED_MSG);
+                                    $("#close-btn").click();
+                                 } else if (result.status === 'error') {
+                                    fillUpViolations($("form[name='report-update']"), $('.error-block'), result);
+                                    $("#confirm").finish().html(NOTUPDATE_MSG);
                                  } else {
                                     $("#confirm").finish().html(NOTUPDATE_MSG);
+                                    $("#close-btn").click();
                                  }
                                  $("#confirm").fadeIn(600)
                                               .delay(3000)
@@ -283,14 +296,29 @@
                                               .fadeOut(1200);                      
                                  }, 
                                dataType: 'json'
-                        });
-                        $("#close-btn").click();
-                    // } //#if
+                        });                        
+                    } //#if
                     return false;
                 });
             },
             'json' 
         );            
+    }
+
+    /*
+     * Server-side field validation violations handler
+     */
+    function fillUpViolations($form, $errorBlock, result) {
+        $error = $form.find('.error');
+        for (var i = 0; i < result.errors.length; i++) {
+            var error = result.errors[i];
+            if (error.type === 'field') {
+                $error.filter('[for=' + error.field + ']').text(error.message);            
+            } else if (error.type === 'object') {
+                $errorBlock.append(error.message + '<br />');
+            }
+        }
+        modal.center();
     }
 
     /*
@@ -304,17 +332,17 @@
                  {id: idVal},
                  function(report) {
                    html = $(html).find("#id").text(report.id).end()
-                                 .find("#startDate").text((new Date(report.startDate)).toString()).end()
-                                 .find("#endDate").text((new Date(report.endDate)).toString()).end()
+                                 .find("#startDate").text(formatDate(new Date(report.startDate))).end()
+                                 .find("#endDate").text(formatDate(new Date(report.endDate))).end()
                                  .find("#performer").text(report.performer).end()
                                  .find("#activity").text(report.activity).end();
-                  html.find("span").text(report.id);                  
-                  html = html.get(0).outerHTML;
-                  modal.open({ content: html });
-                  $("#close-btn").click(function() {
-                      $("#close").click();
-                  });
-                  $("#confirm-btn").click(function() {   
+                   html.find("span").text(report.id);                  
+                   html = html.get(0).outerHTML;
+                   modal.open({ content: html });
+                   $("#close-btn").click(function() {
+                       $("#close").click();
+                   });
+                   $("#confirm-btn").click(function() {   
                       var url = deleteReportUrl;
                       $.post(url, 
                              {id: idVal},
@@ -336,7 +364,7 @@
                              },
                              'text'
                       );
-                  });
+                 });
              },
              'json'
            );         
@@ -364,8 +392,8 @@
               {id: idVal},
               function(report) {                 
                  html.find("#id").text(report.id).end()
-                     .find("#startDate").text((new Date(report.startDate)).toString()).end()
-                     .find("#endDate").text((new Date(report.endDate)).toString()).end()
+                     .find("#startDate").text(formatDate(new Date(report.startDate))).end()
+                     .find("#endDate").text(formatDate(new Date(report.endDate))).end()
                      .find("#performer").text(report.performer).end()
                      .find("#activity").text(report.activity).end();
                  html.find("span").text(report.id);                
