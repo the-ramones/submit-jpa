@@ -12,7 +12,7 @@ import javax.xml.bind.annotation.XmlRootElement;
  * @author Paul Kulitski
  */
 @XmlRootElement
-public class AjaxResponse<T> {
+public class AjaxResponse2 {
 
     public static final String SUCCESS = "success";
     public static final String ERROR = "error";
@@ -34,22 +34,22 @@ public class AjaxResponse<T> {
      * The list of returned error from the server. Mainly fills up only
      * if {@link AjaxResponse#ERROR}.
      */
-    private List<ErrorDetails> errors;
+    private List errors;
 
-    public AjaxResponse() {
+    public AjaxResponse2() {
     }
 
-    public AjaxResponse(String status) {
+    public AjaxResponse2(String status) {
         this.status = status;
     }
 
-    public AjaxResponse(String status, List results, List errors) {
+    public AjaxResponse2(String status, List results, List errors) {
         this.status = status;
         this.results = results;
         this.errors = errors;
     }
 
-    public AjaxResponse(String status, Object result, ErrorDetails error) {
+    public AjaxResponse2(String status, Object result, ErrorDetails error) {
         this.status = status;
         this.results = new ArrayList();
         this.results.add(result);

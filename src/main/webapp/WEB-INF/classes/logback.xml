@@ -25,6 +25,10 @@
     <logger name="org.springframework">
         <level value="INFO" />
     </logger>
+    
+    <logger name="org.codehaus.jackson">
+        <level value="DEBUG" />
+    </logger>    
 
     <root>
         <level value="INFO" />

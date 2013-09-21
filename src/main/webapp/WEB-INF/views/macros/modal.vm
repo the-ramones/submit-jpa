@@ -52,7 +52,7 @@
  * Add form template
  *#
 #macro ( modal_add )
-<h2>#springMessage('content.add.title')</h2> \ 
+<h2>#springMessage('content.add.title')</h2> \
 <p class="error error-block">#springShowErrors("<br/>" "")</p> \
 <form name="report-add"> \
     <div class="form-line clearfix"> \

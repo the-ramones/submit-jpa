@@ -1,5 +1,6 @@
 package sp.controller;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
@@ -16,6 +17,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.support.PagedListHolder;
 import org.springframework.context.MessageSource;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -28,6 +31,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import sp.model.Report;
 import sp.model.ajax.AjaxResponse;
+import sp.model.ajax.AjaxResponse2;
+import sp.model.ajax.AjaxResponse3;
+import sp.model.ajax.ErrorDetails;
 import sp.service.ReportService;
 
 /**
@@ -42,7 +48,6 @@ public class AjaxController {
     private static final Logger logger = LoggerFactory.getLogger(AjaxController.class);
     @Inject
     ReportService reportService;
-    
     //@Resource
     @Inject
     MessageSource messageSource;
@@ -92,60 +97,122 @@ public class AjaxController {
         }
     }
 
+    /**
+     * Checks validity and existence of passed report object and updates its
+     * state in the database. Returns {@link AjaxResponse} object with status
+     * and list of validation errors, if exists. return object will be
+     * serialized to requested form (specified in request header 'Accept') by
+     * Jackson or JAXB serializer if they are in Spring Framework classpath (no
+     * need to manually register them if use <mvc:annotation-driven>).
+     *
+     * @param report report beign updated
+     * @param result {@link BindingResult} object
+     * @param model model object
+     * @return {@link AjaxResponse} object that will be send to the client
+     */
     @RequestMapping(value = "update", method = RequestMethod.POST)
     public @ResponseBody
-    String update(@Valid Report report,
-            BindingResult result, Model model) {
+    AjaxResponse update(@Valid Report report, BindingResult result,
+            Locale locale, Model model) {
         logger.error("IN AJAX UPDATE:");
+        logger.error("Report: {}", report);
 
-        if (!result.hasErrors()) {
-            reportService.updateReport(report);
-            //return "success";
-        } else {
-            logger.error(result.toString());
-        }
-        //return "error";
-        return "success";
+//        AjaxResponse<Report> res;
+//        if (reportService.hasReport(report.getId())) {
+//            if (!result.hasErrors()) {
+//                reportService.updateReport(report);
+//                logger.debug("Report ({}) has been successfully updated", report);
+//                return new AjaxResponse<Report>(AjaxResponse.SUCCESS);
+//            } else {
+//                res = new AjaxResponse(AjaxResponse.ERROR);
+//                logger.debug("Report ({}) cannot be updated in the database", report);
+//
+//                logger.error("BindingResult: {}", result);
+//
+//                for (FieldError error : result.getFieldErrors()) {
+//                    String message = messageSource.getMessage(error, locale);
+//
+//                    logger.error("Error: {}", error);
+//                    logger.error("Message: {}", message);
+//                    logger.error("Field: {}", error.getField());
+//                    logger.error("RejectedValue: {}", error.getRejectedValue());
+//
+//                    ErrorDetails details = new ErrorDetails(ErrorDetails.FIELD_ERROR,
+//                            error.getField(),
+//                            error.getRejectedValue(),
+//                            message);
+//                    res.addError(details);
+//                    return res;
+//                }
+//            }
+//        }
+//        return new AjaxResponse(AjaxResponse.ERROR);
+        //return new AjaxResponse(AjaxResponse.SUCCESS, new Object(), new ErrorDetails(ErrorDetails.FIELD_ERROR));
+        //return report;
+        //return new AjaxResponse2(AjaxResponse2.SUCCESS, new Object(), new ErrorDetails(ErrorDetails.FIELD_ERROR));
+        //return new AjaxResponse2(AjaxResponse2.SUCCESS);
+        List l = new ArrayList();
+        List m = new ArrayList();
+        List k = new ArrayList();
+        l.add(new String("test1"));
+        l.add(new String("test2"));
+        l.add(new String("test3"));
+        m.add(report);
+        m.add(report);
+        m.add(report);
+        ErrorDetails ed = new ErrorDetails(ErrorDetails.FIELD_ERROR, "performer", new String("dannie"), "cannot be verified");
+        k.add(ed);
+        k.add(ed);
+        k.add(ed);
+        //return new AjaxResponse3(AjaxResponse3.SUCCESS, l, k);
+        return new AjaxResponse<Report>(AjaxResponse.SUCCESS, l, k);
     }
 
+    /**
+     * Checks validity of passed report object and adds to the database. Returns
+     * {@link AjaxResponse} object with status and list of validation errors, if
+     * exists. return object will be serialized to requested form (specified in
+     * request header 'Accept') by Jackson or JAXB serializer if they are in
+     * Spring Framework classpath (no need to manually register them if use
+     * <mvc:annotation-driven>).
+     *
+     * @param report report beign updated
+     * @param result {@link BindingResult} object
+     * @param model model object
+     * @paran locale current User locale
+     * @return {@link AjaxResponse} object that will be send to the client
+     */
     @RequestMapping(value = "add", method = RequestMethod.POST)
     public @ResponseBody
-    String add(@Valid Report report,
-            BindingResult result, HttpServletRequest request, HttpServletResponse response, Locale locale, Model model) {
+    AjaxResponse add(@Valid Report report, BindingResult result,
+            Locale locale, Model model) {
         logger.error("IN AJAX ADD:");
         logger.error("Report: {}", report);
-        /*
-         * Force encoding for mapped AjaxResponse
-         */
-////        response.setCharacterEncoding("UTF-8");
-            response.setHeader("Content-Type", "text/plain;charset=UTF-8");
-////        response.setHeader("Accept", "application/json");
-////        response.setHeader("Accept-Charset", "UTF-8");
-        
-        AjaxResponse<Report> res;        
-        if (!result.hasErrors()) {
-            reportService.addReport(report);
-            res = new AjaxResponse<Report>(AjaxResponse.SUCCESS);
-            logger.error(result.toString());
-            logger.error(res.toString());
-            //return "{\"status\":\"success\"}";
-            //return report;
-        } else {
-            res = new AjaxResponse<Report>(AjaxResponse.ERROR);
-            for (FieldError error : result.getFieldErrors()) {
-                String message = messageSource.getMessage(error, locale);
-                res.addError(new AjaxResponse.ErrorDetails(
-                        AjaxResponse.ErrorDetails.FIELD_ERROR,
-                        error.getField(),
-                        error.getRejectedValue(),
-                        message));
-            }
-            logger.error(result.toString());
-            logger.error(res.toString());
-            //return "{\"status\": \"error\"}";
-            //return report;
-        }
-        return "success";
+
+//        AjaxResponse<Report> res = null;
+//        if (!result.hasErrors()) {
+//            reportService.addReport(report); 
+//            res = new AjaxResponse<Report>(AjaxResponse.SUCCESS);
+//        } else {
+//            res = new AjaxResponse<Report>(AjaxResponse.ERROR);
+//            logger.error("BindingResult: {}", result);
+//            for (FieldError error : result.getFieldErrors()) {
+//                String message = messageSource.getMessage(error, locale);
+//
+//                logger.error("Error: {}", error);
+//                logger.error("Message: {}", message);
+//                logger.error("Field: {}", error.getField());
+//                logger.error("RejectedValue: {}", error.getRejectedValue());
+//
+//                ErrorDetails details = new ErrorDetails(ErrorDetails.FIELD_ERROR,
+//                        error.getField(),
+//                        error.getRejectedValue(),
+//                        message);
+//                res.addError(details);
+//            }
+//        }
+//        return res;
+        return new AjaxResponse(AjaxResponse.SUCCESS);
     }
 
     /**
@@ -169,8 +236,6 @@ public class AjaxController {
                 return "success";
             }
         }
-
-        logger.debug("recieved ID: {}", id);
         return "";
     }
 
@@ -204,61 +269,9 @@ public class AjaxController {
                 return sb.toString();
             }
         }
-
-        logger.debug("AJAX: checklist {}", checklist);
-        Map pagers = (Map) session.getAttribute("pagers");
-        logger.debug("AJAX: pagers {}", pagers);
-
         return "";
     }
 
-    ///// TESTS /////
-    @RequestMapping(value = "watch2")
-    public @ResponseBody
-    String watchAll2(@RequestBody String indexes, Model model) {
-        logger.info("In watch2");
-        return "success: " + indexes;
-    }
-
-    private class R {
-
-        String i;
-        String g;
-
-        public String getI() {
-            return i;
-        }
-
-        public void setI(String i) {
-            this.i = i;
-        }
-
-        public String getG() {
-            return g;
-        }
-
-        public void setG(String g) {
-            this.g = g;
-        }
-    }
-
-    @RequestMapping(value = "watch3")
-    public @ResponseBody
-    String watchAll3(@RequestParam("indexes") R indexes, Model model) {
-        logger.info("In watch3");
-        logger.error(indexes.toString());
-        return "success: " + indexes.toString();
-    }
-
-    @RequestMapping(value = "watch4")
-    public @ResponseBody
-    String watchAll4(@RequestBody R indexes, Model model) {
-        logger.info("In watch4");
-        logger.error(indexes.toString());
-        return "success: " + indexes.toString();
-    }
-
-    ////////////////////
     /**
      * Compute and return report's URL if it exists.
      *
@@ -279,12 +292,6 @@ public class AjaxController {
             StringBuilder server = new StringBuilder(url.length());
             server.append(url.substring(0, url.indexOf(request.getRequestURI())));
             server.append(request.getContextPath()).append("/report/detail/").append(id);
-
-            logger.debug("URL: {}", request.getRequestURL());
-            logger.debug("URI: {}", request.getRequestURI());
-            logger.debug("index of URI in URL: {}", url.indexOf(request.getRequestURI()));
-            logger.debug("IN AJAX URL: {}", server.toString());
-
             return server.toString();
         } else {
             return "";

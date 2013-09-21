@@ -59,7 +59,7 @@
     var addToChecklistUrl = "#springUrl('/report/ajax/watch')";
     var addReportUrl = "#springUrl('/report/ajax/add')";  
     var updateReportUrl = "#springUrl('/report/ajax/update')";
-    var deleteReportUrl = #springUrl('/report/ajax/remove')";
+    var deleteReportUrl = "#springUrl('/report/ajax/remove')";
     var getReportUrl = "#springUrl('/report/ajax')";
     var deleteFromChecklistUrl = "#springUrl('/checklist/remove/')";
     var getReportUriUrl = "#springUrl('/report/ajax/uri')";
@@ -89,6 +89,7 @@
     /*
      * Utilizes: 
      *    1. modal - modal.js
+     *    2. validation rules - validation.js
      */
       
 #[[ 
@@ -195,7 +196,7 @@
                         }                    
                         $confirm.finish().fadeIn(600).delay(3000).fadeOut(1200);
                     },
-                    'text'
+                    'json'
             );   
             $("#close-btn").click();         
             return false;
@@ -209,8 +210,8 @@
     function modalUpdate(updateButton) {
         var url = getReportUrl;   
         var urlUpdate = updateReportUrl;         
-        var html = $(modalUpdateUrl);        
-        var idVal = $(update_button).parent(".button-block").data("id").trim();
+        var html = $(modalUpdateHtml);        
+        var idVal = $(updateButton).parent(".button-block").data("id").trim();
         $.get(url, 
               {id: idVal},
               function(report) {
@@ -255,7 +256,7 @@
                 $("#update-btn").click(function(e) {
                     // before ajax call cause defaul action will be fired up
                     e.preventDefault();
-                    if($("form[name='report-update']").valid()) {      
+                    // if($("form[name='report-update']").valid()) {      
                         var idVal = $(updateButton).parent(".button-block").data("id").trim();                
                         var serialReport = $("form[name='report-update']").serialize();
                         serialReport = serialReport + "&id=" + encodeURI(idVal);
@@ -264,21 +265,27 @@
                                async: true,
                                cache: false,
                                data: serialReport,
-                               success: function(data) {
-                                 $("#confirm").finish().html(UPDATED_MSG);
+                               success: function(result) {
+                                 if (result.status === 'success') {
+                                    $("#confirm").finish().html(UPDATED_MSG);
+                                 } else {
+                                    $("#confirm").finish().html(NOTUPDATE_MSG);
+                                 }
                                  $("#confirm").fadeIn(600)
                                               .delay(3000)
                                               .fadeOut(1200);                      
-                                 },
+
+                               },
                                error: function() {
                                  $("#confirm").finish().html(NOTUPDATE_MSG);                                                                 
                                  $("#confirm").fadeIn(600)
                                               .delay(3000)
                                               .fadeOut(1200);                      
-                                 }        
+                                 }, 
+                               dataType: 'json'
                         });
                         $("#close-btn").click();
-                    } //#if
+                    // } //#if
                     return false;
                 });
             },
@@ -290,7 +297,7 @@
      * Delete report handler
      */
     function modalDelete(deleteButton) {
-        var html = modelDeleteHtml; 
+        var html = modalDeleteHtml; 
         var url = getReportUrl;  
         var idVal = $(deleteButton).parent(".button-block").data("id").trim();
            $.get(url, 
@@ -354,7 +361,7 @@
         var error = false;
         var url = getReportUrl; 
         $.get(url, 
-              {id: id_val},
+              {id: idVal},
               function(report) {                 
                  html.find("#id").text(report.id).end()
                      .find("#startDate").text((new Date(report.startDate)).toString()).end()
