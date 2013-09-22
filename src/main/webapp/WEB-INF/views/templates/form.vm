@@ -5,13 +5,13 @@
         <div class="form-line clearfix">
             #springBind('startDate')
             <label for="startDate">#springMessage('content.form.caption.start'):</label>
-            <input type="text" name="startDate" placeholder="#springMessage('content.form.placeholder.start')" autocomplete="off">                             
+            <input type="text" name="startDate" placeholder="#springMessage('content.form.placeholder.start')" autocomplete="off" onchange="resetPeriodSelect();">
             <label for="startDate" class="error">#springShowErrors("<br/>" "")</label>
         </div>
         <div class="form-line clearfix">
             #springBind('endDate')
             <label for="endDate">#springMessage('content.form.caption.end'):</label>
-            <input type="text" name="endDate" placeholder="#springMessage('content.form.placeholder.end')" autocomplete="off">
+            <input type="text" name="endDate" placeholder="#springMessage('content.form.placeholder.end')" autocomplete="off" onchange="resetPeriodSelect();">
             <label for="endDate" class="error">#springShowErrors("<br/>" "")</label>
         </div>
         <div class="form-line clearfix">
@@ -28,6 +28,7 @@
         <div class="form-line clearfix">
             <label for="timePeriod">#springMessage('content.form.caption.timeperiod'):</label>
             <select name="timePeriod" onchange="periodChange(this);">
+                <option value="none" disabled selected>#springMessage('content.form.period.option.default')</option>                
                 <option value="last-qtr">#springMessage('content.form.timeperiod.lastqtr')</option>
                 <option value="last-month">#springMessage('content.form.timeperiod.lastmonth')</option>
                 <option value="last-calendar-year">#springMessage('content.form.timeperiod.lastyear')</option>

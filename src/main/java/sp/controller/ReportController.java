@@ -148,9 +148,9 @@ public class ReportController {
             @ModelAttribute("pagers") Map<String, PagedListHolder<Report>> pagers,
             Model model) {
         logger.error("In POST");
-//        logger.info("startDate: {} of type {}", startDate, startDate.getClass().getConstructors());
-//        logger.info("endDate: {} of type {}", endDate, endDate.getClass().getConstructors());
-//        logger.info("performer: {} of type {}", performer, performer.getClass().getConstructors());
+        logger.info("startDate: {} of type {}", startDate, startDate.getClass().getConstructors());
+        logger.info("endDate: {} of type {}", endDate, endDate.getClass().getConstructors());
+        logger.info("performer: {} of type {}", performer, performer.getClass().getConstructors());
 
         List<Report> reports;
         if (performer.isEmpty()) {

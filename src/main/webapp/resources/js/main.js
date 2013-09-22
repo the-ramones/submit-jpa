@@ -77,6 +77,14 @@ $(document).ready(function() {
 });
 
 /*
+ * Onchange of Time Period Bounds inputs
+ */
+function resetPeriodSelect(element) {
+    alert("fired");
+    $('select[name="timePeriod"]').val("none");
+}
+
+/*
  * Form Date bound filling 
  */
 /*
@@ -136,5 +144,4 @@ function periodChange(select) {
             $("input[name='endDate']").datepicker('setDate', timestamp);
             break;
     }
-    console.log("exit");
 }

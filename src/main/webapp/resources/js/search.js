@@ -2,11 +2,13 @@
  * Actions on search box interactions
  */
 $(document).ready(function() {
+
     $(".subnav").on("click", "a", function() {
         $("input[name='search']").val($(this).text());
         $(".subnav li").css({
             visibility: 'hidden'});
     });
+
     $("input[name='search']").keydown(function(event) {
         var key = event.which;
         console.log(key);
@@ -43,6 +45,7 @@ $(document).ready(function() {
             }
         }
     });
+
     $("input[name='search']").keypress(function(event) {
         if ($(".subnav li").size() === 1) {
             for (var i = 0; i < 3; i++) {
@@ -56,6 +59,7 @@ $(document).ready(function() {
             transition: "all"
         });
     });
+
     /*
      * On-click modal appearing
      */
@@ -66,6 +70,7 @@ $(document).ready(function() {
         }
         // TODO: add modal dialog
     });
+
     $(".table tbody tr").dblclick(function(event) {
         var buttons = $(".button-block");
         var tr = $(this);
@@ -81,15 +86,24 @@ $(document).ready(function() {
         $(this).append(buttons);
         buttons.removeClass("hidden");
     });
+
     /*
      * Button-group addition
      */
     $(".table tbody tr").mouseenter(function(event) {
         // TODO 
     });
+
     $(".table tbody tr").mouseleave(function(avent) {
         var buttons = $(".button-block");
         buttons.addClass("hidden");
+    });
+
+    /*
+     * Search Button action
+     */
+    $("#search_button").click(function(e) {
+        //TODO: 
     });
 });
 

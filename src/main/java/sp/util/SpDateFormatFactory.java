@@ -114,7 +114,7 @@ public class SpDateFormatFactory {
         @Override
         public String[] getShortMonths() {
             return new String[]{
-                "Янв", "Фев", "Мар", "Апр", "Мая", "Июн", "Июл", "Авг", "Сен", "Окт", "Ноя", "Фев"
+                "Янв", "Фев", "Мар", "Апр", "Мая", "Июн", "Июл", "Авг", "Сен", "Окт", "Ноя", "Дек"
             };
         }
     }

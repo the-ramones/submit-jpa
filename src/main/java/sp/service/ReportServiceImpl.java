@@ -67,7 +67,7 @@ public class ReportServiceImpl implements ReportService {
     public List<Report> getReports(Date startDate, Date endDate) {
         return reportRepository.getReports(startDate, endDate);
     }
-    
+
     @Override
     @Transactional
     public List<Report> getReports(Set<Long> ids) {
