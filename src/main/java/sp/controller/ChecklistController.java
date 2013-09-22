@@ -53,7 +53,7 @@ public class ChecklistController {
             for (Long id : checklist) {
                 sb.append(id).append(' ');
             }
-            logger.info("ID added to checklist: {}", sb.toString());
+            logger.debug("IDs added to checklist: {}", sb.toString());
         }
         return "checklist";
     }
@@ -110,7 +110,7 @@ public class ChecklistController {
     public @ResponseBody
     String removeFromChecklistById(@RequestParam("id") Long id,
             HttpSession session, Model model) {
-        logger.error("IN REMOVE: {}", id);
+        logger.debug("IN CHECKLIST REMOVE: {}", id);
 
         Set<Long> checklist = (Set<Long>) session.getAttribute("checklist");
         if ((checklist != null) && !checklist.isEmpty()) {
@@ -118,7 +118,7 @@ public class ChecklistController {
             /*
              * TODO: Put back to the model or not?
              */
-            logger.error("CHECKLIST:{}", checklist);            
+            logger.debug("CHECKLIST: {}", checklist);            
         } else {
             return "missing";
         }

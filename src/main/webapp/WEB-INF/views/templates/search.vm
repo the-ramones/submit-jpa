@@ -1,12 +1,12 @@
 ## Real-time search template
 <div class="form-container">
     <h2>#springMessage('content.search.title')</h2>
-    <form name="search-form" method="POST" action="#springUrl('/report/ajax')" autocomplete="off">
-        <input type="button" name="search-button" id="search_button" />
-        <input type="text" name="search" value="" placeholder="#springMessage('content.search.placeholder')" />
-        <ul class="subnav">
-            <li><a href="#">#springMessage('content.search.nothing')</a></li>
-        </ul>
+    <form name="search-form" method="POST" action="#springUrl('/report/ajax')" autocomplete="off">       
+            <input type="button" name="search-button" id="search_button" />
+            <input type="text" name="search" value="" placeholder="#springMessage('content.search.placeholder')" />
+            <ul class="subnav">
+                <li><a href="#">#springMessage('content.search.nothing')</a></li>
+            </ul>       
     </form>
     <p class="stats"><span>#springMessage('content.search.result'): 419 (0,10 #springMessage('content.search.second').) </span></p>    
 </div>
@@ -14,6 +14,7 @@
 #hint()
 
 <div class="results-wrap">
+    #if($reports)
     <h2>#springMessage('content.search.list.title')</h2>
     <table tabindex="1" class="table">
         <caption>#springMessage('content.search.list.subtitle')</caption>
@@ -25,8 +26,7 @@
                 <th>#springMessage('content.detail.performer')</th>
                 <th>#springMessage('content.detail.activity')</th>
             </tr>
-        <tbody>
-        #if($reports)
+        <tbody>        
             #foreach($report in $reports)
             <tr>
                 <td>${report.id}</td>
@@ -42,8 +42,8 @@
                 </div>
             </tr>
             #end
-        #end
         </tbody>
         </thead>
     </table>
+    #end
 </div>

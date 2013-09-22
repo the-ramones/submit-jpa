@@ -1048,34 +1048,34 @@ form {
         INTERMEDIATE: Menu
        ==================== */
 
-/*    #nav a {
-        float: left;
-        width: 27%;
-        margin: 0 1.7%;
-        padding: 25px 2%;
-        margin-bottom: 10px;
-        margin-top: 10px;
-    }
-
-    #nav li:first-child a {
-        margin-left: 0;
-    }
-
-    #nav li:last-child a {
-        margin-right: 0;
-    }*/
+    /*    #nav a {
+            float: left;
+            width: 27%;
+            margin: 0 1.7%;
+            padding: 25px 2%;
+            margin-bottom: 10px;
+            margin-top: 10px;
+        }
+    
+        #nav li:first-child a {
+            margin-left: 0;
+        }
+    
+        #nav li:last-child a {
+            margin-right: 0;
+        }*/
 
     /* ========================
         INTERMEDIATE: IE Fixes
        ======================== */
 
-/*    #nav ul li {
-        display: inline;
-    }
-
-    .oldie #nav a {
-        margin: 0 0.7%;
-    }*/
+    /*    #nav ul li {
+            display: inline;
+        }
+    
+        .oldie #nav a {
+            margin: 0 0.7%;
+        }*/
 }
 
 @media only screen and (min-width: 768px) {
@@ -1099,10 +1099,10 @@ form {
         float: left;
     }
 
-/*    #nav {
-        float: right;
-        width: 56%;
-    }*/
+    /*    #nav {
+            float: right;
+            width: 56%;
+        }*/
 
     /* ============
         WIDE: Main
@@ -1126,9 +1126,9 @@ form {
         Maximal Width
        =============== */
 
-/*    #nav {
-        width: 38%;
-    }*/
+    /*    #nav {
+            width: 38%;
+        }*/
     .wrapper {
         width: 1026px; /* 1140px - 10% for margins */
         margin: 0 auto;

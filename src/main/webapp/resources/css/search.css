@@ -189,8 +189,9 @@ input[name="search"]::selection {
 #search_button {
     position: absolute;
     z-index: 5;
-    top: 68px;
-    left: 81.1%;
+    top: 58px;
+    /*left: 81.1%;*/
+    right: 22px;
     border: 0 none;
     border-radius: 6px;
     background: rgb(224, 133, 36) url(../img/search.png) center no-repeat;
@@ -210,4 +211,8 @@ input[name="search"]::selection {
 
 .stats {
     font-size: 16px;
-}            
+}      
+
+#search-container {
+    
+}
