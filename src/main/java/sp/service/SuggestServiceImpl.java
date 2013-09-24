@@ -20,12 +20,12 @@ public class SuggestServiceImpl implements SuggestService {
 
     @Override
     public Long[] getIdsByQuery(String query) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return suggestRepository.getIdsByQuery(query);
     }
 
     @Override
     public Long[] getIdsByQuery(String query, Long limit) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return suggestRepository.getIdsByQuery(query, limit);
     }
 
     @Override
@@ -35,6 +35,6 @@ public class SuggestServiceImpl implements SuggestService {
 
     @Override
     public List<Report> getReportsByQuery(String query, Long limit) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return suggestRepository.getReportsByQuery(query, limit);
     }
 }

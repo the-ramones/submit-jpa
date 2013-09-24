@@ -144,4 +144,19 @@ function periodChange(select) {
             $("input[name='endDate']").datepicker('setDate', timestamp);
             break;
     }
+
+    /*
+     * Ajax loader overlay
+     */
+    function upload(button) {
+        var $d = $("<div id='ajax-overlay'></div>");
+        $("body").append($d);
+        $d.fadeIn();
+        $d.click(function(e) {
+            e.preventDefault();
+            $(this).fadeOut();
+            $(this).remove();
+            return false;
+        });
+    }
 }
