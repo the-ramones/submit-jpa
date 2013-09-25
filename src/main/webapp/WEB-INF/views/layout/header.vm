@@ -3,7 +3,7 @@
 <div id="nav">
     <ul>
         <li><a href="#springUrl('/home')">#springMessage("menu.home")</a></li>
-        <li><a href="#springUrl('/report')">#springMessage("menu.reports")</a>
+        <li><a href="#springUrl('/report?new_search')">#springMessage("menu.reports")</a>
             <ul>
                 <li><a href="#springUrl('/report/add')">#springMessage("menu.report.add")</a></li>
                 <li><a href="#springUrl('/report/search?new_search')">#springMessage("menu.report.build")</a>

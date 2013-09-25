@@ -1,3 +1,14 @@
+/*ajax loader*/
+#ajax-overlay {
+    background: #000 url("../img/ajax-loader.gif") center center no-repeat !important;
+    min-width: 100%;
+    min-height: 100%;
+    opacity: 0.5;
+    position: fixed;
+    top: 0;
+    left: 0;
+}
+
 /* Confirmation float window */
 #confirm {
     color: #222;

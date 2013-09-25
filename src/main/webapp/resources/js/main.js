@@ -80,7 +80,6 @@ $(document).ready(function() {
  * Onchange of Time Period Bounds inputs
  */
 function resetPeriodSelect(element) {
-    alert("fired");
     $('select[name="timePeriod"]').val("none");
 }
 
@@ -143,5 +142,20 @@ function periodChange(select) {
             $("input[name='startDate']").datepicker('setDate', startDate);
             $("input[name='endDate']").datepicker('setDate', timestamp);
             break;
+    }
+
+    /*
+     * Ajax loader overlay
+     */
+    function upload(button) {
+        var $d = $("<div id='ajax-overlay'></div>");
+        $("body").append($d);
+        $d.fadeIn();
+        $d.click(function(e) {
+            e.preventDefault();
+            $(this).fadeOut();
+            $(this).remove();
+            return false;
+        });
     }
 }

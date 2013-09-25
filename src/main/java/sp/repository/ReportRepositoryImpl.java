@@ -138,7 +138,7 @@ public class ReportRepositoryImpl implements ReportRepository {
         entityManager.remove(getReportById(id));
     }
 
-    @Override    
+    @Override
     public void updateReport(Report report) {
         Report persistedReport = getReportById(report.getId());
         persistedReport.setStartDate(report.getStartDate());

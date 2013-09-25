@@ -1,4 +1,4 @@
-package service;
+package sp.service.rest;
 
 import javax.persistence.EntityManager;
 import sp.model.Report;

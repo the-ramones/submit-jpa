@@ -1,9 +1,12 @@
 package sp.service;
 
+import java.util.ArrayList;
 import java.util.List;
 import javax.inject.Inject;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import sp.model.Report;
+import sp.model.ajax.Prompt;
 import sp.repository.SuggestRepository;
 
 /**
@@ -19,22 +22,48 @@ public class SuggestServiceImpl implements SuggestService {
     SuggestRepository suggestRepository;
 
     @Override
-    public Long[] getIdsByQuery(String query) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    @Transactional(readOnly = true)
+    public Long getAllCount(String query) {
+        return suggestRepository.getAllCount(query);
     }
 
     @Override
-    public Long[] getIdsByQuery(String query, Long limit) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    @Transactional
+    public List<Long> getIdsByQuery(String query) {
+        return suggestRepository.getIdsByQuery(query);
     }
 
     @Override
+    @Transactional
+    public List<Long> getIdsByQuery(String query, Long limit) {
+        return suggestRepository.getIdsByQuery(query, limit);
+    }
+
+    @Override
+    @Transactional
     public List<Report> getReportsByQuery(String query) {
         return suggestRepository.getReportsByQuery(query);
     }
 
     @Override
+    @Transactional
     public List<Report> getReportsByQuery(String query, Long limit) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return suggestRepository.getReportsByQuery(query, limit);
+    }
+
+    @Override    
+    @Transactional(readOnly = true)
+    public List<Prompt> getPrompts(String query, Long limit) {
+        return suggestRepository.getPrompts(query, limit);
+    }
+
+    @Override
+    public List<String> getPromptsAsString(String query, Long limit) {
+        List<Prompt> prompts = getPrompts(query, limit);
+        List<String> result = new ArrayList<String>(prompts.size());
+        for (Prompt prompt: prompts) {
+            result.add(prompt.toString());
+        }
+        return result;
     }
 }

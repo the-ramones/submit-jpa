@@ -136,7 +136,8 @@ $("form[name='report-add']").validate({
             rangelength: [1, 255],
             regexp: activity_regexp
         }
-    }
+    },
+    focusInvalid: false
 });
 
 $("form[name='search-report']").validate({
@@ -150,21 +151,22 @@ $("form[name='search-report']").validate({
     }
 });
 
-//$("form[name='report-request']").validate({
-////  debug: true,
-//    rules: {
-//        performer: {},
-//        timePeriod: {},
-//        startDate: {
-//            required: true,
-//            reportdate: true
-//        },
-//        endDate: {
-//            required: true,
-//            reportdate: true
-//        }
-//    }
-//});
+$("form[name='report-request']").validate({
+//  debug: true,
+    rules: {
+        performer: {},
+        timePeriod: {},
+        startDate: {
+            required: true,
+            reportdate: true
+        },
+        endDate: {
+            required: true,
+            reportdate: true
+        }
+    },
+    focusInvalid: false
+});
 
 $("form[name='login-form']").validate({
 //  debug: true,

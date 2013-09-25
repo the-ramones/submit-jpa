@@ -25,7 +25,7 @@
              *#
             #set( $delta = $pages - $active )
             ## draw 'spacer' and 'last available page' anchor
-            #set( $prev = $url + '?p=prev' + '&search_id=' + $search )
+            #set( $prev = $url + '?p=prev' + '&search_id=' + $search_id )
             <li><a href="$prev" #if($active eq 1)class="disabled"#end>«</a></li>            
             #if($active gt 1)
             

@@ -23,7 +23,7 @@ import sp.validation.ReportDate;
 import sp.validation.ValidReport;
 
 /**
- * Model for reports
+ * Report entity
  * 
  * @author Paul Kulitski
  */

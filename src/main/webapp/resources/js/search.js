@@ -98,12 +98,5 @@ $(document).ready(function() {
         var buttons = $(".button-block");
         buttons.addClass("hidden");
     });
-
-    /*
-     * Search Button action
-     */
-    $("#search_button").click(function(e) {
-        //TODO: 
-    });
 });
 
