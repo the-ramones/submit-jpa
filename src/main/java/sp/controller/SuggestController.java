@@ -44,7 +44,7 @@ public class SuggestController {
     }
 
     @RequestMapping(value = "", method = RequestMethod.GET)
-    public ResponseEntity<List<Report>> getReportsByQuery(
+    public ResponseEntity<List<Report>> getReprotsByQuery(
             @RequestParam("query") String query,
             @RequestParam(value = "limit", required = false) Long limit,
             Model model) {
@@ -112,4 +112,6 @@ public class SuggestController {
         }
         return re;
     }
+    
+    //@RequestMapping(value)
 }

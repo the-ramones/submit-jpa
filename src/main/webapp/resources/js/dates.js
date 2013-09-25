@@ -23,7 +23,11 @@ function getUserLocale() {
             break;
         }
     }
-    return locale;
+    if (locale) {
+        return locale;
+    } else {
+        return "en";
+    }
 }
 
 var localized_months = {

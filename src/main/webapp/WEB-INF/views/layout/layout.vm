@@ -64,6 +64,7 @@
         <script type="text/javascript" src="#springUrl('/resources/js/search.js')"></script>
         <script type="text/javascript" src="#springUrl('/resources/js/modal.js')"></script>
         <script src="#springUrl('/resources/js/dates.js')"></script>
+        <script src="#springUrl('/resources/js/checklist.js')"></script>
         
         #* 
          * l10n 

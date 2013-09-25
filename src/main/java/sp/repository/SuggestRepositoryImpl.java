@@ -44,10 +44,9 @@ public class SuggestRepositoryImpl implements SuggestRepository {
 
         Root<Report> report = cq.from(Report.class);
         cq.select(report.get(Report_.id))
-                .where( cb.or(
-                    cb.like(report.get(Report_.performer), nQuery),
-                    cb.like(report.get(Report_.activity), nQuery)
-                ));
+                .where(cb.or(
+                cb.like(report.get(Report_.performer), nQuery),
+                cb.like(report.get(Report_.activity), nQuery)));
 
         cq.select(cb.count(report.get(Report_.id)));
 
@@ -69,6 +68,8 @@ public class SuggestRepositoryImpl implements SuggestRepository {
                 .where(cb.or(
                 cb.like(cb.lower(report.get(Report_.performer)), nQuery),
                 cb.like(cb.lower(report.get(Report_.activity)), nQuery)));
+
+        cq.orderBy(cb.desc(report.get(Report_.startDate)));
 
         TypedQuery<Long> idQuery = em.createQuery(cq);
 

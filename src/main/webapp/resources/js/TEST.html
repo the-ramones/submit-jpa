@@ -1,13 +1,283 @@
-<tr>
-    <td>${report.id}</td>
-    <td>${report.startDate}</td>
-    <td>${report.endDate}</td>
-    <td>${report.performer}</td>
-    <td>${report.activity}</td>
-    <!--button group-->
-<div class="button-block clearfix hidden">
-    <button class="action">#springMessage('button.action.get')</button>
-    <button class="action update">#springMessage('button.action.update')</button>          
-    <button class="action delete">#springMessage('button.action.delete')</button>
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <title></title>
+        <meta name="description" content="Spring-based application's Reports!">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <link rel="stylesheet" href="/sp/resources/css/normalize.min.css">
+        <link rel="stylesheet" href="/sp/resources/css/main.css">  
+        <link rel="stylesheet" href="/sp/resources/css/search.css">
+        <link rel="stylesheet" href="/sp/resources/css/modal.css">
+        <link rel="stylesheet" href="/sp/resources/css/pager.css">
+        <link rel="stylesheet" href="/sp/resources/css/jquery-ui-1.10.3.custom.min.css">
+      
+        <link href='http://fonts.googleapis.com/css?family=Roboto+Slab:100&subset=latin,cyrillic' rel='stylesheet' type='text/css'>
+
+        <script src="/sp/resources/js/vendor/modernizr-2.6.2-respond-1.1.0.min.js"></script>      
+        <script src="/sp/resources/js/libs/jquery-1.10.2.js"></script>
+        <script src="/sp/resources/js/libs/jquery-ui-1.10.3.custom.min.js"></script>
+
+    </head>
+    <body>
+        <!--[if lt IE 7]>
+            <p class="chromeframe">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> or <a href="http://www.google.com/chromeframe/?redirect=true">activate Google Chrome Frame</a> to improve your experience.</p>
+        <![endif]-->
+        <div class="page-wrap">
+        <div class="header-container">
+            <div class="wrapper clearfix">
+
+                <a href="/sp/home"><div id="logo"></div></a>
+<h1 class="title">Track your activities</h1>   
+<div id="nav">
+    <ul>
+        <li><a href="/sp/home">Home  </a></li>
+        <li><a href="/sp/report?new_search">Reports!</a>
+            <ul>
+                <li><a href="/sp/report/add">Add activity</a></li>
+                <li><a href="/sp/report/search?new_search">Build report</a>
+                    <ul>
+                        <li><a href="/sp/report/search?new_search">Search activity</a></li>
+                        <li><a href="/sp/report/detail">Activity details</a></li>
+                        <li><a href="/sp/registry">Check registry</a></li>
+                    </ul>
+                </li>
+                <li><a href="/sp/report/suggest">Suggest search</a></li>                                
+            </ul>
+        </li>
+        <li><a  href="/sp/contact">Contact</a>
+            <ul>
+                <li><a href="/sp/instruction">Instruction</a></li>
+                <li><a href="/sp/contact">Contacts</a></li>
+                <li><a href="/sp/about">About</a></li>
+            </ul>
+        </li>
+    </ul>
 </div>
-</tr>
+
+            </div>
+        </div>
+        <!-- content -->
+        <div class="main-container">
+            <div class="main wrapper clearfix">
+
+                     <div class="login-wrap">
+        <div class="login-stick">
+            <ul>
+                <li id="login">
+                    <a href="#" data-icon="&#128101;"></a>
+                </li>
+                <li id="language">
+                    <a href="#" data-icon="&#127758;"></a>
+                </li>
+                <li id="checklist">
+                    <a href="/sp/checklist" data-icon="&#59197;"></a>
+                </li>
+            </ul>
+        </div>
+        <div class="popup" id="popup-login">
+            <div class="arrow"></div>
+            <ul>
+                                    <li><a href="/sp/login?login=true">Anonymous User</a></li>
+                    <li><a href="/sp/login?login=true">Login</a></li>
+                            </ul>
+        </div>                        
+        <div class="popup" id="popup-language">
+            <div class="arrow"></div>
+            <ul>                
+                                                                                                      <li><a href="/sp/report/suggest?$adj_query&lang=en">English</a></li>
+                <li><a href="/sp/report/suggest?$adj_query&lang=ru">Russian</a></li>
+            </ul>
+        </div>
+    </div>  
+ 
+                <div class="form-container" id="search">
+    <h2>Reports! search using AJAX</h2>
+    <form name="search-form" method="POST" action="/sp/report/suggest" >       
+            <input type="button" name="search-button" id="search_button" />
+            <input type="text" name="search" value="" placeholder="Search" />
+            <ul class="subnav">
+                <li><a href="#">Nothing has been found (:</a></li>
+            </ul>       
+    </form>
+    <p class="stats">Results: <span>419</span> (<span>0,10</span> sec.) </span></p>    
+</div>
+
+        <div class="aside">
+        <h3>Get a near real time search!</h3>
+        <p>Just start typing a search query for an activity (IDs, performer names, start dates etc). Search works similar to the search engines, but not so sophisticated</p>
+        <button id="hide_btn" class="btn-small" type="button">Hide it!</button>
+    </div>
+    
+<div class="results-wrap clearfix">
+  
+</div>
+
+<script type="text/javascript">
+
+    /*
+     * Dynamic html elements
+     */
+    var tableHtml = '<div> \
+ <h2>List of activities</h2> \
+    <table tabindex="1" class="table"> \
+        <caption>Reports! records</caption> \
+        <thead> \
+            <tr> \
+                <th>id</th> \
+                <th>start of activity</th> \
+                <th>end of activity</th> \
+                <th>performer</th> \
+                <th>activity</th> \
+            </tr> \
+        <tbody>     \
+        </tbody> \
+        </thead> \
+    </table> \
+</div> \
+';
+    var rowHtml = '<tr> \
+    <td></td> \
+    <td></td> \
+    <td></td> \
+    <td></td> \
+    <td></td> \
+<tr> \
+';
+    var buttonHtml = '<button class="action" onclick="addToChecklist()">Add to Watchlist</button> \
+';
+    
+    /*
+     * Suggest url
+     */
+    var promptUrl = "/sp/report/suggest/ajax/prompt";
+    var suggestUrl = "/sp/report/suggest/ajax";
+
+    /*
+     * Constants
+     */
+    var limit = 10;
+
+    /*
+     * Messages
+     */
+     var NOTHING_FOUND = "Nothing found";
+
+    /*
+     * Search Button action
+     */
+    $("#search_button").click(function(e) {
+        /*
+         * query string
+         */
+        var query = 'query=' + encodeURI($("input[name='search']").val().trim()
+            + '&limit=' + limit);
+        //TODO: timings
+        upload();
+        $.ajax(suggestUrl, {
+            method: "GET",
+            async: true,
+            cache: false,
+            data: query,            
+            complete: function(data) {
+                unload();
+            },
+            error: function() {
+                $("p.stats span:first").text(NOTHING_FOUND);
+                console.log("Error in ajax request to Suggest service");
+            },
+            success: onSuggestSuccess,
+            dataType: 'json'
+        });
+    });
+
+    function onSuggestSuccess(reports) {
+        var $results = $(".results-wrap");
+        $results.empty();
+        var bound = reports.length;
+        if ($("table.table").size() === 0) {
+            $(tableHtml).appendTo($results);
+        }        
+        var $table = $results.find(".table tbody");
+        for (var i = 0; i < bound; i++) {
+            var report = reports[i];
+            var $row = $(rowHtml);
+            $children = $row.children();
+            $children.get(0).innerHTML = report.id;
+            $children.get(1).innerHTML = formatDate(new Date(report.startDate));
+            $children.get(2).innerHTML = formatDate(new Date(report.startDate));
+            $children.get(3).innerHTML = report.performer;
+            $children.get(4).innerHTML = report.activity;
+            $row.data("id", report.id);
+            $table.append($row);
+        }
+        $results.append($(buttonHtml))
+        unload();
+    }
+
+    function upload() {
+       var $load = $("<div id='ajax-overlay'></div>");
+       $("body").append($load);
+       $load.fadeIn();
+    }
+
+    function unload() {
+        $("#ajax-overlay").fadeOut();
+        $("#ajax-overlay").remove();
+    }  
+   
+    $(document).ready(function() {
+        
+    });
+
+</script>
+
+                    <div class="sticky">
+        <a href="#"><i class="icon-briefcase"></i>Get a hint!</a>
+    </div>
+
+            </div> <!-- #main -->
+        </div> <!-- #main-container -->
+        </div> <!-- #page_wrap -->
+        <div class="footer-container">
+            <div class="wrapper clearfix">
+
+                <a href="/sp/home"><div id="logo_small"></div></a>
+<a href="/sp/contact"><h3 style="float:left; text-decoration: none; color: #dddddd;">Paul Kulitski 2013</h3></a>
+<h3 id="facebook" class="image-replacement facebook-dark"><a href="https://www.facebook.com/pavel.kulicki"><span>Facebook Profile</span></a></h3>
+<h3 id="google" class="image-replacement google-dark"><a href="mailto:p.kulitski@gmail.com"><span>Google Mail</span></a></h3>
+<h3 id="twitter" class="image-replacement twitter-dark"><a href="https://twitter.com/PaulKulitski"><span>Twitter Profile</span></a></h3>
+
+            </div>
+        </div>
+
+        <script src="/sp/resources/js/libs/jquery.validate.js"></script>        
+        <script src="/sp/resources/js/main.js"></script>
+        <script src="/sp/resources/js/validation.js"></script>
+        <script type="text/javascript" src="/sp/resources/js/search.js"></script>
+        <script type="text/javascript" src="/sp/resources/js/modal.js"></script>
+        <script src="/sp/resources/js/dates.js"></script>
+        
+        
+        
+        <script type="text/javascript" src="/sp/resources/js/localization/messages_en.js"></script>
+
+            
+            <script type="text/javascript">
+        $.datepicker.setDefaults(
+            {'dateFormat': 'dd M yy'}
+        );
+    </script>
+    
+
+        <script type="text/javascript">
+        </script>
+        
+    </body>
+</html>

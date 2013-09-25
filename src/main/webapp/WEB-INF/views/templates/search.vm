@@ -1,5 +1,5 @@
 ## Real-time search template
-<div class="form-container">
+<div class="form-container" id="search">
     <h2>#springMessage('content.search.title')</h2>
     <form name="search-form" method="POST" action="#springUrl('/report/suggest')" >       
             <input type="button" name="search-button" id="search_button" />
@@ -8,12 +8,12 @@
                 <li><a href="#">#springMessage('content.search.nothing')</a></li>
             </ul>       
     </form>
-    <p class="stats"><span>#springMessage('content.search.result'): 419 (0,10 #springMessage('content.search.second').) </span></p>    
+    <p class="stats invisible">#springMessage('content.search.result'): <span></span> (<span></span> #springMessage('content.search.second').) </span></p>    
 </div>
 
 #hint()
 
-<div class="results-wrap">
+<div class="results-wrap clearfix">
   
 </div>
 
@@ -22,16 +22,29 @@
     /*
      * Dynamic html elements
      */
-    var tableHtml = "#dynamic_table()";
-    var rowHtml = "#dynamic_row()";
-    vat buttonHtml = "dynamic_button_group()";
+    var tableHtml = '#dynamic_table()';
+    var rowHtml = '#dynamic_row()';
+    var buttonHtml = '#dynamic_button_group()';
     
     /*
      * Suggest url
      */
     var promptUrl = "#springUrl('/report/suggest/ajax/prompt')";
     var suggestUrl = "#springUrl('/report/suggest/ajax')";
-    var limit = 8;
+    var addToChecklistUrl = "#springUrl('/report/ajax/watch')";
+
+    /*
+     * Constants
+     */
+    var limit = 10;
+
+    /*
+     * Messages
+     */
+    var NOTHING_FOUND = "#springMessage('search.nothingfound')";
+    var SELECT_ONE_MSG = "#springMessage('checklist.selectone')";
+    var ADDED_TO_CHECKLIST_MSG = "#springMessage('checklist.added')";
+    var NOTADDED_TO_CHECKLIST_MSG = "#springessage('checklist.notadded')";
 
 #[[
     /*
@@ -41,23 +54,77 @@
         /*
          * query string
          */
-        var query = '?query=' + encodeURI($("input[name='search']").val().trim()
+        var query = 'query=' + encodeURI($("input[name='search']").val().trim()
             + '&limit=' + limit);
         //TODO: timings
+        upload();
+        var startTime = new Date();
         $.ajax(suggestUrl, {
             method: "GET",
             async: true,
             cache: false,
-            data: query,
-            complete: onSuggestComplete, 
+            data: query,            
+            complete: function(data) {
+                unload();
+                var requestTime = (new Date()) - startTime;
+                var formattedRequestTime = parseInt(requestTime / 1000) + ',' + (requestTime % 1000);
+                $("p.stats span:last").text(formattedRequestTime);
+            },
+            error: function() {
+                $("p.stats span:first").text(NOTHING_FOUND);
+                $("p.stats").removeClass("invisible");
+                console.log("Error in ajax request to Suggest service");
+            },
+            success: onSuggestSuccess,
             dataType: 'json'
         });
     });
 
-    function onSuggestComplete(data) {
-
+    function onSuggestSuccess(reports) {
+        $('body').addClass('stop-scrolling')
+        var $results = $(".results-wrap");
+        $results.empty();
+        var bound = reports.length;
+        if ($("table.table").size() === 0) {
+            $(tableHtml).appendTo($results);
+        }        
+        var $table = $results.find(".table tbody");
+        for (var i = 0; i < bound; i++) {
+            var report = reports[i];
+            var $row = $(rowHtml);
+            $children = $row.children();
+            $children.get(0).innerHTML = report.id;
+            $children.get(1).innerHTML = formatDate(new Date(report.startDate));
+            $children.get(2).innerHTML = formatDate(new Date(report.startDate));
+            $children.get(3).innerHTML = report.performer;
+            $children.get(4).innerHTML = report.activity;
+            $row.data("id", report.id);
+            $table.append($row);
+        }
+        $results.append($(buttonHtml));
+        $("p.stats span:first").text(bound);
+        $("p.stats").removeClass("invisible");
+        unload();
+        /*
+         * On-click modal appearing
+         */
+        $(".table tbody tr").click(function(event) {
+            $(this).toggleClass("selected");
+        });
+        $('body').removeClass('stop-scrolling')
     }
 
+    function upload() {
+       var $load = $("<div id='ajax-overlay'></div>");
+       $("body").append($load);
+       $load.fadeIn();
+    }
+
+    function unload() {
+        $("#ajax-overlay").fadeOut();
+        $("#ajax-overlay").remove();
+    }  
+   
     $(document).ready(function() {
         
     });
