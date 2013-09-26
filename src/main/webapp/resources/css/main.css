@@ -1,7 +1,19 @@
+/*statistics modal*/
+.statistics span {
+    width: 100%;
+    font-weight: bold;
+    text-align: center;
+}
+
+.statistics textarea {
+    width: 100%;
+    resize: none;
+}
+
 /*Stop scrolling*/
 .stop-scrolling {
-  height: 100%;
-  overflow: hidden;
+    height: 100%;
+    overflow: hidden;
 }
 
 /* Confirmation float window */
@@ -9,7 +21,7 @@
     color: #222;
     background-color: rgb(224, 133, 36) ;
     box-shadow: 0 0 5px black;
-    border-radius: 8px;
+    border-radius: 6px;
     padding: 20px 20px;
     position: fixed;
     right: 20px;

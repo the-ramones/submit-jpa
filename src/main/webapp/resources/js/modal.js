@@ -45,7 +45,7 @@ var modal = (function() {
         /*
          * Stop resizing of modal width
          */
-        $modal.css({
+        $modal.css({            
             width: $modal.css("width")
         });
     };

@@ -2,7 +2,7 @@
 <div class="tile-menu-container">
     <h3>#springMessage('content.checklist.title')</h3>
     <div class="tile-button-menu clearfix">
-        <button class="action update">#springMessage('content.checklist.button.statistics')</button>
+        <button class="action update" onclick="getStats();">#springMessage('content.checklist.button.statistics')</button>
         <button class="action delete">#springMessage('content.checklist.button.email')</button>
         <button class="action" onclick="startNew();">#springMessage('content.checklist.button.newsearch')</button>
     </div>
@@ -48,11 +48,20 @@
     var removeFromChecklistUrl = "#springUrl('/checklist/remove')";
     var cleanUpChecklistUrl = "#springUrl('/checklist/empty')";
     var newSearchRedirectUrl = "#springUrl('/report/search?new_search')";
+    var checklistStatsUrl = "#springUrl('/checklist/stats')";
 
     /*
      * Modal window HTML templates
      */
     var modalUriHtml = '#modal_uri()';
+    var modalStatsHtml = '#modal_stats()';
+
+    /*
+     * Messages
+     */
+    var STATICTICS_FAIL = "#springMessage('checklist.stats.fail')";
+    var EMAIL_DONE = "#springMessage('checklist.email.done')";
+    var EMAIL_FAIL = "#springMessage('checklist.email.fail')";
 
 #[[
     $(document).ready(function() {
@@ -97,6 +106,30 @@
             cache: false
         }); 
         window.location.href=newSearchRedirectUrl;
+    }
+
+    function getStats() { 
+        $.get(checklistStatsUrl, {}, renderStatsModal, 'json')
+            .fail(function() {
+                $("#confirm").finish().html(STATICTICS_FAIL)
+                    .fadeIn(600)
+                    .delay(3000)
+                    .fadeOut(1200);
+            });
+    }
+
+    function renderStatsModal(stats) {
+        var $html = $(modalStatsHtml);
+        $html.find("textarea:eq(0)").text(stats.performers);
+        $html.find("textarea:eq(1)").text(stats.activities)
+        $html.find("#avg").text(stats.averageRange);
+        $html.find("span:eq(1)").text(stats.countPerformers);
+        $html.find("span:eq(3)").text(stats.countActivities);
+        modal.open({content: $html.get(0).outerHTML, width: "40%" });
+        $("#close-btn").click(function() {
+            $("#close").click();
+            return false;
+        });
     }
 ]]#
 </script>

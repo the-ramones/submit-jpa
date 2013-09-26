@@ -17,7 +17,7 @@
         <link rel="stylesheet" href="/sp/resources/css/modal.css">
         <link rel="stylesheet" href="/sp/resources/css/pager.css">
         <link rel="stylesheet" href="/sp/resources/css/jquery-ui-1.10.3.custom.min.css">
-      
+
         <link href='http://fonts.googleapis.com/css?family=Roboto+Slab:100&subset=latin,cyrillic' rel='stylesheet' type='text/css'>
 
         <script src="/sp/resources/js/vendor/modernizr-2.6.2-respond-1.1.0.min.js"></script>      
@@ -30,229 +30,387 @@
             <p class="chromeframe">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> or <a href="http://www.google.com/chromeframe/?redirect=true">activate Google Chrome Frame</a> to improve your experience.</p>
         <![endif]-->
         <div class="page-wrap">
-        <div class="header-container">
-            <div class="wrapper clearfix">
+            <div class="header-container">
+                <div class="wrapper clearfix">
 
-                <a href="/sp/home"><div id="logo"></div></a>
-<h1 class="title">Track your activities</h1>   
-<div id="nav">
-    <ul>
-        <li><a href="/sp/home">Home  </a></li>
-        <li><a href="/sp/report?new_search">Reports!</a>
-            <ul>
-                <li><a href="/sp/report/add">Add activity</a></li>
-                <li><a href="/sp/report/search?new_search">Build report</a>
-                    <ul>
-                        <li><a href="/sp/report/search?new_search">Search activity</a></li>
-                        <li><a href="/sp/report/detail">Activity details</a></li>
-                        <li><a href="/sp/registry">Check registry</a></li>
-                    </ul>
-                </li>
-                <li><a href="/sp/report/suggest">Suggest search</a></li>                                
-            </ul>
-        </li>
-        <li><a  href="/sp/contact">Contact</a>
-            <ul>
-                <li><a href="/sp/instruction">Instruction</a></li>
-                <li><a href="/sp/contact">Contacts</a></li>
-                <li><a href="/sp/about">About</a></li>
-            </ul>
-        </li>
-    </ul>
-</div>
+                    <a href="/sp/home"><div id="logo"></div></a>
+                    <h1 class="title">Track your activities</h1>   
+                    <div id="nav">
+                        <ul>
+                            <li><a href="/sp/home">Home  </a></li>
+                            <li><a href="/sp/report?new_search">Reports!</a>
+                                <ul>
+                                    <li><a href="/sp/report/add">Add activity</a></li>
+                                    <li><a href="/sp/report/search?new_search">Build report</a>
+                                        <ul>
+                                            <li><a href="/sp/report/search?new_search">Search activity</a></li>
+                                            <li><a href="/sp/report/detail">Activity details</a></li>
+                                            <li><a href="/sp/registry">Check registry</a></li>
+                                        </ul>
+                                    </li>
+                                    <li><a href="/sp/report/suggest">Suggest search</a></li>                                
+                                </ul>
+                            </li>
+                            <li><a  href="/sp/contact">Contact</a>
+                                <ul>
+                                    <li><a href="/sp/instruction">Instruction</a></li>
+                                    <li><a href="/sp/contact">Contacts</a></li>
+                                    <li><a href="/sp/about">About</a></li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </div>
 
+                </div>
             </div>
-        </div>
-        <!-- content -->
-        <div class="main-container">
-            <div class="main wrapper clearfix">
+            <!-- content -->
+            <div class="main-container">
+                <div class="main wrapper clearfix">
 
-                     <div class="login-wrap">
-        <div class="login-stick">
-            <ul>
-                <li id="login">
-                    <a href="#" data-icon="&#128101;"></a>
-                </li>
-                <li id="language">
-                    <a href="#" data-icon="&#127758;"></a>
-                </li>
-                <li id="checklist">
-                    <a href="/sp/checklist" data-icon="&#59197;"></a>
-                </li>
-            </ul>
-        </div>
-        <div class="popup" id="popup-login">
-            <div class="arrow"></div>
-            <ul>
-                                    <li><a href="/sp/login?login=true">Anonymous User</a></li>
-                    <li><a href="/sp/login?login=true">Login</a></li>
+                    <div class="login-wrap">
+                        <div class="login-stick">
+                            <ul>
+                                <li id="login">
+                                    <a href="#" data-icon="&#128101;"></a>
+                                </li>
+                                <li id="language">
+                                    <a href="#" data-icon="&#127758;"></a>
+                                </li>
+                                <li id="checklist">
+                                    <a href="/sp/checklist" data-icon="&#59197;"></a>
+                                </li>
                             </ul>
-        </div>                        
-        <div class="popup" id="popup-language">
-            <div class="arrow"></div>
-            <ul>                
-                                                                                                      <li><a href="/sp/report/suggest?$adj_query&lang=en">English</a></li>
-                <li><a href="/sp/report/suggest?$adj_query&lang=ru">Russian</a></li>
-            </ul>
-        </div>
-    </div>  
- 
-                <div class="form-container" id="search">
-    <h2>Reports! search using AJAX</h2>
-    <form name="search-form" method="POST" action="/sp/report/suggest" >       
-            <input type="button" name="search-button" id="search_button" />
-            <input type="text" name="search" value="" placeholder="Search" />
-            <ul class="subnav">
-                <li><a href="#">Nothing has been found (:</a></li>
-            </ul>       
-    </form>
-    <p class="stats">Results: <span>419</span> (<span>0,10</span> sec.) </span></p>    
-</div>
+                        </div>
+                        <div class="popup" id="popup-login">
+                            <div class="arrow"></div>
+                            <ul>
+                                <li><a href="/sp/login?login=true">Anonymous User</a></li>
+                                <li><a href="/sp/login?login=true">Login</a></li>
+                            </ul>
+                        </div>                        
+                        <div class="popup" id="popup-language">
+                            <div class="arrow"></div>
+                            <ul>                
+                                <li><a href="/sp/checklist?$adj_query&lang=en">English</a></li>
+                                <li><a href="/sp/checklist?$adj_query&lang=ru">Russian</a></li>
+                            </ul>
+                        </div>
+                    </div>  
 
-        <div class="aside">
-        <h3>Get a near real time search!</h3>
-        <p>Just start typing a search query for an activity (IDs, performer names, start dates etc). Search works similar to the search engines, but not so sophisticated</p>
-        <button id="hide_btn" class="btn-small" type="button">Hide it!</button>
-    </div>
-    
-<div class="results-wrap clearfix">
-  
-</div>
+                    <div class="tile-menu-container">
+                        <h3>Checklist</h3>
+                        <div class="tile-button-menu clearfix">
+                            <button class="action update" onclick="getStats();">Statistics</button>
+                            <button class="action delete">Send on E-mail</button>
+                            <button class="action" onclick="startNew();">Start a new Search</button>
+                        </div>
+                    </div>
+                    <div class="tile-container">
+                        <h2>Details of activity №112</h2>
+                        <dl class="dl-horizontal">
+                            <dt>id</dt>
+                            <dd>112</dd>
+                        </dl>
+                        <dl class="dl-horizontal">
+                            <dt>start of activity</dt>
+                            <dd>04 Sep 2013</dd>
+                        </dl>
+                        <dl class="dl-horizontal">
+                            <dt>end of activity</dt>
+                            <dd>03 Sep 2013</dd>
+                        </dl>
+                        <dl class="dl-horizontal">
+                            <dt>performer</dt>
+                            <dd>аыав</dd>
+                        </dl>
+                        <dl class="dl-horizontal">
+                            <dt>activity</dt>
+                            <dd>аыва</dd>
+                        </dl>
+                        <button class="action" onclick="getUri(this);">Get URI</button>
+                        <button class="action delete" onclick="putAway(this);">Put Away</button>
+                    </div>
+                    <div class="tile-container">
+                        <h2>Details of activity №113</h2>
+                        <dl class="dl-horizontal">
+                            <dt>id</dt>
+                            <dd>113</dd>
+                        </dl>
+                        <dl class="dl-horizontal">
+                            <dt>start of activity</dt>
+                            <dd>04 Sep 2013</dd>
+                        </dl>
+                        <dl class="dl-horizontal">
+                            <dt>end of activity</dt>
+                            <dd>03 Sep 2013</dd>
+                        </dl>
+                        <dl class="dl-horizontal">
+                            <dt>performer</dt>
+                            <dd>аыав</dd>
+                        </dl>
+                        <dl class="dl-horizontal">
+                            <dt>activity</dt>
+                            <dd>аыва</dd>
+                        </dl>
+                        <button class="action" onclick="getUri(this);">Get URI</button>
+                        <button class="action delete" onclick="putAway(this);">Put Away</button>
+                    </div>
+                    <div class="tile-container">
+                        <h2>Details of activity №169</h2>
+                        <dl class="dl-horizontal">
+                            <dt>id</dt>
+                            <dd>169</dd>
+                        </dl>
+                        <dl class="dl-horizontal">
+                            <dt>start of activity</dt>
+                            <dd>03 Sep 2013</dd>
+                        </dl>
+                        <dl class="dl-horizontal">
+                            <dt>end of activity</dt>
+                            <dd>04 Sep 2013</dd>
+                        </dl>
+                        <dl class="dl-horizontal">
+                            <dt>performer</dt>
+                            <dd>ht</dd>
+                        </dl>
+                        <dl class="dl-horizontal">
+                            <dt>activity</dt>
+                            <dd>hgh</dd>
+                        </dl>
+                        <button class="action" onclick="getUri(this);">Get URI</button>
+                        <button class="action delete" onclick="putAway(this);">Put Away</button>
+                    </div>
+                    <div class="tile-container">
+                        <h2>Details of activity №174</h2>
+                        <dl class="dl-horizontal">
+                            <dt>id</dt>
+                            <dd>174</dd>
+                        </dl>
+                        <dl class="dl-horizontal">
+                            <dt>start of activity</dt>
+                            <dd>10 Sep 2013</dd>
+                        </dl>
+                        <dl class="dl-horizontal">
+                            <dt>end of activity</dt>
+                            <dd>12 Sep 2013</dd>
+                        </dl>
+                        <dl class="dl-horizontal">
+                            <dt>performer</dt>
+                            <dd>Daniel Atkinson</dd>
+                        </dl>
+                        <dl class="dl-horizontal">
+                            <dt>activity</dt>
+                            <dd>joking</dd>
+                        </dl>
+                        <button class="action" onclick="getUri(this);">Get URI</button>
+                        <button class="action delete" onclick="putAway(this);">Put Away</button>
+                    </div>
+                    <div class="tile-container">
+                        <h2>Details of activity №175</h2>
+                        <dl class="dl-horizontal">
+                            <dt>id</dt>
+                            <dd>175</dd>
+                        </dl>
+                        <dl class="dl-horizontal">
+                            <dt>start of activity</dt>
+                            <dd>10 Sep 2013</dd>
+                        </dl>
+                        <dl class="dl-horizontal">
+                            <dt>end of activity</dt>
+                            <dd>11 Sep 2013</dd>
+                        </dl>
+                        <dl class="dl-horizontal">
+                            <dt>performer</dt>
+                            <dd>Dan Dan</dd>
+                        </dl>
+                        <dl class="dl-horizontal">
+                            <dt>activity</dt>
+                            <dd>ditching</dd>
+                        </dl>
+                        <button class="action" onclick="getUri(this);">Get URI</button>
+                        <button class="action delete" onclick="putAway(this);">Put Away</button>
+                    </div>
+                    <div class="tile-container">
+                        <h2>Details of activity №176</h2>
+                        <dl class="dl-horizontal">
+                            <dt>id</dt>
+                            <dd>176</dd>
+                        </dl>
+                        <dl class="dl-horizontal">
+                            <dt>start of activity</dt>
+                            <dd>20 Sep 2013</dd>
+                        </dl>
+                        <dl class="dl-horizontal">
+                            <dt>end of activity</dt>
+                            <dd>21 Sep 2013</dd>
+                        </dl>
+                        <dl class="dl-horizontal">
+                            <dt>performer</dt>
+                            <dd>Dan Deaf</dd>
+                        </dl>
+                        <dl class="dl-horizontal">
+                            <dt>activity</dt>
+                            <dd>playing</dd>
+                        </dl>
+                        <button class="action" onclick="getUri(this);">Get URI</button>
+                        <button class="action delete" onclick="putAway(this);">Put Away</button>
+                    </div>
+                    <div class="tile-container">
+                        <h2>Details of activity №177</h2>
+                        <dl class="dl-horizontal">
+                            <dt>id</dt>
+                            <dd>177</dd>
+                        </dl>
+                        <dl class="dl-horizontal">
+                            <dt>start of activity</dt>
+                            <dd>20 Sep 2013</dd>
+                        </dl>
+                        <dl class="dl-horizontal">
+                            <dt>end of activity</dt>
+                            <dd>20 Sep 2013</dd>
+                        </dl>
+                        <dl class="dl-horizontal">
+                            <dt>performer</dt>
+                            <dd>de</dd>
+                        </dl>
+                        <dl class="dl-horizontal">
+                            <dt>activity</dt>
+                            <dd>frfg</dd>
+                        </dl>
+                        <button class="action" onclick="getUri(this);">Get URI</button>
+                        <button class="action delete" onclick="putAway(this);">Put Away</button>
+                    </div>
 
-<script type="text/javascript">
+                    <script>
 
-    /*
-     * Dynamic html elements
-     */
-    var tableHtml = '<div> \
- <h2>List of activities</h2> \
-    <table tabindex="1" class="table"> \
-        <caption>Reports! records</caption> \
-        <thead> \
-            <tr> \
-                <th>id</th> \
-                <th>start of activity</th> \
-                <th>end of activity</th> \
-                <th>performer</th> \
-                <th>activity</th> \
-            </tr> \
-        <tbody>     \
-        </tbody> \
-        </thead> \
-    </table> \
-</div> \
-';
-    var rowHtml = '<tr> \
-    <td></td> \
-    <td></td> \
-    <td></td> \
-    <td></td> \
-    <td></td> \
-<tr> \
-';
-    var buttonHtml = '<button class="action" onclick="addToChecklist()">Add to Watchlist</button> \
-';
-    
-    /*
-     * Suggest url
-     */
-    var promptUrl = "/sp/report/suggest/ajax/prompt";
-    var suggestUrl = "/sp/report/suggest/ajax";
+                                /*
+                                 * URLs
+                                 */
+                                var getReportUriUrl = "/sp/report/ajax/uri";
+                                var removeFromChecklistUrl = "/sp/checklist/remove";
+                                var cleanUpChecklistUrl = "/sp/checklist/empty";
+                                var newSearchRedirectUrl = "/sp/report/search?new_search";
+                                var checklistStatsUrl = "/sp/checklist/stats";
 
-    /*
-     * Constants
-     */
-    var limit = 10;
+                                /*
+                                 * Modal window HTML templates
+                                 */
+                                var modalUriHtml = '    <h2>Report URI:</h2> \
+                        <input type="text" value="" style="width: 320px;"> \
+                        <div class="modal-block"> \
+                            <div class="button-block-modal"> \
+                                <button id="close-btn" class="action delete">Close</button> \
+                            </div> \
+                        </div> \
+                    ';
+                                var modalStatsHtml = '<div class="statistics"> \
+                    <h2>Статистика</h2> \
+                    <span>Количество исполнителей:</span><span></span> \
+                    <textarea class="clearfix"></textarea> \
+                    <span>Количество деятельностей:</span><span></span> \
+                    <textarea class="clearfix"></textarea> \
+                    <label>Средняя продолжительность</label> \
+                    <span id="avg"></span> \
+                    <div class="modal-block"> \
+                    <div class="button-block-modal"> \
+                    <button id="close-btn" class="action delete">Close</button> \
+                    </div> \
+                    ';
 
-    /*
-     * Messages
-     */
-     var NOTHING_FOUND = "Nothing found";
+                                /*
+                                 * Messages
+                                 */
+                                var STATICTICS_FAIL = "Cannot load stats<br />Please, try again";
+                                var EMAIL_DONE = "Email has been sended<br />to the e-mail address";
+                                var EMAIL_FAIL = "Email hasn't been sended.<br />Try again";
 
-    /*
-     * Search Button action
-     */
-    $("#search_button").click(function(e) {
-        /*
-         * query string
-         */
-        var query = 'query=' + encodeURI($("input[name='search']").val().trim()
-            + '&limit=' + limit);
-        //TODO: timings
-        upload();
-        $.ajax(suggestUrl, {
-            method: "GET",
-            async: true,
-            cache: false,
-            data: query,            
-            complete: function(data) {
-                unload();
-            },
-            error: function() {
-                $("p.stats span:first").text(NOTHING_FOUND);
-                console.log("Error in ajax request to Suggest service");
-            },
-            success: onSuggestSuccess,
-            dataType: 'json'
-        });
-    });
 
-    function onSuggestSuccess(reports) {
-        var $results = $(".results-wrap");
-        $results.empty();
-        var bound = reports.length;
-        if ($("table.table").size() === 0) {
-            $(tableHtml).appendTo($results);
-        }        
-        var $table = $results.find(".table tbody");
-        for (var i = 0; i < bound; i++) {
-            var report = reports[i];
-            var $row = $(rowHtml);
-            $children = $row.children();
-            $children.get(0).innerHTML = report.id;
-            $children.get(1).innerHTML = formatDate(new Date(report.startDate));
-            $children.get(2).innerHTML = formatDate(new Date(report.startDate));
-            $children.get(3).innerHTML = report.performer;
-            $children.get(4).innerHTML = report.activity;
-            $row.data("id", report.id);
-            $table.append($row);
-        }
-        $results.append($(buttonHtml))
-        unload();
-    }
+                                $(document).ready(function() {
+                                    $(".tile-container").draggable();
+                                });
 
-    function upload() {
-       var $load = $("<div id='ajax-overlay'></div>");
-       $("body").append($load);
-       $load.fadeIn();
-    }
+                                function getUri(tile) {
+                                    var idVal = $(tile).parent("div.tile-container").find("dl:first > dd").text().trim();
+                                    // jQuery ajax + utilize of Promise object
+                                    $.ajax(getReportUriUrl, {
+                                        method: "GET",
+                                        async: true,
+                                        cache: false,
+                                        data: "id=" + idVal,
+                                    }).done(function(uri) {
+                                        modal.open({content: modalUriHtml});
+                                        $("#modal").find('input[type="text"]').val(uri);
+                                        $("#close-btn").click(function() {
+                                            $("#close").click();
+                                        });
+                                    });
+                                }
 
-    function unload() {
-        $("#ajax-overlay").fadeOut();
-        $("#ajax-overlay").remove();
-    }  
-   
-    $(document).ready(function() {
-        
-    });
+                                function putAway(tile) {
+                                    var idVal = $(tile).parent("div.tile-container").find("dl:first > dd").text().trim();
+                                    id = "id=" + idVal;
+                                    $.ajax(removeFromChecklistUrl, {
+                                        method: "POST",
+                                        async: true,
+                                        cached: false,
+                                        data: id,
+                                        dataType: 'text',
+                                        success: function(data) {
+                                        }
+                                    });
+                                    $(tile).parent("div.tile-container").slideUp(1000);
+                                }
 
-</script>
+                                function startNew() {
+                                    $.ajax(cleanUpChecklistUrl, {
+                                        method: "POST",
+                                        async: false,
+                                        cache: false
+                                    });
+                                    window.location.href = newSearchRedirectUrl;
+                                }
+
+                                function getStats() {
+                                    $.get(checklistStatsUrl, {}, renderStatsModal, 'json')
+                                            .fail(function() {
+                                        $("#confirm").finish().html(STATICTICS_FAIL)
+                                                .fadeIn(600)
+                                                .delay(3000)
+                                                .fadeOut(1200);
+                                    });
+                                }
+
+                                function renderStatsModal(stats) {
+                                    var $html = $(modalStatsHtml);
+                                    $html.find("textarea:eq(0)").text(stats.performers);
+                                    $html.find("textarea:eq(1)").text(stats.activities)
+                                    $html.find("#avg").text(stats.averageRange);
+                                    $html.find("span:eq(1)").text(stats.countPerformers);
+                                    $html.find("span:eq(3)").text(stats.countActivities);
+                                    modal.open({content: $html.get(0).outerHTML})
+                                    $("#close-btn").click(function() {
+                                        $("#close").click();
+                                        return false;
+                                    });
+                                }
+
+                    </script>
 
                     <div class="sticky">
-        <a href="#"><i class="icon-briefcase"></i>Get a hint!</a>
-    </div>
+                        <a href="#"><i class="icon-briefcase"></i>Get a hint!</a>
+                    </div>
 
-            </div> <!-- #main -->
-        </div> <!-- #main-container -->
+                </div> <!-- #main -->
+            </div> <!-- #main-container -->
         </div> <!-- #page_wrap -->
         <div class="footer-container">
             <div class="wrapper clearfix">
 
                 <a href="/sp/home"><div id="logo_small"></div></a>
-<a href="/sp/contact"><h3 style="float:left; text-decoration: none; color: #dddddd;">Paul Kulitski 2013</h3></a>
-<h3 id="facebook" class="image-replacement facebook-dark"><a href="https://www.facebook.com/pavel.kulicki"><span>Facebook Profile</span></a></h3>
-<h3 id="google" class="image-replacement google-dark"><a href="mailto:p.kulitski@gmail.com"><span>Google Mail</span></a></h3>
-<h3 id="twitter" class="image-replacement twitter-dark"><a href="https://twitter.com/PaulKulitski"><span>Twitter Profile</span></a></h3>
+                <a href="/sp/contact"><h3 style="float:left; text-decoration: none; color: #dddddd;">Paul Kulitski 2013</h3></a>
+                <h3 id="facebook" class="image-replacement facebook-dark"><a href="https://www.facebook.com/pavel.kulicki"><span>Facebook Profile</span></a></h3>
+                <h3 id="google" class="image-replacement google-dark"><a href="mailto:p.kulitski@gmail.com"><span>Google Mail</span></a></h3>
+                <h3 id="twitter" class="image-replacement twitter-dark"><a href="https://twitter.com/PaulKulitski"><span>Twitter Profile</span></a></h3>
 
             </div>
         </div>
@@ -263,21 +421,22 @@
         <script type="text/javascript" src="/sp/resources/js/search.js"></script>
         <script type="text/javascript" src="/sp/resources/js/modal.js"></script>
         <script src="/sp/resources/js/dates.js"></script>
-        
-        
-        
+        <script src="/sp/resources/js/checklist.js"></script>
+
+
+
         <script type="text/javascript" src="/sp/resources/js/localization/messages_en.js"></script>
 
-            
-            <script type="text/javascript">
-        $.datepicker.setDefaults(
-            {'dateFormat': 'dd M yy'}
-        );
-    </script>
-    
+
+        <script type="text/javascript">
+                                $.datepicker.setDefaults(
+                                        {'dateFormat': 'dd M yy'}
+                                );
+        </script>
+
 
         <script type="text/javascript">
         </script>
-        
+
     </body>
 </html>

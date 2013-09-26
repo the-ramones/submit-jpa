@@ -14,7 +14,9 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import sp.model.Report;
+import sp.model.ajax.Statistics;
 import sp.service.ReportService;
+import sp.util.SpStatisticsGenerator;
 
 /**
  * Checklist controller
@@ -123,5 +125,18 @@ public class ChecklistController {
             return "missing";
         }
         return "success";
+    }
+    
+    @RequestMapping(value = "stats", method = RequestMethod.GET)
+    public @ResponseBody Statistics getStatistics(HttpSession session, 
+        Model model) {
+        logger.debug("IN GET STATISTICS");
+        
+        Set<Long> checklist = (Set<Long>) session.getAttribute("checklist");
+        if ((checklist != null) && !checklist.isEmpty()) {
+            Statistics stats = SpStatisticsGenerator.generateStatistics(checklist);
+            return stats;
+        }        
+        return null;
     }
 }
