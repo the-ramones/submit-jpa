@@ -113,5 +113,5 @@ public class SuggestController {
         return re;
     }
     
-    //@RequestMapping(value)
+    //@RequestMapping(value = "")
 }

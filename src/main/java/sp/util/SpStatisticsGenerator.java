@@ -19,7 +19,11 @@ import sp.repository.ReportRepository;
  */
 public class SpStatisticsGenerator {
 
+    static final long ONE_DAY_IN_MILLISECONDS = 24 * 60 * 60 * 1000;
     private static final Logger logger = LoggerFactory.getLogger(SpStatisticsGenerator.class);
+    /*
+     * Subject for setter injection via @PostConstruct handler
+     */
     private static ReportRepository reportRepository;
 
     public static void setReportRepository(ReportRepository repository) {
@@ -34,19 +38,37 @@ public class SpStatisticsGenerator {
      */
     public static synchronized Statistics generateStatistics(Set<Long> ids) {
         List<Report> reports = reportRepository.getReports(ids);
+        /*
+         * Cache initial capacity
+         */
         int initialCapacity = reports.size();
         Set<String> performers = new HashSet<String>(initialCapacity);
         Set<String> activities = new HashSet<String>(initialCapacity);
         List<Long> rangePeriods = new ArrayList<Long>(initialCapacity);
+        long tmpRange;
         for (Report report : reports) {
             performers.add(report.getPerformer());
             activities.add(report.getActivity());
             if (report.getEndDate() != null) {
-                rangePeriods.add(report.getEndDate().getTime()
-                        - report.getStartDate().getTime());
+                tmpRange = report.getEndDate().getTime() - report.getStartDate().getTime();
+                /*
+                 * If duration < 0, then Report instance is not valid. So log it,
+                 * drop the range (average won't be robust). If duration is equals
+                 * zero (start and end date of activity are the same day) supppose
+                 * activity duration to be equals 1 day.
+                 */
+                if (tmpRange > 0) {
+                    rangePeriods.add(tmpRange);
+                } else if (tmpRange == 0) {
+                    rangePeriods.add(ONE_DAY_IN_MILLISECONDS);
+                }
             } else {
-                rangePeriods.add(new Date().getTime()
-                        - report.getStartDate().getTime());
+                tmpRange = new Date().getTime() - report.getStartDate().getTime();
+                if (tmpRange > 0) {
+                    rangePeriods.add(tmpRange);
+                } else if (tmpRange == 0) {
+                    rangePeriods.add(ONE_DAY_IN_MILLISECONDS);
+                }
             }
         }
         Statistics stats = new Statistics();
@@ -55,16 +77,16 @@ public class SpStatisticsGenerator {
         for (String performer : performers) {
             sb.append(performer).append(',').append(' ');
         }
-        sb.deleteCharAt(sb.length() - 1);
+        sb.delete(sb.length() - 2, sb.length() - 1);
         stats.setPerformers(sb.toString());
         stats.setCountPerformers(performers.size());
         sb = new StringBuilder(activities.size() * activities.iterator().next().length());
         for (String activity : activities) {
             sb.append(activity).append(',').append(' ');
         }
-        sb.deleteCharAt(sb.length());
+        sb.delete(sb.length() - 2, sb.length() - 1);
         stats.setActivities(sb.toString());
-        stats.setCountActivities(activities.size());        
+        stats.setCountActivities(activities.size());
         long avg = average(rangePeriods);
         logger.info("AVERAGE LONG: {}", avg);
         sb = new StringBuilder(4);

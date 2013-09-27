@@ -5,7 +5,7 @@
  *#
 #macro ( modal_uri $uri )
     <h2>#springMessage('modal.reporturi'):</h2> \
-    <input type="text" value="$!uri" style="width: 320px;"> \
+    <input type="text" value="$!uri" style="width: 100%"> \
     <div class="modal-block"> \
         <div class="button-block-modal"> \
             <button id="close-btn" class="action delete">#springMessage('button.close')</button> \
@@ -170,8 +170,8 @@
 <textarea class="clearfix"></textarea> \
 <span>#springMessage('modal.stats.count.activities'):</span><span></span> \
 <textarea class="clearfix"></textarea> \
-<label>#springMessage('modal.stats.avgrange')</label> \
-<span id="avg"></span> \
+<label>#springMessage('modal.stats.avgrange'):</label> \
+<span id="avg"></span><span>#springMessage('modal.stats.days')</span> \
 <div class="modal-block"> \
 <div class="button-block-modal"> \
 <button id="close-btn" class="action delete">Close</button> \

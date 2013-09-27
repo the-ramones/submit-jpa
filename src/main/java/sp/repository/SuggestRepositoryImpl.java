@@ -17,7 +17,7 @@ import sp.model.Report_;
 import sp.model.ajax.Prompt;
 
 /**
- * Implementaion of {@link SuggestRepository}. Limited for search only for
+ * Implementation of {@link SuggestRepository}. Limited for search only for
  * 'performer' and 'activity' fields so far.
  *
  * @author Paul Kulitski

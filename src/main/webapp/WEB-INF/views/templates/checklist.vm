@@ -77,7 +77,7 @@
                cache: false,   
                data: "id=" + idVal, 
         }).done(function(uri) {
-               modal.open({ content: modalUriHtml});
+               modal.open({ content: modalUriHtml, width: "30%"});
                $("#modal").find('input[type="text"]').val(uri);
                $("#close-btn").click(function() {  
                    $("#close").click();
