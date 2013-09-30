@@ -36,7 +36,7 @@ public class ReportServiceImpl implements ReportService {
     @Override
     //@Cacheable(value = "sp.model.Report", key = "#performer")
     //@Transactional(propagation = Propagation.REQUIRED, readOnly = true)
-    @Transactional
+    @Transactional(readOnly = true)
     public List<Report> getReports(String performer) {
         return reportRepository.getReportsByPerformer(performer);
 
@@ -44,32 +44,32 @@ public class ReportServiceImpl implements ReportService {
 
     @Override
     //@Transactional(propagation = Propagation.REQUIRED, readOnly = true)
-    @Transactional
+    @Transactional(readOnly = true)
     public Report getReportById(Long id) {
         return reportRepository.getReportById(id);
     }
 
     @Override
     //@Transactional(propagation = Propagation.SUPPORTED, readOnly = true)
-    @Transactional
+    @Transactional(readOnly = true)
     public List<String> getPerformers() {
         return reportRepository.getPerformers();
     }
 
     @Override
-    @Transactional
+    @Transactional(readOnly = true)
     public List<Report> getReports(String performer, Date startDate, Date endDate) {
         return reportRepository.getReports(performer, startDate, endDate);
     }
 
     @Override
-    @Transactional
+    @Transactional(readOnly = true)
     public List<Report> getReports(Date startDate, Date endDate) {
         return reportRepository.getReports(startDate, endDate);
     }
 
     @Override
-    @Transactional
+    @Transactional(readOnly = true)
     public List<Report> getReports(Set<Long> ids) {
         return reportRepository.getReports(ids);
     }

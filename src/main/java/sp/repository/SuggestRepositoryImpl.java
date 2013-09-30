@@ -26,7 +26,7 @@ import sp.model.ajax.Prompt;
 public class SuggestRepositoryImpl implements SuggestRepository {
 
     private static final Logger logger = LoggerFactory.getLogger(SuggestRepositoryImpl.class);
-    @PersistenceContext
+    @PersistenceContext(unitName = "reportPU")
     EntityManager em;
 
     private String normalizeQuery(String query) {
@@ -37,67 +37,78 @@ public class SuggestRepositoryImpl implements SuggestRepository {
 
     @Override
     public Long getAllCount(String query) {
-        String nQuery = normalizeQuery(query);
+        if (query != null) {
+            String nQuery = normalizeQuery(query);
 
-        CriteriaBuilder cb = em.getCriteriaBuilder();
-        CriteriaQuery<Long> cq = cb.createQuery(Long.class);
+            CriteriaBuilder cb = em.getCriteriaBuilder();
+            CriteriaQuery<Long> cq = cb.createQuery(Long.class);
 
-        Root<Report> report = cq.from(Report.class);
-        cq.select(report.get(Report_.id))
-                .where(cb.or(
-                cb.like(report.get(Report_.performer), nQuery),
-                cb.like(report.get(Report_.activity), nQuery)));
+            Root<Report> report = cq.from(Report.class);
+            cq.select(report.get(Report_.id))
+                    .where(cb.or(
+                    cb.like(report.get(Report_.performer), nQuery),
+                    cb.like(report.get(Report_.activity), nQuery)));
 
-        cq.select(cb.count(report.get(Report_.id)));
+            cq.select(cb.count(report.get(Report_.id)));
 
-        TypedQuery<Long> resultQuery = em.createQuery(cq);
-        return resultQuery.getSingleResult();
+            TypedQuery<Long> resultQuery = em.createQuery(cq);
+            return resultQuery.getSingleResult();
+        } else {
+            return 0L;
+        }
     }
 
     @Override
     public List<Long> getIdsByQuery(String query) {
+        if (query != null) {
+            String nQuery = normalizeQuery(query);
 
-        String nQuery = normalizeQuery(query);
+            CriteriaBuilder cb = em.getCriteriaBuilder();
+            CriteriaQuery<Long> cq = cb.createQuery(Long.class);
 
-        CriteriaBuilder cb = em.getCriteriaBuilder();
-        CriteriaQuery<Long> cq = cb.createQuery(Long.class);
+            Root<Report> report = cq.from(Report.class);
 
-        Root<Report> report = cq.from(Report.class);
+            cq.select(report.get(Report_.id))
+                    .where(cb.or(
+                    cb.like(cb.lower(report.get(Report_.performer)), nQuery),
+                    cb.like(cb.lower(report.get(Report_.activity)), nQuery)));
 
-        cq.select(report.get(Report_.id))
-                .where(cb.or(
-                cb.like(cb.lower(report.get(Report_.performer)), nQuery),
-                cb.like(cb.lower(report.get(Report_.activity)), nQuery)));
+            cq.orderBy(cb.desc(report.get(Report_.startDate)));
 
-        cq.orderBy(cb.desc(report.get(Report_.startDate)));
+            TypedQuery<Long> idQuery = em.createQuery(cq);
 
-        TypedQuery<Long> idQuery = em.createQuery(cq);
-
-        return (List<Long>) idQuery.getResultList();
+            return (List<Long>) idQuery.getResultList();
+        } else {
+            return null;
+        }
     }
 
     @Override
     public List<Long> getIdsByQuery(String query, Long limit) {
-        String nQuery = normalizeQuery(query);
+        if (query != null) {
+            String nQuery = normalizeQuery(query);
 
-        CriteriaBuilder cb = em.getCriteriaBuilder();
-        CriteriaQuery<Long> cq = cb.createQuery(Long.class);
+            CriteriaBuilder cb = em.getCriteriaBuilder();
+            CriteriaQuery<Long> cq = cb.createQuery(Long.class);
 
-        Root<Report> report = cq.from(Report.class);
+            Root<Report> report = cq.from(Report.class);
 
-        cq.select(report.get(Report_.id))
-                .where(cb.or(
-                cb.like(cb.lower(report.get(Report_.performer)), nQuery),
-                cb.like(cb.lower(report.get(Report_.activity)), nQuery)));
+            cq.select(report.get(Report_.id))
+                    .where(cb.or(
+                    cb.like(cb.lower(report.get(Report_.performer)), nQuery),
+                    cb.like(cb.lower(report.get(Report_.activity)), nQuery)));
 
-        cq.orderBy(cb.desc(report.get(Report_.startDate)));
+            cq.orderBy(cb.desc(report.get(Report_.startDate)));
 
-        TypedQuery<Long> idQuery = em.createQuery(cq);
+            TypedQuery<Long> idQuery = em.createQuery(cq);
 
-        if (limit > 0) {
-            return (List<Long>) idQuery.setMaxResults(limit.intValue()).getResultList();
+            if (limit > 0) {
+                return (List<Long>) idQuery.setMaxResults(limit.intValue()).getResultList();
+            } else {
+                return (List<Long>) idQuery.getResultList();
+            }
         } else {
-            return (List<Long>) idQuery.getResultList();
+            return null;
         }
     }
 
@@ -110,107 +121,119 @@ public class SuggestRepositoryImpl implements SuggestRepository {
      */
     @Override
     public List<Report> getReportsByQuery(String query) {
-        /*
-         * Normalize query string
-         */
-        String nQuery = normalizeQuery(query);
-        logger.error("Normalized query: {}", nQuery);
-        /*
-         * Create a criteria builder and criteria query. Type-safe
-         */
-        logger.error("Entity manager: {}", em);
-        logger.error("Entity manager properties: {}", em.getProperties());
-        logger.error("Entity manager properties: {}", em.isOpen());
-        CriteriaBuilder cb = em.getCriteriaBuilder();
-        CriteriaQuery<Report> cq = cb.createQuery(Report.class);
-        /*
-         * Create a root element of a query. Additionally, can make joins, 
-         * multiple root elements
-         */
-        Root<Report> report = cq.from(Report.class);
-        /*
-         * Dynamic metamodel
-         */
-        Predicate predicatePerformer;
-        predicatePerformer = cb.like(cb.lower(report.get(Report_.performer)), nQuery);
-        Predicate predicateActivity;
-        predicateActivity = cb.like(cb.lower(report.get(Report_.activity)), nQuery);
+        if (query != null) {
+            /*
+             * Normalize query string
+             */
+            String nQuery = normalizeQuery(query);
+            logger.error("Normalized query: {}", nQuery);
+            /*
+             * Create a criteria builder and criteria query. Type-safe
+             */
+            logger.error("Entity manager: {}", em);
+            logger.error("Entity manager properties: {}", em.getProperties());
+            logger.error("Entity manager properties: {}", em.isOpen());
+            CriteriaBuilder cb = em.getCriteriaBuilder();
+            CriteriaQuery<Report> cq = cb.createQuery(Report.class);
+            /*
+             * Create a root element of a query. Additionally, can make joins, 
+             * multiple root elements
+             */
+            Root<Report> report = cq.from(Report.class);
+            /*
+             * Dynamic metamodel
+             */
+            Predicate predicatePerformer;
+            predicatePerformer = cb.like(cb.lower(report.get(Report_.performer)), nQuery);
+            Predicate predicateActivity;
+            predicateActivity = cb.like(cb.lower(report.get(Report_.activity)), nQuery);
 
-        cq.select(report)
-                .where(cb.or(predicatePerformer, predicateActivity))
-                .orderBy(cb.asc(report.get(Report_.performer)));
+            cq.select(report)
+                    .where(cb.or(predicatePerformer, predicateActivity))
+                    .orderBy(cb.asc(report.get(Report_.performer)));
 
-        cq.orderBy(cb.desc(report.get(Report_.startDate)));
+            cq.orderBy(cb.desc(report.get(Report_.startDate)));
 
-        TypedQuery<Report> reportQuery = em.createQuery(cq);
-        logger.error("Report query: {}", reportQuery.toString());
-        return reportQuery.getResultList();
+            TypedQuery<Report> reportQuery = em.createQuery(cq);
+            logger.error("Report query: {}", reportQuery.toString());
+            return reportQuery.getResultList();
+        } else {
+            return null;
+        }
     }
 
     @Override
     public List<Report> getReportsByQuery(String query, Long limit) {
-        /*
-         * Normalize query string
-         */
-        String nQuery = normalizeQuery(query);
-        /*
-         * Create a criteria builder and criteria query. Type-safe
-         */
-        CriteriaBuilder cb = em.getCriteriaBuilder();
-        CriteriaQuery<Report> cq = cb.createQuery(Report.class);
-        /*
-         * Create a root element of a query. Additionally, can make joins, 
-         * multiple root elements
-         */
-        Root<Report> report = cq.from(Report.class);
-        /*
-         * Dynamic metamodel
-         */
-        Predicate predicatePerformer;
-        predicatePerformer = cb.like(cb.lower(report.get(Report_.performer)), nQuery);
-        Predicate predicateActivity;
-        predicateActivity = cb.like(cb.lower(report.get(Report_.activity)), nQuery);
+        if (query != null) {
+            /*
+             * Normalize query string
+             */
+            String nQuery = normalizeQuery(query);
+            /*
+             * Create a criteria builder and criteria query. Type-safe
+             */
+            CriteriaBuilder cb = em.getCriteriaBuilder();
+            CriteriaQuery<Report> cq = cb.createQuery(Report.class);
+            /*
+             * Create a root element of a query. Additionally, can make joins, 
+             * multiple root elements
+             */
+            Root<Report> report = cq.from(Report.class);
+            /*
+             * Dynamic metamodel
+             */
+            Predicate predicatePerformer;
+            predicatePerformer = cb.like(cb.lower(report.get(Report_.performer)), nQuery);
+            Predicate predicateActivity;
+            predicateActivity = cb.like(cb.lower(report.get(Report_.activity)), nQuery);
 
-        cq.select(report)
-                .where(cb.or(predicatePerformer, predicateActivity))
-                .orderBy(cb.asc(report.get(Report_.performer)));
+            cq.select(report)
+                    .where(cb.or(predicatePerformer, predicateActivity))
+                    .orderBy(cb.asc(report.get(Report_.performer)));
 
-        cq.orderBy(cb.desc(report.get(Report_.startDate)));
+            cq.orderBy(cb.desc(report.get(Report_.startDate)));
 
-        TypedQuery<Report> reportQuery = em.createQuery(cq);
+            TypedQuery<Report> reportQuery = em.createQuery(cq);
 
-        if (limit > 0) {
-            return reportQuery.setMaxResults(limit.intValue()).getResultList();
+            if (limit > 0) {
+                return reportQuery.setMaxResults(limit.intValue()).getResultList();
+            } else {
+                return reportQuery.getResultList();
+            }
         } else {
-            return reportQuery.getResultList();
+            return null;
         }
     }
 
     @Override
     public List<Prompt> getPrompts(String query, Long limit) {
 
-        String nQuery = normalizeQuery(query);
+        if (query != null) {
+            String nQuery = normalizeQuery(query);
 
-        CriteriaBuilder cb = em.getCriteriaBuilder();
-        CriteriaQuery<Prompt> cq = cb.createQuery(Prompt.class);
+            CriteriaBuilder cb = em.getCriteriaBuilder();
+            CriteriaQuery<Prompt> cq = cb.createQuery(Prompt.class);
 
-        Root<Report> report = cq.from(Report.class);
+            Root<Report> report = cq.from(Report.class);
 
-        Selection prompt = cb.construct(Prompt.class,
-                report.get(Report_.performer),
-                report.get(Report_.activity),
-                report.get(Report_.id));
+            Selection prompt = cb.construct(Prompt.class,
+                    report.get(Report_.performer),
+                    report.get(Report_.activity),
+                    report.get(Report_.id));
 
-        cq.select(prompt).where(cb.or(
-                cb.like(cb.lower(report.get(Report_.performer)), nQuery),
-                cb.like(cb.lower(report.get(Report_.activity)), nQuery)));
+            cq.select(prompt).where(cb.or(
+                    cb.like(cb.lower(report.get(Report_.performer)), nQuery),
+                    cb.like(cb.lower(report.get(Report_.activity)), nQuery)));
 
-        cq.orderBy(cb.desc(report.get(Report_.startDate)));
+            cq.orderBy(cb.desc(report.get(Report_.startDate)));
 
-        TypedQuery<Prompt> resultQuery = em.createQuery(cq);
-        if (limit > 0) {
-            resultQuery.setMaxResults(limit.intValue());
+            TypedQuery<Prompt> resultQuery = em.createQuery(cq);
+            if (limit > 0) {
+                resultQuery.setMaxResults(limit.intValue());
+            }
+            return resultQuery.getResultList();
+        } else {
+            return null;
         }
-        return resultQuery.getResultList();
     }
 }

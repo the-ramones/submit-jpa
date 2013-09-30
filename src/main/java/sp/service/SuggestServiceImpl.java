@@ -28,25 +28,25 @@ public class SuggestServiceImpl implements SuggestService {
     }
 
     @Override
-    @Transactional
+    @Transactional(readOnly = true)
     public List<Long> getIdsByQuery(String query) {
         return suggestRepository.getIdsByQuery(query);
     }
 
     @Override
-    @Transactional
+    @Transactional(readOnly = true)
     public List<Long> getIdsByQuery(String query, Long limit) {
         return suggestRepository.getIdsByQuery(query, limit);
     }
 
     @Override
-    @Transactional
+    @Transactional(readOnly = true)
     public List<Report> getReportsByQuery(String query) {
         return suggestRepository.getReportsByQuery(query);
     }
 
     @Override
-    @Transactional
+    @Transactional(readOnly = true)
     public List<Report> getReportsByQuery(String query, Long limit) {
         return suggestRepository.getReportsByQuery(query, limit);
     }
@@ -58,6 +58,7 @@ public class SuggestServiceImpl implements SuggestService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<String> getPromptsAsString(String query, Long limit) {
         List<Prompt> prompts = getPrompts(query, limit);
         List<String> result = new ArrayList<String>(prompts.size());

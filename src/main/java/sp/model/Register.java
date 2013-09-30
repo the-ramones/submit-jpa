@@ -22,10 +22,11 @@ import javax.persistence.TemporalType;
 @Entity
 @Table(name = "registers", catalog = "registry")
 @NamedQueries({
-    @NamedQuery(name = "Register.findByPeriod",
-        query = "select r from Register r where r.recordTime between :startDate and :endDate"),
-    @NamedQuery(name = "Register.find",
-        query = "select r from Register r where r.op = :op and r.user = :user and (r.recordTime between :startDate and :endDate)")
+    @NamedQuery(name = "Register.find", query = "select r from Register r where r.op = :op and r.user = :user and (r.recordTime between :startDate and :endDate)"),
+    @NamedQuery(name = "Register.findByPeriod", query = "select r from Register r where r.recordTime between :startDate and :endDate"),    
+    @NamedQuery(name = "Register.getRegistersByOp", query = "select r from Register r where r.op = :op"),
+    @NamedQuery(name = "Register.getRegistersByUser", query = "select r from Register r where r.user = :user"),   
+        
 })
 public class Register implements java.io.Serializable {
 

@@ -11,8 +11,10 @@ import org.springframework.http.converter.StringHttpMessageConverter;
 import org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerAdapter;
 
 /**
- * PostProcessor for character encoding processing
- * 
+ * PostProcessor for character encoding processing. 
+ * Use with Spring configuration:
+ *     <bean class = "EncodingPostProcessor" />
+ *
  * @author Paul Kulitski
  */
 public class EncodingPostProcessor implements BeanPostProcessor {
@@ -38,7 +40,4 @@ public class EncodingPostProcessor implements BeanPostProcessor {
             throws BeansException {
         return bean;
     }
-    /* in Spring configuration:
-     *  <bean class = "EncodingPostProcessor" /> 
-     */
 }

@@ -10,6 +10,7 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 import javax.inject.Inject;
+import javax.inject.Named;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
@@ -49,6 +50,7 @@ public class AjaxController {
     ReportService reportService;
     //@Resource
     @Inject
+    @Named("messageSource")
     MessageSource messageSource;
 
     @InitBinder

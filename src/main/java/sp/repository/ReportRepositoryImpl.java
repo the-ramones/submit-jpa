@@ -49,27 +49,39 @@ public class ReportRepositoryImpl implements ReportRepository {
      * transactions if you combine several DAOs from a manager for instance. 
      * In the end you'll find that your DAOs will become anemic."
      */
-    @PersistenceContext
+    @PersistenceContext(unitName = "reportPU")
     private EntityManager entityManager;
 
     @Override
     public Report getReportById(Long id) {
-        return entityManager.find(Report.class, id);
+        if (id != null) {
+            return entityManager.find(Report.class, id);
+        } else {
+            return null;
+        }
     }
 
     @Override
     public Report saveReport(Report report) {
-        entityManager.persist(report);
-        entityManager.flush();
-        return report;
+        if (report != null) {
+            entityManager.persist(report);
+            entityManager.flush();
+            return report;
+        } else {
+            return null;
+        }
     }
 
     @Override
     public List<Report> getReportsByPerformer(String performer) {
-        TypedQuery<Report> query =
-                entityManager.createNamedQuery("Report.getReportsByPerformer", Report.class);
-        query.setParameter("performer", performer);
-        return query.getResultList();
+        if (performer != null) {
+            TypedQuery<Report> query =
+                    entityManager.createNamedQuery("Report.getReportsByPerformer", Report.class);
+            query.setParameter("performer", performer);
+            return query.getResultList();
+        } else {
+            return null;
+        }
     }
 
     @Override
@@ -81,69 +93,105 @@ public class ReportRepositoryImpl implements ReportRepository {
 
     @Override
     public List<Report> getReports(String performer, Date startDate, Date endDate) {
-        TypedQuery<Report> query =
-                entityManager.createNamedQuery("Report.getReports", Report.class);
-        query.setParameter("performer", performer);
-        query.setParameter("startDate", startDate);
-        query.setParameter("endDate", endDate);
-        return query.getResultList();
+        if (performer != null) {
+            TypedQuery<Report> query =
+                    entityManager.createNamedQuery("Report.getReports", Report.class);
+            query.setParameter("performer", performer);
+            if (startDate != null) {
+                query.setParameter("startDate", startDate);
+            } else {
+                query.setParameter("startDate", new Date(0));
+            }
+            if (endDate != null) {
+                query.setParameter("endDate", endDate);
+            } else {
+                query.setParameter("endDate", new Date());
+            }
+            return query.getResultList();
+        } else {
+            return null;
+        }
     }
 
     @Override
     public List<Report> getReports(Date startDate, Date endDate) {
         TypedQuery<Report> query =
                 entityManager.createNamedQuery("Report.getReportsByPeriod", Report.class);
-        query.setParameter("startDate", startDate);
-        query.setParameter("endDate", endDate);
+        if (startDate != null) {
+            query.setParameter("startDate", startDate);
+        } else {
+            query.setParameter("startDate", new Date(0));
+        }
+        if (endDate != null) {
+            query.setParameter("endDate", endDate);
+        } else {
+            query.setParameter("endDate", new Date());
+        }
         return query.getResultList();
     }
 
     @Override
     public List<Report> getReports(Set<Long> ids) {
-        TypedQuery<Report> query =
-                entityManager.createNamedQuery("Report.getReportsByIds", Report.class);
-        query.setParameter("ids", ids);
-        return query.getResultList();
+        if (ids != null) {
+            TypedQuery<Report> query =
+                    entityManager.createNamedQuery("Report.getReportsByIds", Report.class);
+            query.setParameter("ids", ids);
+            return query.getResultList();
+        } else {
+            return null;
+        }
     }
 
     @Override
     public Boolean hasReport(Long id) {
-        TypedQuery<Report> query =
-                entityManager.createNamedQuery("Report.hasReport", Report.class);
-        query.setParameter("id", id);
-        return !query.getResultList().isEmpty();
+        if (id != null) {
+            TypedQuery<Report> query =
+                    entityManager.createNamedQuery("Report.hasReport", Report.class);
+            query.setParameter("id", id);
+            return !query.getResultList().isEmpty();
+        } else {
+            return null;
+        }
     }
 
     @Override
     public Long[] hasReports(Long[] ids) {
-        TypedQuery<Long> query =
-                entityManager.createNamedQuery("Report.hasReports", Long.class);
-        query.setParameter("ids", Arrays.asList(ids));
-        Long count = query.getSingleResult();
-        if (count == ids.length) {
-            return ids;
-        } else {
-            Long[] consistIds = new Long[ids.length];
-            for (Long id : ids) {
-                if (hasReport(id)) {
-                    consistIds[consistIds.length] = id;
+        if (ids != null) {
+            TypedQuery<Long> query =
+                    entityManager.createNamedQuery("Report.hasReports", Long.class);
+            query.setParameter("ids", Arrays.asList(ids));
+            Long count = query.getSingleResult();
+            if (count == ids.length) {
+                return ids;
+            } else {
+                Long[] consistIds = new Long[ids.length];
+                for (Long id : ids) {
+                    if (hasReport(id)) {
+                        consistIds[consistIds.length] = id;
+                    }
                 }
+                return consistIds;
             }
-            return consistIds;
+        } else {
+            return null;
         }
     }
 
     @Override
     public void removeReport(Long id) {
-        entityManager.remove(getReportById(id));
+        if (id != null) {
+            entityManager.remove(getReportById(id));
+        }
     }
 
     @Override
     public void updateReport(Report report) {
-        Report persistedReport = getReportById(report.getId());
-        persistedReport.setStartDate(report.getStartDate());
-        persistedReport.setEndDate(report.getEndDate());
-        persistedReport.setPerformer(report.getPerformer());
-        persistedReport.setActivity(report.getActivity());
+        if (report != null) {
+            Report persistedReport = getReportById(report.getId());
+            persistedReport.setStartDate(report.getStartDate());
+            persistedReport.setEndDate(report.getEndDate());
+            persistedReport.setPerformer(report.getPerformer());
+            persistedReport.setActivity(report.getActivity());
+        }
     }
 }

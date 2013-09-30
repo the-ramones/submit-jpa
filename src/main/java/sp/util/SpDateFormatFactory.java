@@ -25,6 +25,10 @@ public class SpDateFormatFactory {
 
     private static final Logger logger = LoggerFactory.getLogger(SpDateFormatFactory.class);
 
+    public static DateFormat getDateFormat() {
+        return getDateFormat(null, null, null);
+    }
+
     public static DateFormat getDateFormat(Locale locale) {
         return getDateFormat(null, locale, null);
     }

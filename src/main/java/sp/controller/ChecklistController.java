@@ -1,9 +1,18 @@
 package sp.controller;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLConnection;
 import java.util.List;
+import java.util.Locale;
 import java.util.Set;
 import javax.inject.Inject;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import javax.servlet.http.HttpUtils;
+import org.apache.pdfbox.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
@@ -15,7 +24,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import sp.model.Report;
 import sp.model.ajax.Statistics;
+import sp.service.EmailService;
 import sp.service.ReportService;
+import sp.util.SpEmailGenerator;
 import sp.util.SpStatisticsGenerator;
 
 /**
@@ -30,6 +41,9 @@ public class ChecklistController {
     private static final Logger logger = LoggerFactory.getLogger(ChecklistController.class);
     @Inject
     private ReportService reportService;
+    
+    @Inject
+    private EmailService emailService;
 
     /**
      * Checks User session for 'checklist' set with IDs of checked-for-later
@@ -120,23 +134,63 @@ public class ChecklistController {
             /*
              * TODO: Put back to the model or not?
              */
-            logger.debug("CHECKLIST: {}", checklist);            
+            logger.debug("CHECKLIST: {}", checklist);
         } else {
             return "missing";
         }
         return "success";
     }
-    
+
     @RequestMapping(value = "stats", method = RequestMethod.GET)
-    public @ResponseBody Statistics getStatistics(HttpSession session, 
-        Model model) {
+    public @ResponseBody
+    Statistics getStatistics(HttpSession session,
+            Model model) {
         logger.debug("IN GET STATISTICS");
-        
+
         Set<Long> checklist = (Set<Long>) session.getAttribute("checklist");
         if ((checklist != null) && !checklist.isEmpty()) {
             Statistics stats = SpStatisticsGenerator.generateStatistics(checklist);
             return stats;
-        }        
+        }
         return null;
+    }
+
+    @RequestMapping(value = "email", method = RequestMethod.GET)
+    public @ResponseBody
+    String sendStatisticsOnEmail(HttpSession session, HttpServletRequest request,
+            Locale locale, Model model) {
+        logger.debug("IN SEND ON EMAIL");
+
+        Set<Long> checklist = (Set<Long>) session.getAttribute("checklist");
+        if (checklist != null) {
+            if (!checklist.isEmpty()) {
+                Statistics stats = SpStatisticsGenerator.generateStatistics(checklist);
+                String emailHtml = null;
+                /*
+                 * Make a request to '/email/statistics'
+                 */
+                StringBuffer rawUrl = request.getRequestURL();                
+                rawUrl.substring(rawUrl.indexOf("/checklist/email"));
+                try {
+                    URL emailUrl = new URL(rawUrl.toString());                    
+                    URLConnection con = emailUrl.openConnection();
+                    InputStream in = con.getInputStream();
+                    String encoding = con.getContentEncoding();
+                    encoding = encoding == null ? "UTF-8" : encoding;
+                    byte[] b = new byte[1024];
+                    emailHtml = new String(IOUtils.toByteArray(in), encoding);                    
+                } catch (MalformedURLException ex) {
+                    logger.warn("Malformed URL when constructing path to email controller", ex);
+                } catch (IOException ioex) {
+                    logger.warn("Error with getting input stream from the URL connection", ioex);
+                }                
+                emailService.sendEmailWithStatistics(emailHtml, stats);
+                return "success";
+            } else {
+                return "empty";
+            }
+        } else {
+            return "error";
+        }
     }
 }

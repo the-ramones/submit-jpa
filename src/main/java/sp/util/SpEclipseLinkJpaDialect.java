@@ -14,7 +14,7 @@ import org.springframework.transaction.TransactionException;
 
 /**
  * JPA Dialect enhancement for supporting custom isolation levels
- *
+ *        --  Experimental --
  * @author web-resource
  */
 public class SpEclipseLinkJpaDialect extends EclipseLinkJpaDialect {

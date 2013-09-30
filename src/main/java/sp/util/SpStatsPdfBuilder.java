@@ -9,6 +9,8 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import javax.inject.Inject;
+import javax.inject.Named;
 import org.apache.pdfbox.cos.COSString;
 import org.apache.pdfbox.exceptions.COSVisitorException;
 import org.apache.pdfbox.pdmodel.PDDocument;
@@ -18,6 +20,8 @@ import org.apache.pdfbox.pdmodel.font.PDFont;
 import org.apache.pdfbox.pdmodel.font.PDType1Font;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.context.MessageSource;
+import org.springframework.stereotype.Component;
 import sp.model.ajax.Statistics;
 
 /**
@@ -27,14 +31,40 @@ import sp.model.ajax.Statistics;
  *
  * @author Paul Kulitski
  */
+@Component
 public class SpStatsPdfBuilder {
 
     /*
      * Localized messages:
-     *  keys: 'email.pdf.title', 'email.pdf.performers', 'email.pdf.activities', 
+     *  keys: 'email.pdf.title', 
+     *        'email.pdf.performers', 
+     *        'email.pdf.activities', 
      *        'email.pdf.footer'
+     *        'email.pdf.countactivities'
+     *        'email.pdf.countactivities'
      */
-    Map messages = new HashMap();
+    @Inject
+    @Named("emailMessageSource")
+    MessageSource messageSource;
+    private Statistics statistics;
+    private String username;
+
+    public Statistics getStatistics() {
+        return statistics;
+    }
+
+    public void setStatistics(Statistics statistics) {
+        this.statistics = statistics;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+    // TODO: clean-up
     static String user = "Paul Daniel";
     static Date date = new Date();
     static String performers = "dan van, man can, sam tam,dan van, man can, sam tam,d van, man can, sam tam,dan van, man can, sam tam,dan van, man can, sam tam,dan van, man can, sam tam,dan van, man can, sam tam,dan van, man can, sam tam,dan van, man can, sam tam,dan van, man can, sam tam,dan van, man can, sam tam,dan van, man can, sam tam";
@@ -69,7 +99,7 @@ public class SpStatsPdfBuilder {
         try {
             document = new PDDocument();
         } catch (IOException ex) {
-            logger.error("Cannot create a new PDF document", ex);                    
+            logger.error("Cannot create a new PDF document", ex);
         }
     }
     /*
@@ -77,16 +107,36 @@ public class SpStatsPdfBuilder {
      */
     float vertPos = 0;
     float horPos = 0;
-    
     private static Logger logger = LoggerFactory.getLogger(SpStatsPdfBuilder.class);
 
-    public void build() throws IOException, COSVisitorException {
-        if ((messages != null) && (user != null) && (statistics != null)) {
-            createAppendablePDF();
+    private static final String PDF_PATH_PREFIX = "files/";
+    /**
+     * Build a PDF file with statistics to be used as a attachment to an e-mail.
+     * {@link SpStatsPdfBuilder#setStatistics(sp.model.ajax.Statistics)} and
+     * {@link SpStatsPdfBuilder#setUsername(java.lang.String)} have to be used
+     * before invocation.
+     *
+     * @return s path to PDF file
+     * @throws IOException
+     * @throws COSVisitorException
+     */
+    public String build() {
+        if ((username != null) && (statistics != null)) {
+            StringBuilder sb = new StringBuilder(64);
+            sb.append(PDF_PATH_PREFIX).append(getUsername()).append('/');
+            String currentDate = SpDateFormatFactory.getDateFormat()
+                    .format(new Date());
+            try {
+                createAppendablePDF();
+            } catch (COSVisitorException cex) {
+            } catch (IOException ioex) {
+            }
+        } else {
+            return null;
         }
     }
 
-    private void createAppendablePDF() throws IOException, COSVisitorException {
+    private void createAppendablePDF(String path) throws IOException, COSVisitorException {
 
         PDPageContentStream stream =
                 appendStringLine(null, "Reports! checklist statistics",

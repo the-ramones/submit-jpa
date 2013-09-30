@@ -1,0 +1,540 @@
+/*statistics modal*/
+.statistics span {
+    width: 100%;
+    font-weight: bold;
+    text-align: center;
+}
+
+.statistics textarea {
+    width: 100%;
+    resize: none;
+}
+
+/*Stop scrolling*/
+.stop-scrolling {
+    height: 100%;
+    overflow: hidden;
+}
+
+label,
+select,
+button,
+input[type="button"],
+input[type="reset"],
+input[type="submit"],
+input[type="radio"],
+input[type="checkbox"] {
+    cursor: pointer;
+}
+
+input[type="file"],
+input[type="image"],
+input[type="submit"],
+input[type="reset"],
+input[type="button"],
+input[type="radio"],
+input[type="checkbox"] {
+    width: auto;
+}
+
+input[type="radio"],
+input[type="checkbox"] {
+    margin: 4px 0 0 0;
+    line-height: normal;
+}
+
+.hor-center {
+    display:block;
+    margin: auto auto;
+}
+
+/* for form */
+input, select {
+    border-radius: 3px; 
+    font-size: 100%;
+}
+
+select {
+    background-color: rgb(255,255,255);
+}
+
+button::-moz-focus-inner,
+input::-moz-focus-inner {
+    border: 0;
+    padding: 0;
+}
+
+*:focus {
+    outline: 0;
+}
+
+/*sticky footer*/
+html, body {
+    height: 100%;    
+}
+
+body {
+    background: url(../img/fabric.jpg);
+}
+.page-wrap {
+    min-height: 100%;
+    /* equal to footer height */
+    margin-bottom: -104px; 
+}
+.page-wrap:after {
+    content: " ";
+    display: block;
+    /*width: 100%;*/
+
+}
+.page-wrap:after, .footer-container {
+    /* .push must be the same height as footer */
+    height: 94px; 
+}
+
+/*image replacement*/
+.image-replacement {
+    margin: 0 0 0 1%; padding:0;
+    position:relative;
+    width:64px; height:64px;
+    overflow:hidden;
+    float: right;
+    font-size: 0px;
+}
+
+.image-replacement span {
+    display:block;
+    position:absolute; left:0; top:0; z-index:1;
+    width:64px; height:64px;
+    margin:0; padding:0;
+}
+
+.google-dark {
+    background:url("../img/ir/google_dark.png") top left no-repeat;    
+}
+
+.twitter-dark {
+    background:url("../img/ir/twitter_dark.png") top left no-repeat;
+}
+
+.facebook-dark {
+    background:url("../img/ir/facebook_dark.png") top left no-repeat;
+}
+
+.google-active {
+    background:url("../img/ir/google_active.png") top left no-repeat; 
+}
+
+.twitter-active {
+    background:url("../img/ir/twitter_active.png") top left no-repeat; 
+}
+
+.facebook-active {
+    background:url("../img/ir/facebook_active.png") top left no-repeat; 
+}
+
+#logo {
+    display:block;
+    width: 175px;
+    height: 70px;
+    background: url(../img/logo/logo.png) top left no-repeat;
+    position: relative;
+    float:left;
+    top: 10px;
+    margin: 0 10px 0 0;
+}
+
+#logo_small {
+    display: inline-block;
+    width: 121px;
+    height: 64px;
+    background: url(../img/logo/logo_bottom.png) top left no-repeat;
+    position: relative;    
+    top: 0;
+    left: 0;
+    margin: 0 10px 0 0;
+    padding: 0 0 0 0;
+    float:left;
+}
+
+/* ==========================================================================
+   HTML5 Boilerplate styles - h5bp.com (generated via initializr.com)
+   ========================================================================== */
+html,
+button,
+input,
+select,
+textarea {
+    color: #222;
+}
+
+body {
+    font-size: 1em;
+    line-height: 1.4;
+    width: 100%;
+}
+
+::-moz-selection {
+    background: rgba(224,133,36,0.75);
+    text-shadow: none;
+}
+
+::selection {
+    background: rgba(224,133,36,0.75);
+    text-shadow: none;
+}
+
+hr {
+    display: block;
+    height: 1px;
+    border: 0;
+    border-top: 1px solid #ccc;
+    margin: 1em 0;
+    padding: 0;
+}
+
+img {
+    vertical-align: middle;
+}
+
+/* group of related elements */
+fieldset {
+    border: 0;
+    margin: 0;
+    padding: 0;
+}
+
+/* resizable by a user */
+textarea {
+    resize: vertical;
+}
+
+/* html5 for IE */
+.chromeframe {
+    margin: 0.2em 0;
+    background: #ccc;
+    color: #000;
+    padding: 0.2em 0;
+}
+
+/* ===== Initializr Styles ==================================================
+ 
+   ========================================================================== */
+
+body {
+    font: 16px/26px Helvetica, Helvetica Neue, Arial;
+}
+
+.wrapper {
+    width: 90%;
+    margin: 0 5% 0 5%;
+}
+
+.header-container {
+    background: url(../img/grunge.jpg) repeat-x;
+    border-bottom: 10px solid rgba(224, 133, 36, 0.7);
+    z-index: 5;
+    position: relative;
+}
+
+.footer-container,
+.main .aside {
+    border-top: 10px solid rgba(224, 133, 36, 0.7);
+}
+
+.header-container,
+.footer-container,
+.main .aside {
+    background: url(../img/grunge.jpg);
+}
+
+.main-container {
+    background: url(../img/fabric.jpg);
+}
+.title {
+    color: rgb(221, 221, 221);
+    font-weight: 200;
+    margin-top: 35px;    
+}
+
+/* ==============
+    MOBILE: Main
+   ============== */
+
+.main {
+    padding: 30px 0;
+}
+
+.footer-container div {
+    color: white;
+    padding: 10px 0;
+}
+
+/* ===============
+    ALL: IE Fixes
+   =============== */
+
+.ie7 .title {
+    padding-top: 30px;
+}
+
+/* ==========================================================================
+   Author's custom styles
+   ========================================================================== */
+form {
+    margin: 0 0 20px;
+}
+
+/* from CSS-tricks */
+.center {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+
+    /*
+    Nope =(
+    margin-left: -25%;
+    margin-top: -25%;
+    */
+
+    /* 
+    Yep!
+    */
+    transform: translate(-50%, -50%);
+
+    /*
+    Not even necessary really. 
+    e.g. Height could be left out!
+    */
+    width: 40%;
+    height: 50%;
+}
+
+/* ==========================================================================
+   Media Queries
+   ========================================================================== */
+
+@media only screen and (min-width: 480px) {
+
+    /* ====================
+        INTERMEDIATE: Menu
+       ==================== */
+
+    /*    #nav a {
+            float: left;
+            width: 27%;
+            margin: 0 1.7%;
+            padding: 25px 2%;
+            margin-bottom: 10px;
+            margin-top: 10px;
+        }
+    
+        #nav li:first-child a {
+            margin-left: 0;
+        }
+    
+        #nav li:last-child a {
+            margin-right: 0;
+        }*/
+
+    /* ========================
+        INTERMEDIATE: IE Fixes
+       ======================== */
+
+    /*    #nav ul li {
+            display: inline;
+        }
+    
+        .oldie #nav a {
+            margin: 0 0.7%;
+        }*/
+}
+
+@media only screen and (min-width: 768px) {
+
+    /* ====================
+        WIDE: CSS3 Effects
+       ==================== */
+
+    .header-container,
+    .main .aside {
+        -webkit-box-shadow: 0 5px 10px #aaa;
+        -moz-box-shadow: 0 5px 10px #aaa;
+        box-shadow: 0 5px 10px #aaa;
+    }
+
+    /* ============
+        WIDE: Menu
+       ============ */
+
+    .title {
+        float: left;
+    }
+
+    /* ============
+        WIDE: Main
+       ============ */
+
+    .main #article {
+        float: left;
+        width: 57%;
+    }
+
+    .main .aside {
+        text-align: justify;
+        float: right;
+        width: 28%;
+    }
+}
+
+@media only screen and (min-width: 1140px) {
+
+    /* ===============
+        Maximal Width
+       =============== */
+
+    .wrapper {
+        width: 1026px; /* 1140px - 10% for margins */
+        margin: 0 auto;
+    }
+}
+
+/* ==========================================================================
+   Helper classes
+   ========================================================================== */
+
+/* image replacement (replace a text with an image) */
+.ir {
+    background-color: transparent;
+    border: 0;
+    overflow: hidden;
+    *text-indent: -9999px;
+}
+
+.ir:before {
+    content: "";
+    display: block;
+    width: 0;
+    height: 150%;
+}
+
+/* hidden elements and not displayed (won't take the page space)*/
+.hidden {
+    display: none !important;
+    visibility: hidden;
+}
+
+/* hide content to the user but leave the element visible to the screen reader */
+.visuallyhidden {
+    border: 0;
+    clip: rect(0 0 0 0);
+    height: 1px;
+    margin: -1px;
+    overflow: hidden;
+    padding: 0;
+    position: absolute;
+    width: 1px;
+}
+
+/* hide content to the user but leave the element focusable via the keyboard */
+.visuallyhidden.focusable:active,
+.visuallyhidden.focusable:focus {
+    clip: auto;
+    height: auto;
+    margin: 0;
+    overflow: visible;
+    position: static;
+    width: auto;
+}
+
+/* make invisible */
+.invisible {
+    visibility: hidden;
+}
+
+/* clears float layout (at element does not automatically force the container’s height adjust to the floated element)*/
+.clearfix:before,
+.clearfix:after {
+    content: " ";
+    display: table;
+}
+
+.clearfix:after {
+    clear: both;
+}
+
+.clearfix    {
+    *zoom: 1;
+}
+
+/* ==========================================================================
+   Print styles
+   ========================================================================== */
+
+@media print {
+    * {
+        background: transparent !important;
+        color: #000 !important; /* Black prints faster: h5bp.com/s */
+        box-shadow: none !important;
+        text-shadow: none !important;
+    }
+
+    a,
+    a:visited {
+        text-decoration: underline;
+    }
+
+    a[href]:after {
+        content: " (" attr(href) ")";
+    }
+
+    abbr[title]:after {
+        content: " (" attr(title) ")";
+    }
+
+    /*
+     * Don't show links for images, or javascript/internal links
+     */
+
+    .ir a:after,
+    a[href^="javascript:"]:after,
+    a[href^="#"]:after {
+        content: "";
+    }
+
+    pre,
+    blockquote {
+        border: 1px solid #999;
+        page-break-inside: avoid;
+    }
+
+    thead {
+        display: table-header-group; /* h5bp.com/t */
+    }
+
+    tr,
+    img {
+        page-break-inside: avoid;
+    }
+
+    img {
+        max-width: 100% !important;
+    }
+
+
+    @page {
+        margin: 0.5cm;
+    }
+
+    p,
+    h2,
+    h3 {
+        orphans: 3;
+        widows: 3;
+    }
+
+    h2,
+    h3 {
+        page-break-after: avoid;
+    }
+}
