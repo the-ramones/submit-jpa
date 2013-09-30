@@ -104,10 +104,14 @@ public class SpStatisticsGenerator {
      * @return average value
      */
     private static synchronized long average(List<Long> list) {
-        Long average = 0L;
-        for (Long p : list) {
-            average += p;
+        if (list.size() > 0) {
+            Long average = 0L;
+            for (Long p : list) {
+                average += p;
+            }
+            return Math.round(average / list.size());
+        } else {
+            return 0L;
         }
-        return Math.round(average / list.size());
     }
 }

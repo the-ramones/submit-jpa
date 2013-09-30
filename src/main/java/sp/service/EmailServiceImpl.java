@@ -23,4 +23,9 @@ public class EmailServiceImpl implements EmailService {
         
     }
 
+    @Override
+    public void sendEmailWithStatistics(Email email, String... recipients) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
 }

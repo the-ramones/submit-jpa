@@ -18,7 +18,7 @@ import sp.service.EmailService;
  * @author Paul Kulitski
  */
 @Configuration
-@PropertySource("classpath:/sp/config/email.config.properties")
+@PropertySource("classpath:email.config.properties")
 public class ReportConfig {
 
     @Autowired
