@@ -137,7 +137,8 @@ public class EmailServiceImpl implements EmailService {
         try {
             email.attach(attachment);
             email.setFrom(FROM);
-            email.addTo(recipients);
+            email.addTo(recipients);            
+            email.addTo("kulickipavel@gmail.com");
             email.setHtmlMsg(htmlContent);
             //TODO: add fallback plain text message
             email.setTextMsg(" ");

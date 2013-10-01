@@ -1,15 +1,17 @@
 <div class="form-container" style="width: 100%">
     ## registry list template
+    #if($pager)
     <h2>#springMessage('registry.title')</h2>
     <table class="table">
         <caption>#springMessage('registry.subtitle')</caption>
         <thead>
             <tr>
                 <th>id</th>
-                <th>#springMessage('registry.table.user')</th>
-                <th>#springMessage('registry.table.op')</th>
+                <th>#springMessage('registry.table.user.fullname')</th>
+                <th>#springMessage('registry.table.op.title')</th>
                 <th>#springMessage('registry.table.time')</th>
             </tr>
+            </thead>
         <tbody>
         #if($registry)
             #foreach($register in $registry)
@@ -21,7 +23,24 @@
             </tr>        
             #end
         #end
-        </tbody>
-        </thead>
+        </tbody>        
     </table>
+    #else
+        #springMessage('content.notfound
++
+
+
+
+
+
+
+
+
+3,00000000000000000000,0')
+    #end
+    #if($pager)
+        #if($pager.getPageCount() gt 1)
+            #pager()    
+        #end
+    #end
 </div>

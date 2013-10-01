@@ -31,7 +31,7 @@
         </tbody>
     </table>
     #{else}
-        <p>#springMessage</p>
+        <p>#springMessage('content.notfound')</p>
     #end
     
     #if($pager)

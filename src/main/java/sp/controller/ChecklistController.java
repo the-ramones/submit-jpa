@@ -11,7 +11,6 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URISyntaxException;
 import java.net.URL;
-import java.net.URLConnection;
 import java.util.List;
 import java.util.Locale;
 import java.util.Set;
@@ -165,7 +164,7 @@ public class ChecklistController {
         return null;
     }
 
-    private static final String JSESSION_KEY = "J_SESSION";
+    private static final String JSESSION_KEY = "JSESSIONID";
     
     @RequestMapping(value = "email", method = RequestMethod.GET)
     public @ResponseBody
@@ -179,6 +178,9 @@ public class ChecklistController {
                 Statistics stats = SpStatisticsGenerator.generateStatistics(checklist);
                 session.setAttribute("statistics", stats);
                 
+                /*
+                 * Session Ids
+                 */
                 logger.error("JSESSION ID FROM SESSION: {}", session.getId());
                 logger.error("JSESSION ID FROM @CookieValue: {}", sessionId);
                 String reqSessionId = null;
@@ -194,19 +196,16 @@ public class ChecklistController {
                  * Make a request to '/email/statistics'
                  */
                 StringBuffer rawUrl = request.getRequestURL();
-                logger.error("request URL: {}", rawUrl);
                 int index = rawUrl.indexOf("/checklist/email");
-                logger.error("OCCURENCE INDEX: {}", index);
                 if (index != -1) {
                     String baseUrl = rawUrl.substring(0, index);
                     try {
                         CookieManager cm = new CookieManager();
-                        //cm.setCookiePolicy(CookiePolicy.ACCEPT_ALL);
                         cm.setCookiePolicy(CookiePolicy.ACCEPT_ORIGINAL_SERVER);
                         CookieHandler.setDefault(cm);
-
                         CookieStore cookieJar = cm.getCookieStore();
                         HttpCookie sessionCookie = new HttpCookie("JSESSIONID", reqSessionId);
+
                         URL emailUrl = new URL(baseUrl + "/email/statistics");
                         try {
                             cookieJar.add(emailUrl.toURI(), sessionCookie);
@@ -214,19 +213,16 @@ public class ChecklistController {
                             logger.warn("Error in URI syntax");
                         }
 
-                        logger.error("EMAIL URL: {}", emailUrl);
-
                         HttpURLConnection con = (HttpURLConnection) emailUrl.openConnection();
                         InputStream in = con.getInputStream();
                         String encoding = con.getContentEncoding();
                         encoding = encoding == null ? "UTF-8" : encoding;
                         byte[] b = new byte[1024];
+                        int c = 0;
                         emailHtml = new String(IOUtils.toByteArray(in), encoding);
                         
-                        logger.error("EMAIL HTML: {}", emailHtml);
-
                         for (HttpCookie cookie: cm.getCookieStore().getCookies()) {
-                            System.out.println("COOKIE: " + cookie.toString());
+                            System.out.println("AFTER COOKIE: " + cookie.toString());
                         }
                     } catch (MalformedURLException ex) {
                         logger.warn("Malformed URL when constructing path to email controller", ex);

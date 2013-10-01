@@ -8,9 +8,6 @@ import java.text.DateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
-import javax.annotation.PostConstruct;
-import javax.inject.Inject;
-import javax.inject.Named;
 import org.apache.pdfbox.cos.COSString;
 import org.apache.pdfbox.exceptions.COSVisitorException;
 import org.apache.pdfbox.pdmodel.PDDocument;
@@ -20,17 +17,17 @@ import org.apache.pdfbox.pdmodel.font.PDFont;
 import org.apache.pdfbox.pdmodel.font.PDType1Font;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
-import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Service;
 import sp.model.ajax.Statistics;
 
 /**
  * Builder of PDF files. Renders statistics that represents by
  * {@link Statistics} instances. Have to be synchronized if shared between
  * multiple threads.
+ * 
+ * NOTE: unresolved issue with Cyrylic and Unicode symbols. PDFBoc implementation
+ *       will be dropped
  *
  * @author Paul Kulitski
  */
@@ -38,7 +35,6 @@ import sp.model.ajax.Statistics;
 public class SpStatsPdfBuilder {
 
     private MessageSource messageSource;
-    
     private Statistics statistics;
     private String username;
     private Locale locale;
@@ -47,7 +43,7 @@ public class SpStatsPdfBuilder {
     public void setMessageSource(MessageSource messageSource) {
         this.messageSource = messageSource;
     }
-    
+
     public Statistics getStatistics() {
         return statistics;
     }
@@ -278,14 +274,10 @@ public class SpStatsPdfBuilder {
             String line, float indent, float margin,
             PDFont font, float fontSize) throws IOException {
         PDPageContentStream contentStream = stream;
-        System.out.println("VER.POS: " + vertPos);
-        System.out.println("HOR.POS: " + horPos);
-        System.out.println("LINE: " + line);
         /*
          * Firts page
          */
         if (contentStream == null) {
-            System.out.println("NULL STREAM");
             PDPage newPage = new PDPage();
             document.addPage(newPage);
             contentStream = new PDPageContentStream(document, newPage);
@@ -293,14 +285,8 @@ public class SpStatsPdfBuilder {
             vertPos = verticalDistance - bottomUpMargin + margin;
             horPos = leftRightMargin + indent;
             contentStream.moveTextPositionByAmount(horPos, vertPos);
-
-            System.out.println("VER.POS: " + vertPos);
-            System.out.println("HOR.POS: " + horPos);
         }
-        //
         if ((vertPos + margin) > bottomUpMargin) {
-            // CURRENT PAGE
-            System.out.println("OLD STREAM");
             vertPos += margin;
             horPos += indent;
             contentStream.moveTextPositionByAmount(indent, margin);
@@ -309,8 +295,6 @@ public class SpStatsPdfBuilder {
             stream = contentStream;
             return stream;
         } else {
-            System.out.println("NEW STREAM");
-            // NEXT PAGE
             stream.endText();
             stream.close();
 

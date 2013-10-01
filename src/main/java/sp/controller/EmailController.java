@@ -1,6 +1,7 @@
 package sp.controller;
 
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
@@ -40,8 +41,11 @@ public class EmailController {
      */
     @RequestMapping(value = "statistics", method = RequestMethod.GET)
     public String getHtmlWithStatistics(@ModelAttribute Statistics stats,
-            Model model, HttpServletResponse res) {
+            Model model, HttpServletResponse res, HttpSession session) {
         logger.debug("IN SEND EMAIL WITH STATISTICS");
+        
+        logger.error("SESSION ID: {}", session.getId());
+        logger.error("stats: {}", session.getAttribute("statistics"));
         
         return "stats-email";
     }

@@ -1,5 +1,5 @@
 ## Changes layout from default to 'layout-email.vm'
-#set( $layout = "/layout/layout_email.vm" )
+#set( $layout = "/layout/layout_email2.vm" )
 #if($statistics)
 <div class="statistics"> 
     <h2>#springMessage('modal.stats.title')</h2> 
