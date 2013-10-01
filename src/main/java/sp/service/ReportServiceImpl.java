@@ -95,4 +95,10 @@ public class ReportServiceImpl implements ReportService {
     public void updateReport(Report report) {
         reportRepository.updateReport(report);
     }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<Report> getAllReports() {
+        return reportRepository.getAllReports();
+    }
 }

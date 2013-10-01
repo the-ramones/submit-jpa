@@ -14,6 +14,7 @@
        xmlns:util="http://www.springframework.org/schema/util"
        xmlns:cache="http://www.springframework.org/schema/cache"
        xmlns:mvc="http://www.springframework.org/schema/mvc"
+       xmlns:task="http://www.springframework.org/schema/task"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.1.xsd
           http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-3.1.xsd
           http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.1.xsd
@@ -26,6 +27,7 @@
           http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-3.1.xsd
           http://www.springframework.org/schema/cache http://www.springframework.org/schema/cache/spring-cache-3.1.xsd
           http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-3.1.xsd
+          http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task-3.1.xsd
 ">
     
     <!-- context -->
@@ -93,6 +95,19 @@
             </props>
         </property>
         <!-- an inner beans? -->
+        <property name="jpaDialect" ref="jpaDialect" />
+        <property name="jpaVendorAdapter" ref="jpaVendorAdapter" />
+    </bean>
+    
+      <!-- EntityMangerFactory, will be used with @PersistenceContext(unitName = "in-settings") -->
+    <bean id="entityManagerFactory2" class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
+        <property name="persistenceUnitName" value="registryPU" />
+        <property name="dataSource" ref="reportsDS" />
+        <property name="jpaPropertyMap">
+            <props>
+                <prop key="eclipselink.weaving">false</prop>
+            </props>
+        </property>
         <property name="jpaDialect" ref="jpaDialect" />
         <property name="jpaVendorAdapter" ref="jpaVendorAdapter" />
     </bean>
@@ -168,4 +183,13 @@
      <bean id="validator" class="org.springframework.validation.beanvalidation.LocalValidatorFactoryBean" />
     -->
     
+    <task:annotation-driven />    
+        
+    <bean id="emailMessageSource"
+          class="org.springframework.context.support.ReloadableResourceBundleMessageSource">
+        <property name="basename" value="/WEB-INF/i18n/messages_email" />
+        <property name="defaultEncoding" value="UTF-8" />
+        <property name="cacheSeconds" value="1" />
+    </bean>
+
 </beans>

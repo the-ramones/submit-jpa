@@ -194,4 +194,11 @@ public class ReportRepositoryImpl implements ReportRepository {
             persistedReport.setActivity(report.getActivity());
         }
     }
+
+    @Override
+    public List<Report> getAllReports() {
+        TypedQuery<Report> query =
+                entityManager.createNamedQuery("Report.getAllReports", Report.class);
+        return query.getResultList();
+    }
 }

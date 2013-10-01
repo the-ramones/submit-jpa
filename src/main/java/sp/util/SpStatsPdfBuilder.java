@@ -1,14 +1,13 @@
 package sp.util;
 
 import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
+import java.util.Locale;
 import javax.inject.Inject;
 import javax.inject.Named;
 import org.apache.pdfbox.cos.COSString;
@@ -34,20 +33,13 @@ import sp.model.ajax.Statistics;
 @Component
 public class SpStatsPdfBuilder {
 
-    /*
-     * Localized messages:
-     *  keys: 'email.pdf.title', 
-     *        'email.pdf.performers', 
-     *        'email.pdf.activities', 
-     *        'email.pdf.footer'
-     *        'email.pdf.countactivities'
-     *        'email.pdf.countactivities'
-     */
     @Inject
     @Named("emailMessageSource")
     MessageSource messageSource;
     private Statistics statistics;
     private String username;
+    private Locale locale;
+    private Date date;
 
     public Statistics getStatistics() {
         return statistics;
@@ -64,11 +56,22 @@ public class SpStatsPdfBuilder {
     public void setUsername(String username) {
         this.username = username;
     }
-    // TODO: clean-up
-    static String user = "Paul Daniel";
-    static Date date = new Date();
-    static String performers = "dan van, man can, sam tam,dan van, man can, sam tam,d van, man can, sam tam,dan van, man can, sam tam,dan van, man can, sam tam,dan van, man can, sam tam,dan van, man can, sam tam,dan van, man can, sam tam,dan van, man can, sam tam,dan van, man can, sam tam,dan van, man can, sam tam,dan van, man can, sam tam";
-    static String activities = "dance, drinking, face hilling, pit stopping, dance, drinking, face hilling, pit stopping, dance, drinking, face hilling, pit stopping, dance, drinking, face hilling, pit stopping, dance, drinking, face hilling, pit stopping, dance, drinking, face hilling, pit stopping, dance, drinking, face hilling, pit stopping, dance, drinking, face hilling, pit stopping, dance, drinking, face hilling, pit stopping, dance, drinking, face hilling, pit stopping";
+
+    public Locale getLocale() {
+        return locale;
+    }
+
+    public void setLocale(Locale locale) {
+        this.locale = locale;
+    }
+
+    public Date getDate() {
+        return date;
+    }
+
+    public void setDate(Date date) {
+        this.date = date;
+    }
     /*
      * Constants
      *   100 - top margin
@@ -108,8 +111,9 @@ public class SpStatsPdfBuilder {
     float vertPos = 0;
     float horPos = 0;
     private static Logger logger = LoggerFactory.getLogger(SpStatsPdfBuilder.class);
-
+    private DateFormat dateFormat;
     private static final String PDF_PATH_PREFIX = "files/";
+
     /**
      * Build a PDF file with statistics to be used as a attachment to an e-mail.
      * {@link SpStatsPdfBuilder#setStatistics(sp.model.ajax.Statistics)} and
@@ -123,65 +127,121 @@ public class SpStatsPdfBuilder {
     public String build() {
         if ((username != null) && (statistics != null)) {
             StringBuilder sb = new StringBuilder(64);
-            sb.append(PDF_PATH_PREFIX).append(getUsername()).append('/');
-            String currentDate = SpDateFormatFactory.getDateFormat()
-                    .format(new Date());
-            try {
-                createAppendablePDF();
-            } catch (COSVisitorException cex) {
-            } catch (IOException ioex) {
+            sb.append(PDF_PATH_PREFIX).append(getUsername()).append('/').append("stats_");
+            if (locale == null) {
+                setLocale(Locale.ENGLISH);
             }
-        } else {
-            return null;
+            dateFormat = SpDateFormatFactory.getDateFormat(locale);
+            if (date == null) {
+                date = new Date();
+            }
+            String userDirectory = sb.toString();
+            CheckOrCreatePath(userDirectory);
+            String currentDate = dateFormat.format(date).replace(' ', '_');
+            sb.append(currentDate);
+            sb.append(".pdf");
+            setDate(date);
+            String path = sb.toString();
+            try {
+                createAppendablePDF(path);
+                return path;
+            } catch (COSVisitorException cex) {
+                logger.error("Cannot create PDF file. Check PDFBox library", cex);
+            } catch (IOException ioex) {
+                logger.error("Cannot create PDF file on the server", ioex);
+            }
         }
+        return null;
     }
+    
+    private boolean CheckOrCreatePath(String path) {
+        File file = new File(path);
+        if (!file.exists()) {
+            file.mkdirs();
+            return true;
+        }
+        return true;
+    }
+    private static final String PDF_TITLE_KEY = "email.pdf.title";
+    private static final String PDF_AMOUNTPERFORMERS_KEY = "email.pdf.countperformers";
+    private static final String PDF_AMOUTACTIVITIES_KEY = "email.pdf.countactivities";
+    private static final String PDF_PERFORMER_KEY = "email.pdf.performers";
+    private static final String PDF_ACTIVITIES_KEY = "email.pdf.activities";
+    private static final String PDF_AVG_KEY = "email.pdf.avg";
+    private static final String PDF_FOOTER_KEY = "email.pdf.footer";
+    private static final String PDF_DAYS_KEY = "email.pdf.days";
 
+    /**
+     * Create a linear PDF file. Uses simple PDF page positioning and splitting
+     * content flow into pages.
+     *
+     * @param path path to store PDF file
+     * @throws IOException
+     * @throws COSVisitorException
+     */
     private void createAppendablePDF(String path) throws IOException, COSVisitorException {
 
         PDPageContentStream stream =
-                appendStringLine(null, "Reports! checklist statistics",
+                appendStringLine(null, messageSource.getMessage(PDF_TITLE_KEY, null, locale),
                 75, 0, helveticaBold, 16);
 
-        appendStringLine(stream, user + ", " + getFormattedDate(date),
+        appendStringLine(stream, username + ", " + dateFormat.format(date),
                 -15, -30, helveticaBold, 14);
 
-        appendStringLine(stream, "Amount of distinct performers: " + 12L,
+        appendStringLine(stream, messageSource.getMessage(PDF_AMOUNTPERFORMERS_KEY, null, locale)
+                + ": " + statistics.getCountPerformers(),
                 -120, -40, helvetica, 14);
 
-        appendStringLine(stream, "Amount of distinct activities: " + 8L,
+        appendStringLine(stream, messageSource.getMessage(PDF_AMOUTACTIVITIES_KEY, null, locale)
+                + ": " + statistics.getCountActivities(),
                 0, -32, helvetica, 14);
 
-        appendStringLine(stream, "Average activity duration: " + 15.4 + " day(s)",
+        appendStringLine(stream, messageSource.getMessage(PDF_AVG_KEY, null, locale)
+                + ": " + statistics.getAverageRange()
+                + messageSource.getMessage(PDF_DAYS_KEY, null, locale),
                 0, -32, helvetica, 14);
 
-        // append list of performers
-        appendStringLine(stream, "Performers: ", 0, -40, helveticaBold, 14);
+        appendStringLine(stream, messageSource.getMessage(PDF_PERFORMER_KEY, null, locale)
+                + ':', 0, -40, helveticaBold, 14);
+
         stream.moveTextPositionByAmount(20, 0);
         horPos += 20;
 
         float margin = getFontHeight(helvetica, 12);
-        for (String performer : performers.split(", ")) {
+        for (String performer : statistics.getPerformers().split(", ")) {
             stream = appendStringLine(stream, performer, 0, -margin, helvetica, 12);
         }
 
-        // append list of activities
-        appendStringLine(stream, "Activities: ", -20, -40, helveticaBold, 14);
+        appendStringLine(stream, messageSource.getMessage(PDF_ACTIVITIES_KEY, null, locale),
+                -20, -40, helveticaBold, 14);
         stream.moveTextPositionByAmount(20, 0);
         horPos += 20;
 
-        for (String activity : activities.split(", ")) {
+        for (String activity : statistics.getActivities().split(", ")) {
             stream = appendStringLine(stream, activity, 0, -margin, helvetica, 12);
         }
 
-        appendFooter(stream, "Reports! 2013, Paul Kulitski", 175, -500,
-                helvetica, 12);
+        appendFooter(stream, messageSource.getMessage(PDF_FOOTER_KEY, null, locale),
+                175, -500, helvetica, 12);
         stream.endText();
         stream.close();
 
-        document.save("files/stats3.pdf");
+        document.save(path);
         document.close();
     }
 
+    /**
+     * Appends a footer to the end of the last document's page.
+     *
+     * @param stream pdf page stream
+     * @param line line to be drawn
+     * @param indent horizontal indent
+     * @param margin vertical margin
+     * @param font font to be used
+     * @param fontSize font size
+     * @return page content stream object (allows chain calls)
+     * @throws IOException
+     */
     PDPageContentStream appendFooter(PDPageContentStream stream,
             String line, float indent, float margin,
             PDFont font, float fontSize) throws IOException {
@@ -202,7 +262,7 @@ public class SpStatsPdfBuilder {
      * @param line string to be added
      * @param indent horizontal indent
      * @param margin vertical margin between lines
-     * @param font font to be used for line renddering
+     * @param font font to be used for line rendering
      * @param fontSize font size
      * @return
      * @throws IOException
@@ -311,14 +371,5 @@ public class SpStatsPdfBuilder {
         float fontHeight =
                 font.getFontDescriptor().getFontBoundingBox().getHeight() / 1000 * size;
         return fontHeight;
-    }
-
-    private static String getFormattedDate(Date date) {
-        DateFormat format = new SimpleDateFormat("dd MMM yyyy hh:mm:ss");
-        if (date == null) {
-            return format.format(new Date());
-        } else {
-            return format.format(date);
-        }
     }
 }

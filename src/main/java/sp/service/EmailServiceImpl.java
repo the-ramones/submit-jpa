@@ -1,4 +1,4 @@
-package sp.service;
+    package sp.service;
 
 import java.util.Date;
 import java.util.Locale;
@@ -117,6 +117,8 @@ public class EmailServiceImpl implements EmailService {
         SpStatsPdfBuilder statsBuilder = new SpStatsPdfBuilder();
         statsBuilder.setStatistics(stats);
         statsBuilder.setUsername(username);
+        statsBuilder.setLocale(locale);
+        statsBuilder.setDate(new Date());
         String path = statsBuilder.build();
         EmailAttachment attachment = null;
         if (path != null) {

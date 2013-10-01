@@ -37,7 +37,8 @@ import sp.validation.ValidReport;
     @NamedQuery(name = "Report.getReportsByIds", query = "select r from Report r where r.id IN :ids"),
     @NamedQuery(name = "Report.hasReport", query = "select r from Report r where r.id = :id"),
     @NamedQuery(name = "Report.hasReports", query = "select count(r) from Report r where r.id IN :ids"),
-    @NamedQuery(name = "Report.removeReport", query = "delete from Report r where r.id = :id")
+    @NamedQuery(name = "Report.removeReport", query = "delete from Report r where r.id = :id"),
+    @NamedQuery(name = "Report.getAllReports", query = "select r from Report r")
 })
 @XmlRootElement
 @ValidReport

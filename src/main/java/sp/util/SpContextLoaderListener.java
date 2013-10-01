@@ -1,8 +1,10 @@
 package sp.util;
 
 import ch.qos.logback.classic.LoggerContext;
+import java.io.File;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
+import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
@@ -12,8 +14,20 @@ import org.slf4j.LoggerFactory;
  */
 public class SpContextLoaderListener implements ServletContextListener {
 
+    private static final String REPORTS_FILE_DIRECTORY = "files";
+    private static Logger logger = LoggerFactory.getLogger(SpContextLoaderListener.class);
+    
     @Override
     public void contextInitialized(ServletContextEvent sce) {
+        /*
+         * Create directory for Reports! files
+         */
+        File filesDirectory = new File(REPORTS_FILE_DIRECTORY);
+        if (!filesDirectory.exists()) {
+            if (!filesDirectory.mkdirs()) {
+                logger.warn("Cannot create Reports! files directory");
+            }
+        }
     }
 
     @Override

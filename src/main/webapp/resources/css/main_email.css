@@ -1,4 +1,4 @@
-/*statistics modal*/
+/* HTML Email CSS */
 .statistics span {
     width: 100%;
     font-weight: bold;
@@ -10,65 +10,6 @@
     resize: none;
 }
 
-/*Stop scrolling*/
-.stop-scrolling {
-    height: 100%;
-    overflow: hidden;
-}
-
-label,
-select,
-button,
-input[type="button"],
-input[type="reset"],
-input[type="submit"],
-input[type="radio"],
-input[type="checkbox"] {
-    cursor: pointer;
-}
-
-input[type="file"],
-input[type="image"],
-input[type="submit"],
-input[type="reset"],
-input[type="button"],
-input[type="radio"],
-input[type="checkbox"] {
-    width: auto;
-}
-
-input[type="radio"],
-input[type="checkbox"] {
-    margin: 4px 0 0 0;
-    line-height: normal;
-}
-
-.hor-center {
-    display:block;
-    margin: auto auto;
-}
-
-/* for form */
-input, select {
-    border-radius: 3px; 
-    font-size: 100%;
-}
-
-select {
-    background-color: rgb(255,255,255);
-}
-
-button::-moz-focus-inner,
-input::-moz-focus-inner {
-    border: 0;
-    padding: 0;
-}
-
-*:focus {
-    outline: 0;
-}
-
-/*sticky footer*/
 html, body {
     height: 100%;    
 }
@@ -76,17 +17,18 @@ html, body {
 body {
     background: url(../img/fabric.jpg);
 }
+
 .page-wrap {
     min-height: 100%;
     /* equal to footer height */
     margin-bottom: -104px; 
 }
+
 .page-wrap:after {
     content: " ";
     display: block;
-    /*width: 100%;*/
-
 }
+
 .page-wrap:after, .footer-container {
     /* .push must be the same height as footer */
     height: 94px; 
@@ -184,29 +126,8 @@ body {
     text-shadow: none;
 }
 
-hr {
-    display: block;
-    height: 1px;
-    border: 0;
-    border-top: 1px solid #ccc;
-    margin: 1em 0;
-    padding: 0;
-}
-
-img {
-    vertical-align: middle;
-}
-
-/* group of related elements */
-fieldset {
-    border: 0;
-    margin: 0;
-    padding: 0;
-}
-
-/* resizable by a user */
 textarea {
-    resize: vertical;
+    border-color: rgb(221,221,221);
 }
 
 /* html5 for IE */
@@ -220,7 +141,6 @@ textarea {
 /* ===== Initializr Styles ==================================================
  
    ========================================================================== */
-
 body {
     font: 16px/26px Helvetica, Helvetica Neue, Arial;
 }
@@ -234,7 +154,7 @@ body {
     background: url(../img/grunge.jpg) repeat-x;
     border-bottom: 10px solid rgba(224, 133, 36, 0.7);
     z-index: 5;
-    position: relative;
+    position: relative;    
 }
 
 .footer-container,
@@ -257,10 +177,6 @@ body {
     margin-top: 35px;    
 }
 
-/* ==============
-    MOBILE: Main
-   ============== */
-
 .main {
     padding: 30px 0;
 }
@@ -270,128 +186,54 @@ body {
     padding: 10px 0;
 }
 
-/* ===============
-    ALL: IE Fixes
-   =============== */
-
 .ie7 .title {
     padding-top: 30px;
 }
 
 /* ==========================================================================
-   Author's custom styles
-   ========================================================================== */
-form {
-    margin: 0 0 20px;
-}
-
-/* from CSS-tricks */
-.center {
-    position: absolute;
-    left: 50%;
-    top: 50%;
-
-    /*
-    Nope =(
-    margin-left: -25%;
-    margin-top: -25%;
-    */
-
-    /* 
-    Yep!
-    */
-    transform: translate(-50%, -50%);
-
-    /*
-    Not even necessary really. 
-    e.g. Height could be left out!
-    */
-    width: 40%;
-    height: 50%;
-}
-
-/* ==========================================================================
    Media Queries
    ========================================================================== */
+.title:before {
+    content: "";
+    display: block;
+    clear: both;            
+}
+
+.title {
+    text-align: center;
+}
+
+.wrapper a:nth-of-type(2) {
+    display: none;
+}
 
 @media only screen and (min-width: 480px) {
-
-    /* ====================
-        INTERMEDIATE: Menu
-       ==================== */
-
-    /*    #nav a {
-            float: left;
-            width: 27%;
-            margin: 0 1.7%;
-            padding: 25px 2%;
-            margin-bottom: 10px;
-            margin-top: 10px;
-        }
-    
-        #nav li:first-child a {
-            margin-left: 0;
-        }
-    
-        #nav li:last-child a {
-            margin-right: 0;
-        }*/
-
-    /* ========================
-        INTERMEDIATE: IE Fixes
-       ======================== */
-
-    /*    #nav ul li {
-            display: inline;
-        }
-    
-        .oldie #nav a {
-            margin: 0 0.7%;
-        }*/
 }
 
 @media only screen and (min-width: 768px) {
 
-    /* ====================
-        WIDE: CSS3 Effects
-       ==================== */
-
-    .header-container,
-    .main .aside {
+    .header-container {
         -webkit-box-shadow: 0 5px 10px #aaa;
         -moz-box-shadow: 0 5px 10px #aaa;
         box-shadow: 0 5px 10px #aaa;
     }
 
-    /* ============
-        WIDE: Menu
-       ============ */
+    .wrapper a:nth-of-type(2) {
+        display: inline-block;
+    }
+
+    .title:before {
+        content: "";
+        display: inline-block;
+        clear: none;            
+    }
 
     .title {
-        float: left;
-    }
-
-    /* ============
-        WIDE: Main
-       ============ */
-
-    .main #article {
-        float: left;
-        width: 57%;
-    }
-
-    .main .aside {
-        text-align: justify;
-        float: right;
-        width: 28%;
+        text-align: left;
     }
 }
 
 @media only screen and (min-width: 1140px) {
-
-    /* ===============
-        Maximal Width
-       =============== */
 
     .wrapper {
         width: 1026px; /* 1140px - 10% for margins */
@@ -418,40 +260,6 @@ form {
     height: 150%;
 }
 
-/* hidden elements and not displayed (won't take the page space)*/
-.hidden {
-    display: none !important;
-    visibility: hidden;
-}
-
-/* hide content to the user but leave the element visible to the screen reader */
-.visuallyhidden {
-    border: 0;
-    clip: rect(0 0 0 0);
-    height: 1px;
-    margin: -1px;
-    overflow: hidden;
-    padding: 0;
-    position: absolute;
-    width: 1px;
-}
-
-/* hide content to the user but leave the element focusable via the keyboard */
-.visuallyhidden.focusable:active,
-.visuallyhidden.focusable:focus {
-    clip: auto;
-    height: auto;
-    margin: 0;
-    overflow: visible;
-    position: static;
-    width: auto;
-}
-
-/* make invisible */
-.invisible {
-    visibility: hidden;
-}
-
 /* clears float layout (at element does not automatically force the container’s height adjust to the floated element)*/
 .clearfix:before,
 .clearfix:after {
@@ -470,7 +278,6 @@ form {
 /* ==========================================================================
    Print styles
    ========================================================================== */
-
 @media print {
     * {
         background: transparent !important;
@@ -495,7 +302,6 @@ form {
     /*
      * Don't show links for images, or javascript/internal links
      */
-
     .ir a:after,
     a[href^="javascript:"]:after,
     a[href^="#"]:after {

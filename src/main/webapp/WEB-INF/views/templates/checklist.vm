@@ -3,7 +3,7 @@
     <h3>#springMessage('content.checklist.title')</h3>
     <div class="tile-button-menu clearfix">
         <button class="action update" onclick="getStats();">#springMessage('content.checklist.button.statistics')</button>
-        <button class="action delete">#springMessage('content.checklist.button.email')</button>
+        <button class="action delete" onclick="sendEmail();">#springMessage('content.checklist.button.email')</button>
         <button class="action" onclick="startNew();">#springMessage('content.checklist.button.newsearch')</button>
     </div>
 </div>
@@ -49,6 +49,7 @@
     var cleanUpChecklistUrl = "#springUrl('/checklist/empty')";
     var newSearchRedirectUrl = "#springUrl('/report/search?new_search')";
     var checklistStatsUrl = "#springUrl('/checklist/stats')";
+    var sendEmailUrl = "#springUrl('/checklis/email')";
 
     /*
      * Modal window HTML templates
@@ -129,6 +130,23 @@
         $("#close-btn").click(function() {
             $("#close").click();
             return false;
+        });
+    }
+
+    function sendEmail() {
+        $.get(sendEmailUrl, {}, function(result) {
+            if (result === "success") {
+                $("#confirm").finish().html(EMAIL_DONE)
+                    .fadeIn(600)
+                    .delay(3000)
+                    .fadeOut(1200);
+            }
+        },
+        'text').error(function() {
+            $("#confirm").finish().html(EMAIL_FAIL)
+                .fadeIn(600)
+                .delay(3000)
+                .fadeOut(1200);
         });
     }
 ]]#

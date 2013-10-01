@@ -11,7 +11,6 @@ import java.util.Set;
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
-import javax.servlet.http.HttpUtils;
 import org.apache.pdfbox.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,10 +22,11 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import sp.model.Report;
+import sp.model.User;
 import sp.model.ajax.Statistics;
 import sp.service.EmailService;
 import sp.service.ReportService;
-import sp.util.SpEmailGenerator;
+import sp.service.UserService;
 import sp.util.SpStatisticsGenerator;
 
 /**
@@ -41,7 +41,8 @@ public class ChecklistController {
     private static final Logger logger = LoggerFactory.getLogger(ChecklistController.class);
     @Inject
     private ReportService reportService;
-    
+    @Inject
+    private UserService userService;
     @Inject
     private EmailService emailService;
 
@@ -169,22 +170,25 @@ public class ChecklistController {
                 /*
                  * Make a request to '/email/statistics'
                  */
-                StringBuffer rawUrl = request.getRequestURL();                
+                StringBuffer rawUrl = request.getRequestURL();
                 rawUrl.substring(rawUrl.indexOf("/checklist/email"));
                 try {
-                    URL emailUrl = new URL(rawUrl.toString());                    
+                    URL emailUrl = new URL(rawUrl.toString());
                     URLConnection con = emailUrl.openConnection();
                     InputStream in = con.getInputStream();
                     String encoding = con.getContentEncoding();
                     encoding = encoding == null ? "UTF-8" : encoding;
                     byte[] b = new byte[1024];
-                    emailHtml = new String(IOUtils.toByteArray(in), encoding);                    
+                    emailHtml = new String(IOUtils.toByteArray(in), encoding);
                 } catch (MalformedURLException ex) {
                     logger.warn("Malformed URL when constructing path to email controller", ex);
                 } catch (IOException ioex) {
                     logger.warn("Error with getting input stream from the URL connection", ioex);
-                }                
-                emailService.sendEmailWithStatistics(emailHtml, stats);
+                }
+                //TODO: replace mock implementation with Spring Security artifacts
+                User user = userService.getUserById(1);
+                emailService.sendEmailWithStatisticsAndPdfAttachment(
+                        emailHtml, stats, user.getFullname(), locale, user.getEmail());
                 return "success";
             } else {
                 return "empty";

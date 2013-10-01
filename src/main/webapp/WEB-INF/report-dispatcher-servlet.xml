@@ -94,13 +94,6 @@
         <property name="defaultEncoding" value="UTF-8" />
         <property name="cacheSeconds" value="1" />
     </bean>
-    
-    <bean id="emailMessageSource"
-          class="org.springframework.context.support.ReloadableResourceBundleMessageSource">
-        <property name="basename" value="/WEB-INF/i18n/messages_email" />
-        <property name="defaultEncoding" value="UTF-8" />
-        <property name="cacheSeconds" value="1" />
-    </bean>
 
     <!-- LocaleResolver implementation that uses a cookie sent back to the user 
     in case of a custom setting, with a fallback to the specified default locale

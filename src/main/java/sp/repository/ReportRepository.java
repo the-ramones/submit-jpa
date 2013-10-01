@@ -33,4 +33,6 @@ public interface ReportRepository {
     public void removeReport(Long id);
 
     public void updateReport(Report report);
+    
+    public List<Report> getAllReports();
 }
