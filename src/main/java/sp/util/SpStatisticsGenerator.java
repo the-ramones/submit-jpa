@@ -91,8 +91,8 @@ public class SpStatisticsGenerator {
         logger.info("AVERAGE LONG: {}", avg);
         sb = new StringBuilder(4);
 
-        sb.append((avg / (24 * 60 * 60 * 1000)));
-        logger.info("AVERAGE LONG AFTER: {}", avg);
+        sb.append(avg / ONE_DAY_IN_MILLISECONDS);
+        logger.info("AVERAGE LONG AFTER: {}", avg / ONE_DAY_IN_MILLISECONDS);
         stats.setAverageRange(sb.toString());
         return stats;
     }

@@ -2,13 +2,21 @@ package sp.controller;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.CookieHandler;
+import java.net.CookieManager;
+import java.net.CookiePolicy;
+import java.net.CookieStore;
+import java.net.HttpCookie;
+import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.List;
 import java.util.Locale;
 import java.util.Set;
 import javax.inject.Inject;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import org.apache.pdfbox.io.IOUtils;
@@ -16,6 +24,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -156,37 +165,81 @@ public class ChecklistController {
         return null;
     }
 
+    private static final String JSESSION_KEY = "J_SESSION";
+    
     @RequestMapping(value = "email", method = RequestMethod.GET)
     public @ResponseBody
     String sendStatisticsOnEmail(HttpSession session, HttpServletRequest request,
-            Locale locale, Model model) {
+            @CookieValue("JSESSIONID") String sessionId, Locale locale, Model model) {
         logger.debug("IN SEND ON EMAIL");
 
         Set<Long> checklist = (Set<Long>) session.getAttribute("checklist");
         if (checklist != null) {
             if (!checklist.isEmpty()) {
                 Statistics stats = SpStatisticsGenerator.generateStatistics(checklist);
+                session.setAttribute("statistics", stats);
+                
+                logger.error("JSESSION ID FROM SESSION: {}", session.getId());
+                logger.error("JSESSION ID FROM @CookieValue: {}", sessionId);
+                String reqSessionId = null;
+                for (Cookie cookie: request.getCookies()) {
+                    if (cookie.getName().equals("JSESSIONID")) {
+                        reqSessionId = cookie.getValue();
+                    }
+                }
+                logger.error("JSESSION ID FROM REQUEST: {}", reqSessionId);
+                
                 String emailHtml = null;
                 /*
                  * Make a request to '/email/statistics'
                  */
                 StringBuffer rawUrl = request.getRequestURL();
-                rawUrl.substring(rawUrl.indexOf("/checklist/email"));
-                try {
-                    URL emailUrl = new URL(rawUrl.toString());
-                    URLConnection con = emailUrl.openConnection();
-                    InputStream in = con.getInputStream();
-                    String encoding = con.getContentEncoding();
-                    encoding = encoding == null ? "UTF-8" : encoding;
-                    byte[] b = new byte[1024];
-                    emailHtml = new String(IOUtils.toByteArray(in), encoding);
-                } catch (MalformedURLException ex) {
-                    logger.warn("Malformed URL when constructing path to email controller", ex);
-                } catch (IOException ioex) {
-                    logger.warn("Error with getting input stream from the URL connection", ioex);
+                logger.error("request URL: {}", rawUrl);
+                int index = rawUrl.indexOf("/checklist/email");
+                logger.error("OCCURENCE INDEX: {}", index);
+                if (index != -1) {
+                    String baseUrl = rawUrl.substring(0, index);
+                    try {
+                        CookieManager cm = new CookieManager();
+                        //cm.setCookiePolicy(CookiePolicy.ACCEPT_ALL);
+                        cm.setCookiePolicy(CookiePolicy.ACCEPT_ORIGINAL_SERVER);
+                        CookieHandler.setDefault(cm);
+
+                        CookieStore cookieJar = cm.getCookieStore();
+                        HttpCookie sessionCookie = new HttpCookie("JSESSIONID", reqSessionId);
+                        URL emailUrl = new URL(baseUrl + "/email/statistics");
+                        try {
+                            cookieJar.add(emailUrl.toURI(), sessionCookie);
+                        } catch(URISyntaxException uex) {
+                            logger.warn("Error in URI syntax");
+                        }
+
+                        logger.error("EMAIL URL: {}", emailUrl);
+
+                        HttpURLConnection con = (HttpURLConnection) emailUrl.openConnection();
+                        InputStream in = con.getInputStream();
+                        String encoding = con.getContentEncoding();
+                        encoding = encoding == null ? "UTF-8" : encoding;
+                        byte[] b = new byte[1024];
+                        emailHtml = new String(IOUtils.toByteArray(in), encoding);
+                        
+                        logger.error("EMAIL HTML: {}", emailHtml);
+
+                        for (HttpCookie cookie: cm.getCookieStore().getCookies()) {
+                            System.out.println("COOKIE: " + cookie.toString());
+                        }
+                    } catch (MalformedURLException ex) {
+                        logger.warn("Malformed URL when constructing path to email controller", ex);
+                    } catch (IOException ioex) {
+                        logger.warn("Error with getting input stream from the URL connection", ioex);
+                    }
                 }
+
                 //TODO: replace mock implementation with Spring Security artifacts
                 User user = userService.getUserById(1);
+
+                logger.error("user, stats, locale, reciever: {} {} {} {}", stats, user.getFullname(), locale, user.getEmail());
+
                 emailService.sendEmailWithStatisticsAndPdfAttachment(
                         emailHtml, stats, user.getFullname(), locale, user.getEmail());
                 return "success";

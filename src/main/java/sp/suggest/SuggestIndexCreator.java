@@ -20,7 +20,10 @@ public class SuggestIndexCreator {
     @Inject
     ReportService reportService;
 
-    @Scheduled(fixedRate = 4 * 60 * 1000)
+    private static final int UPDATE_RATE = 4 * 60 * 1000;
+    
+    
+    @Scheduled(fixedRate = UPDATE_RATE)
     public void updateIndex() {
         Long id;
         for (Report report : reportService.getAllReports()) {

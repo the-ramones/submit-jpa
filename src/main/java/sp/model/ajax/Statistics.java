@@ -22,7 +22,7 @@ public class Statistics {
     public Statistics(String dateRange, String activities, String performers) {
         this.averageRange = dateRange;
         this.activities = activities;
-        this.performers = performers;
+        this.performers = performers;        
     }
 
     public String getActivities() {

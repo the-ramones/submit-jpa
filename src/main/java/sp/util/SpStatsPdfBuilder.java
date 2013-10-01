@@ -8,6 +8,7 @@ import java.text.DateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 import javax.inject.Named;
 import org.apache.pdfbox.cos.COSString;
@@ -19,8 +20,11 @@ import org.apache.pdfbox.pdmodel.font.PDFont;
 import org.apache.pdfbox.pdmodel.font.PDType1Font;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
+import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 import sp.model.ajax.Statistics;
 
 /**
@@ -33,14 +37,17 @@ import sp.model.ajax.Statistics;
 @Component
 public class SpStatsPdfBuilder {
 
-    @Inject
-    @Named("emailMessageSource")
-    MessageSource messageSource;
+    private MessageSource messageSource;
+    
     private Statistics statistics;
     private String username;
     private Locale locale;
     private Date date;
 
+    public void setMessageSource(MessageSource messageSource) {
+        this.messageSource = messageSource;
+    }
+    
     public Statistics getStatistics() {
         return statistics;
     }
@@ -97,6 +104,7 @@ public class SpStatsPdfBuilder {
 
     /*
      * PDF document initialization
+     * Note: TextToPdf - converts text file into PDF file
      */
     {
         try {
@@ -127,7 +135,7 @@ public class SpStatsPdfBuilder {
     public String build() {
         if ((username != null) && (statistics != null)) {
             StringBuilder sb = new StringBuilder(64);
-            sb.append(PDF_PATH_PREFIX).append(getUsername()).append('/').append("stats_");
+            sb.append(PDF_PATH_PREFIX).append(getUsername()).append('/');
             if (locale == null) {
                 setLocale(Locale.ENGLISH);
             }
@@ -138,8 +146,7 @@ public class SpStatsPdfBuilder {
             String userDirectory = sb.toString();
             CheckOrCreatePath(userDirectory);
             String currentDate = dateFormat.format(date).replace(' ', '_');
-            sb.append(currentDate);
-            sb.append(".pdf");
+            sb.append("stats_").append(currentDate).append(".pdf");
             setDate(date);
             String path = sb.toString();
             try {
@@ -153,7 +160,7 @@ public class SpStatsPdfBuilder {
         }
         return null;
     }
-    
+
     private boolean CheckOrCreatePath(String path) {
         File file = new File(path);
         if (!file.exists()) {

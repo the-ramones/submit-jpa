@@ -1,6 +1,8 @@
 package sp.controller;
 
 import javax.servlet.http.HttpServletResponse;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -21,6 +23,8 @@ import sp.model.ajax.Statistics;
 @SessionAttributes("statistics")
 public class EmailController {
 
+    private static final Logger logger = LoggerFactory.getLogger(EmailController.class);
+    
     @ModelAttribute("statistics")
     public Statistics populateStatistics() {
         return new Statistics();
@@ -37,6 +41,8 @@ public class EmailController {
     @RequestMapping(value = "statistics", method = RequestMethod.GET)
     public String getHtmlWithStatistics(@ModelAttribute Statistics stats,
             Model model, HttpServletResponse res) {
+        logger.debug("IN SEND EMAIL WITH STATISTICS");
+        
         return "stats-email";
     }
 }

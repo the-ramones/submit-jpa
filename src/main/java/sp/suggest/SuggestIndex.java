@@ -21,7 +21,7 @@ public class SuggestIndex {
 
     private static class SuggestIndexHolder {
 
-        private static final Map index = new ConcurrentHashMap<String, Set>(
+        private static final ConcurrentHashMap index = new ConcurrentHashMap<String, Set>(
                 INITIAL_CATACITY, LOAD_FACTOR, CONCURRENCY_LEVEL);
     }
     public static Map index = SuggestIndexHolder.index;
@@ -37,6 +37,7 @@ public class SuggestIndex {
         } else {
             ((Set) index.get(key)).add(docId);
         }
+        
     }
 
     public Set<String> getKeys(Long limit) {

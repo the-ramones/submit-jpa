@@ -1,4 +1,4 @@
-    package sp.service;
+package sp.service;
 
 import java.util.Date;
 import java.util.Locale;
@@ -24,18 +24,20 @@ import sp.util.SpStatsPdfBuilder;
  *
  * @author Paul Kulitski
  */
-@Async
+//@Async
 @Service
 public class EmailServiceImpl implements EmailService {
 
+    
     private static final Logger logger = LoggerFactory.getLogger(EmailServiceImpl.class);
     @Inject
     Session emailSession;
     @Inject
     @Named("emailMessageSource")
-    MessageSource messageSource;
+    private MessageSource messageSource;
+    
     private static final String DEFAULT_CHARSET = "UTF-8";
-
+    private static final String FROM = "areports@mail.ru";
     /**
      * Sends a generic text email message to the list of specified recipients
      *
@@ -84,7 +86,7 @@ public class EmailServiceImpl implements EmailService {
         try {
             email.setHtmlMsg(htmlContent);
             // TODO: falback text message
-            email.setTextMsg("");
+            email.setTextMsg(" ");
             email.addTo(recipients);
             email.send();
         } catch (EmailException ex) {
@@ -101,10 +103,13 @@ public class EmailServiceImpl implements EmailService {
 
     @Override
     public void sendEmailWithStatisticsAndPdfAttachment(String htmlContent, Statistics stats, String username, Locale locale, String... recipients) {
+        
+        logger.error("IN EMAILSERVICE SEND EMAIL WITH STATISTICS");
+        
         HtmlEmail email = new HtmlEmail();
         email.setMailSession(emailSession);
         email.setCharset(DEFAULT_CHARSET);
-        String currentDate = SpDateFormatFactory.getDateFormat().format(new Date());
+        String currentDate = SpDateFormatFactory.getDateFormat(locale).format(new Date());
         String subject = messageSource.getMessage(STATISTICS_SUBJECT_I18N_KEY, null, locale);
         String asof = messageSource.getMessage(STATISTICS_SUBJECT_I18N_KEY, null, locale);
         StringBuilder sb = new StringBuilder(subject.length() * 2);
@@ -114,10 +119,11 @@ public class EmailServiceImpl implements EmailService {
          * Build an PDF file corresponding to the specified Statistics object and
          * username
          */
-        SpStatsPdfBuilder statsBuilder = new SpStatsPdfBuilder();
+        SpStatsPdfBuilder statsBuilder = new SpStatsPdfBuilder();        
         statsBuilder.setStatistics(stats);
         statsBuilder.setUsername(username);
-        statsBuilder.setLocale(locale);
+        statsBuilder.setMessageSource(messageSource);
+        statsBuilder.setLocale(locale);        
         statsBuilder.setDate(new Date());
         String path = statsBuilder.build();
         EmailAttachment attachment = null;
@@ -130,6 +136,11 @@ public class EmailServiceImpl implements EmailService {
         }
         try {
             email.attach(attachment);
+            email.setFrom(FROM);
+            email.addTo(recipients);
+            email.setHtmlMsg(htmlContent);
+            //TODO: add fallback plain text message
+            email.setTextMsg(" ");
             email.send();
         } catch (EmailException ex) {
             logger.error("Cannot send an email", ex);

@@ -49,7 +49,7 @@
     var cleanUpChecklistUrl = "#springUrl('/checklist/empty')";
     var newSearchRedirectUrl = "#springUrl('/report/search?new_search')";
     var checklistStatsUrl = "#springUrl('/checklist/stats')";
-    var sendEmailUrl = "#springUrl('/checklis/email')";
+    var sendEmailUrl = "#springUrl('/checklist/email')";
 
     /*
      * Modal window HTML templates
