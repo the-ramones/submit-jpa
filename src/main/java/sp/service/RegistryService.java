@@ -25,4 +25,6 @@ public interface RegistryService {
     public List<Register> getRegister(User user, Op op, Date startDate, Date endDate);
 
     public Register addRegister(Register register);
+    
+    public List<Register> getAll();
 }

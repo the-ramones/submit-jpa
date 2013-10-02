@@ -25,4 +25,6 @@ public interface RegisterRepository {
     public List<Register> getRegister(User user, Op op, Date startDate, Date endDate);
 
     public Register saveRegister(Register register);
+    
+    public List<Register> getAll();
 }

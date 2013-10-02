@@ -26,18 +26,9 @@
         </tbody>        
     </table>
     #else
-        #springMessage('content.notfound
-+
-
-
-
-
-
-
-
-
-3,00000000000000000000,0')
+        #springMessage('content.notfound')
     #end
+
     #if($pager)
         #if($pager.getPageCount() gt 1)
             #pager()    

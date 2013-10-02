@@ -107,4 +107,11 @@ public class RegisterRepositoryImpl implements RegisterRepository {
             return null;
         }
     }
+
+    @Override
+    public List<Register> getAll() {
+        TypedQuery<Register> query =
+                em.createNamedQuery("Register.getAll", Register.class);
+        return query.getResultList();
+    }
 }

@@ -59,4 +59,9 @@ public class RegistryServiceImpl implements RegistryService {
     public Register addRegister(Register register) {
         return registerRepository.saveRegister(register);
     }
+
+    @Override
+    public List<Register> getAll() {
+        return registerRepository.getAll();
+    }
 }
