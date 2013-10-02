@@ -171,7 +171,7 @@ public class ReportController {
                 pager.toString(), pager.getPageCount(), pager.getPageSize());
 
         logger.error("CHECKLIST IN POST: {}", model.asMap().get("checklist"));
-        //TODO: add checlkist to the model anfd to the session;
+        //TODO: add checlkist to the model and to the session;
 
         String searchId = SpHasher.getHash(new Object[]{startDate, endDate});
 

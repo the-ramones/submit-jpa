@@ -7,8 +7,8 @@
         <thead>
             <tr>
                 <th>id</th>
-                <th>#springMessage('registry.table.user.fullname')</th>
-                <th>#springMessage('registry.table.op.title')</th>
+                <th>#springMessage('registry.table.user')</th>
+                <th>#springMessage('registry.table.op')</th>
                 <th>#springMessage('registry.table.time')</th>
             </tr>
             </thead>
@@ -17,8 +17,8 @@
             #foreach($register in $registry)
             <tr>
                 <td>${registry.id}</td>
-                <td>${registry.user}</td>
-                <td>${registry.op}</td>
+                <td>${registry.user.fullname}</td>
+                <td>${registry.op.title}</td>
                 <td>${report.recordTime}</td>
             </tr>        
             #end
@@ -31,7 +31,7 @@
 
     #if($pager)
         #if($pager.getPageCount() gt 1)
-            #pager()    
+            #pager_lazy()    
         #end
     #end
 </div>

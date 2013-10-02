@@ -18,8 +18,8 @@ public interface ReportService {
 
     public List<Report> getReports(String performer, Date startDate, Date endDate);
 
-    public List<Report> getReports(Date startDate, Date endDate);   
-    
+    public List<Report> getReports(Date startDate, Date endDate);
+
     public List<Report> getReports(Set<Long> ids);
 
     public Report getReportById(Long id);
@@ -29,10 +29,10 @@ public interface ReportService {
     public Boolean hasReport(Long id);
 
     public Long[] hasReports(Long[] ids);
-    
+
     public void removeReport(Long id);
 
     public void updateReport(Report report);
-    
-        public List<Report> getAllReports();
+
+    public List<Report> getAllReports();
 }

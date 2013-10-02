@@ -64,4 +64,10 @@ public class RegistryServiceImpl implements RegistryService {
     public List<Register> getAll() {
         return registerRepository.getAll();
     }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<Register> getRegisters(int from, int limit) {
+        return registerRepository.getAll(from, limit);
+    }
 }

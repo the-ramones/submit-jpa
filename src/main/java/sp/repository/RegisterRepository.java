@@ -27,4 +27,6 @@ public interface RegisterRepository {
     public Register saveRegister(Register register);
     
     public List<Register> getAll();
+    
+    public List<Register> getAll(int from, int limit);
 }

@@ -60,6 +60,13 @@
         <session-timeout>30</session-timeout>
 <!--        <cookie-config></cookie-config>
         <tracking-mode></tracking-mode>-->
+<!--            <session-timeout>720</session-timeout>
+    <cookie-config>
+        <name>SZSESSION</name>
+        <path>/</path>
+        <http-only>true</http-only>
+        <secure>true</secure>
+    </cookie-config>-->
     </session-config>
     <welcome-file-list>
         <welcome-file>redirect.jsp</welcome-file>

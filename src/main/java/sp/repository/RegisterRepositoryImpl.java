@@ -114,4 +114,13 @@ public class RegisterRepositoryImpl implements RegisterRepository {
                 em.createNamedQuery("Register.getAll", Register.class);
         return query.getResultList();
     }
+
+    @Override
+    public List<Register> getAll(int from, int limit) {
+        TypedQuery<Register> query = 
+                em.createNamedQuery("Register.getAll", Register.class);
+        query.setFirstResult(from);
+        query.setMaxResults(limit);
+        return query.getResultList();
+    }
 }

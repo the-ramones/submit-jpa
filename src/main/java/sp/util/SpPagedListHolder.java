@@ -30,6 +30,7 @@ public class SpPagedListHolder<T> extends PagedListHolder<T> {
         Pattern regexp = Pattern.compile("^next|prev|last|first$", Pattern.CASE_INSENSITIVE);        
         try {
             p = Integer.valueOf(page);
+            setPage(p);
         } catch (NumberFormatException ex) {            
         }        
         if (p == null) {

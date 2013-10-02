@@ -26,7 +26,7 @@ import javax.persistence.TemporalType;
     @NamedQuery(name = "Register.findByPeriod", query = "select r from Register r where r.recordTime between :startDate and :endDate"),
     @NamedQuery(name = "Register.getRegistersByOp", query = "select r from Register r where r.op = :op"),
     @NamedQuery(name = "Register.getRegistersByUser", query = "select r from Register r where r.user = :user"),
-    @NamedQuery(name = "Register.getAll", query = "select r from Register r")
+    @NamedQuery(name = "Register.getAll", query = "select r from Register r order by r.recordTime desc")
 })
 public class Register implements java.io.Serializable {
 
