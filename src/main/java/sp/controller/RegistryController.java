@@ -11,7 +11,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
-import org.springframework.beans.support.PagedListHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.WebDataBinder;
@@ -25,7 +24,6 @@ import sp.model.Register;
 import sp.service.RegistryService;
 import sp.util.SpDateFormatFactory;
 import sp.util.SpLazyPager;
-import sp.util.SpSortDefinition;
 
 /**
  * Registry Controller
@@ -71,42 +69,48 @@ public class RegistryController {
             Model model) {
         logger.error("IN SHOW REGISTRY");
 
-        boolean reject = false;
+        logger.debug("new: {}", newSearch);
+        logger.debug("registry-pager: {}", pager);
+        logger.debug("page: {}", page);
+
+        List<Register> registers = null;
         if (pager.getSourceCount() == 0 || newSearch != null) {
-            List<Register> registers = registryService.getRegisters(0, PAGINATION_THRESHOLD);
+            registers = registryService.getRegisters(0, PAGINATION_THRESHOLD);
             if (!registers.isEmpty()) {
                 pager.setPageSize(PAGINATION_THRESHOLD);
-                pager.setSourceCount(registers.size());
+                pager.setSourceCount(registryService.count().intValue());
                 pager.setPage(0);
                 model.addAttribute("registers", registers);
+
+                logger.debug("registers: {}", registers);
+
                 return "registry";
             } else {
-                return "redirect:search/nothing";
+                return "redirect:registry/nothing";
             }
         } else {
-            if (pager != null) {
-                if (page != null) {
-                    try {
-                        pager.setPage(page);
-                    } catch (NumberFormatException ex) {
-                        logger.error("Wrong page string. Redirecting to the fallback page");
-                        reject = true;                        
-                    }
-                } else {
-                    pager.setPage(0);
+            if (page != null) {
+                boolean correct = pager.setPage(page);
+                if (!correct) {
+                    return "redirect:registry/nothing";
                 }
+            } else {
+                pager.setPage(0);
             }
+            registers = registryService
+                    .getRegisters(pager.getPageOffset(), pager.getPageSize());
+            model.addAttribute("registers", registers);
         }
-        if (reject) {
-            return "redirect:registry/nothing";
-        }
+
+        logger.debug("registry-pager: {}", pager);
+        logger.debug("registers: {}", registers);
+
         return "registry";
     }
-    
+
     @RequestMapping(value = "nothing", method = RequestMethod.GET)
     public String nothingFound(Model model) {
         model.addAttribute("backpath", "/registry?new");
         return "nothing";
     }
-    
 }

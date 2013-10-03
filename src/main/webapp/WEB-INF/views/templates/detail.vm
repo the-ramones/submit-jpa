@@ -35,7 +35,7 @@
         window.location.href="$back";
     }
     function show_uri() {
-        modal.open({content: '#modal_uri( $uri )'});
+        modal.open({content: '#modal_uri( $uri )', width: "30%"});
         $("#close-btn").click(function() {
             $("#close").click();
         });

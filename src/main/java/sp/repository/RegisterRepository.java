@@ -29,4 +29,12 @@ public interface RegisterRepository {
     public List<Register> getAll();
     
     public List<Register> getAll(int from, int limit);
+    
+    public Long count();
+    
+    public Long count(Op op);
+    
+    public Long count(User user);
+    
+    public Long count(User user, Op op);
 }

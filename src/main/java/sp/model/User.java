@@ -98,7 +98,6 @@ public class User implements java.io.Serializable {
         hash = 11 * hash + (this.id != null ? this.id.hashCode() : 0);
         hash = 11 * hash + (this.fullname != null ? this.fullname.hashCode() : 0);
         hash = 11 * hash + (this.job != null ? this.job.hashCode() : 0);
-        hash = 11 * hash + (this.registers != null ? this.registers.hashCode() : 0);
         return hash;
     }
 
@@ -118,9 +117,6 @@ public class User implements java.io.Serializable {
             return false;
         }
         if ((this.job == null) ? (other.job != null) : !this.job.equals(other.job)) {
-            return false;
-        }
-        if (this.registers != other.registers && (this.registers == null || !this.registers.equals(other.registers))) {
             return false;
         }
         return true;

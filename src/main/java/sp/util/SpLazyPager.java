@@ -61,7 +61,9 @@ public class SpLazyPager {
     }
 
     public void setPage(int page) {
-        this.page = page;
+        if ((page >= 0) && (page < getPageCount())) {
+            this.page = page;
+        }
     }
 
     public int getPage() {
@@ -95,13 +97,13 @@ public class SpLazyPager {
     }
 
     public void previousPage() {
-        if ((page - 1) >= 0) {
+        if (page > 0) {
             page -= 1;
         }
     }
 
     public void nextPage() {
-        if ((page + 1) <= (sourceCount / pageSize)) {
+        if (page < (sourceCount / pageSize)) {
             page += 1;
         }
     }
@@ -134,22 +136,25 @@ public class SpLazyPager {
      * can be passed into {@link java.lang.Integer#valueOf(java.lang.String)}
      * plus string values 'next', 'prev', 'first', 'last'
      *
+     * NOTE: 1-based counting for convenience using in View
+     *
      * @param page page being set up
      */
-    public void setPage(String page) {
+    public boolean setPage(String page) {
         Integer p = null;
-        Pattern regexp = Pattern.compile("^next|prev|last|first$", Pattern.CASE_INSENSITIVE);
         try {
             p = Integer.valueOf(page);
-            if ((p > 0) && (p < getPageCount())) {
+            if ((p > 0) && (p <= getPageCount())) {
                 setPage(p - 1);
+                return true;
             }
         } catch (NumberFormatException ex) {
-            logger.debug("Wrong page number string. Stay on the same page");
-            throw ex;
+            logger.info("Wrong page number string. Stay on the same page");
         }
+        Pattern regexp = Pattern.compile("^next|prev|last|first$", Pattern.CASE_INSENSITIVE);
         if (p == null) {
             if (regexp.matcher(page).matches()) {
+                page = page.toLowerCase();
                 if (page.equals("next")) {
                     nextPage();
                 } else if (page.equals("prev")) {
@@ -159,7 +164,14 @@ public class SpLazyPager {
                 } else if (page.equals("first")) {
                     setPage(0);
                 }
+                return true;
             }
         }
+        return false;
+    }
+
+    @Override
+    public String toString() {
+        return "SpLazyPager{" + "sourceCount=" + sourceCount + ", refreshDate=" + refreshDate + ", pageSize=" + pageSize + ", page=" + page + ", maxLinkedPages=" + maxLinkedPages + '}';
     }
 }

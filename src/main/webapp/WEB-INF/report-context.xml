@@ -194,6 +194,6 @@
     -->
     
     <!-- CGLIB proxy or Java Interface Proxy-->
-    <task:annotation-driven mode="proxy"/>    
+    <task:annotation-driven />    
         
 </beans>

@@ -117,10 +117,44 @@ public class RegisterRepositoryImpl implements RegisterRepository {
 
     @Override
     public List<Register> getAll(int from, int limit) {
-        TypedQuery<Register> query = 
+        TypedQuery<Register> query =
                 em.createNamedQuery("Register.getAll", Register.class);
         query.setFirstResult(from);
         query.setMaxResults(limit);
         return query.getResultList();
+    }
+
+    @Override
+    public Long count() {
+        TypedQuery<Long> query =
+                em.createNamedQuery("Register.countAll", Long.class);
+        return query.getSingleResult();
+    }
+
+    @Override
+    public Long count(Op op) {
+        TypedQuery<Long> query =
+                em.createNamedQuery("Register.countByOp", Long.class);
+        query.setParameter("op", op);
+        return query.getSingleResult();
+    }
+
+    @Override
+    public Long count(User user) {
+        TypedQuery<Long> query =
+                em.createNamedQuery("Register.countByUser", Long.class);
+        query.setParameter("user", user);
+        return query.getSingleResult();
+
+    }
+
+    @Override
+    public Long count(User user, Op op) {
+        TypedQuery<Long> query =
+                em.createNamedQuery("Register.countByUserAndOp", Long.class);
+        query.setParameter("op", op);
+        query.setParameter("user", user);
+        return query.getSingleResult();
+
     }
 }

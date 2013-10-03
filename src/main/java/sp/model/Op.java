@@ -88,7 +88,6 @@ public class Op implements java.io.Serializable {
         int hash = 3;
         hash = 97 * hash + (this.id != null ? this.id.hashCode() : 0);
         hash = 97 * hash + (this.title != null ? this.title.hashCode() : 0);
-        hash = 97 * hash + (this.registers != null ? this.registers.hashCode() : 0);
         return hash;
     }
 
@@ -105,9 +104,6 @@ public class Op implements java.io.Serializable {
             return false;
         }
         if ((this.title == null) ? (other.title != null) : !this.title.equals(other.title)) {
-            return false;
-        }
-        if (this.registers != other.registers && (this.registers == null || !this.registers.equals(other.registers))) {
             return false;
         }
         return true;

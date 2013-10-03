@@ -70,4 +70,24 @@ public class RegistryServiceImpl implements RegistryService {
     public List<Register> getRegisters(int from, int limit) {
         return registerRepository.getAll(from, limit);
     }
+
+    @Override
+    public Long count() {
+        return registerRepository.count();
+    }
+
+    @Override
+    public Long count(Op op) {
+        return registerRepository.count(op);                
+    }
+
+    @Override
+    public Long count(User user) {
+        return registerRepository.count(user);
+    }
+
+    @Override
+    public Long count(User user, Op op) {
+        return registerRepository.count(user, op);
+    }
 }

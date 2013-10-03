@@ -1,16 +1,17 @@
 package sp.suggest;
 
+import java.lang.ref.WeakReference;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.Exchanger;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 
 /**
@@ -20,7 +21,7 @@ import org.springframework.stereotype.Component;
  */
 @Lazy
 @Component
-public class SuggestIndex {
+public class SuggestIndex implements Index {
 
     /*
      * index properties
@@ -35,6 +36,10 @@ public class SuggestIndex {
     Lock writeLock = new ReentrantLock();
     ReadWriteLock readWriteLock = new ReentrantReadWriteLock();
     private boolean processed = false;
+    /*
+     * Loggers 
+     */
+    protected static final Logger logger = LoggerFactory.getLogger(SuggestIndex.class);
 
     /*
      * static Singleton holder
@@ -45,11 +50,14 @@ public class SuggestIndex {
                 INITIAL_CATACITY, LOAD_FACTOR, CONCURRENCY_LEVEL);
     }
     public ConcurrentHashMap<String, LinkedList> index = SuggestIndexHolder.index;
+    private static WeakReference<ConcurrentHashMap<String, LinkedList>> swapIndexRef;
 
+    @Override
     public ConcurrentHashMap<String, LinkedList> getIndex() {
         return SuggestIndexHolder.index;
     }
 
+    @Override
     public void addToIndex(String key, Long docId) {
         try {
             writeLock.lockInterruptibly();
@@ -68,12 +76,31 @@ public class SuggestIndex {
         }
     }
 
+    public void addToSwapIndex(String key, Long docId) {
+        try {
+            processLock.lockInterruptibly();
+            ConcurrentHashMap<String, LinkedList> swapIndex = swapIndexRef.get();
+            LinkedList ids = new LinkedList<Long>();
+            swapIndex.putIfAbsent(key, ids);
+            if (swapIndex.containsKey(key)) {
+                LinkedList entry = (LinkedList) swapIndex.get(key);
+                entry.add(docId);
+            }
+
+        } catch (InterruptedException ex) {
+            logger.warn("Cannot acquire write lock on the index");
+        } finally {
+            processLock.unlock();
+        }
+    }
+
     /**
      * Should not change elements
      *
      * @param limit
      * @return
      */
+    @Override
     public Set<String> getKeys() {
         return index.keySet();
     }
@@ -87,7 +114,6 @@ public class SuggestIndex {
     public List getValues(String key) {
         return index.get(key);
     }
-    protected static final Logger logger = LoggerFactory.getLogger(SuggestIndex.class);
 
     public synchronized void setProcessing(boolean state) {
         processed = state;
@@ -97,7 +123,7 @@ public class SuggestIndex {
         return processed;
     }
 
-    public synchronized void process() {
+    public synchronized void process(ConcurrentHashMap<String, LinkedList> newIndex) {
         try {
             processLock.lockInterruptibly();
             processed = true;
@@ -110,26 +136,34 @@ public class SuggestIndex {
             processed = false;
         }
     }
-    
-    private ConcurrentHashMap<String, Set> swapIndex = new ConcurrentHashMap<String, Set>(
-            INITIAL_CATACITY, LOAD_FACTOR, CONCURRENCY_LEVEL);
-    private Exchanger indexSwitcher = new Exchanger();
 
-    public synchronized void switchIndex() {
-        //indexSwitcher.
-    }
-
-    public synchronized boolean inProgress() {
+    public ConcurrentHashMap<String, LinkedList> getSwapIndex() {
         try {
-            lock.lock();
-            return indexingInProcess;
+            processLock.lock();
+            if (swapIndexRef != null) {
+                ConcurrentHashMap<String, LinkedList> swapIndex = swapIndexRef.get();
+                if (swapIndex != null) {
+                    swapIndex.clear();
+                    return swapIndex;
+                }
+            }
+            return new ConcurrentHashMap<String, LinkedList>(
+                    INITIAL_CATACITY, LOAD_FACTOR, CONCURRENCY_LEVEL);
         } finally {
-            lock.unlock();
+            processLock.unlock();
         }
 
     }
 
-    public synchronized void setInProgress(boolean inProgress) {
-        indexingInProcess = inProgress;
+    public Lock getProcessLock() {
+        return processLock;
+    }
+
+    public void switchIndexes() {
+        if (processed) {
+            ConcurrentHashMap<String, LinkedList> swap = index;
+            index = swapIndexRef.get();
+            swapIndexRef = new WeakReference<ConcurrentHashMap<String, LinkedList>>(swap);
+        }
     }
 }

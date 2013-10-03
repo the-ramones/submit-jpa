@@ -2,7 +2,7 @@
  * Defines a pager. Utilizes 'pager' and 'settings' context variable
  * from the Velocity template being called from.
  *#
-#macro (pager $pager)
+#macro (lazy_pager $pager)
 #* Defines pager appearance. If, for example equals 3, then '<< 1 2 3 ... 'last' >>'
  * will be drawn
  *#
@@ -16,9 +16,9 @@
 #set( $active = $pager.getPage() + 1 )
 ## Current page URL from Apache RequestFacade
 #set( $url = $request.getRequestURL() )
-<div class="pagination clearfix">  
+<div class="pagination clearfix">
     <ul class="clearfix">
-        #if( $pages gt $maxOnPager )
+        #if( $pages gt $maxOnPager )  
             #* Defines difference between active page and last page.
              * If $delta > $$maxOnPager, renders: << 2 3 4 5 ... 100 >>
              * Otherwise: << 96 97 98 99 100 >>
@@ -54,7 +54,7 @@
             #set( $prev = $url + '?p=prev' )
             <li><a href="$prev" #if($active eq 1)class="disabled"#end>«</a></li>
             #foreach( $page in [1..$pages] )
-                #set($page_url = $url + '?p=' )
+                #set($page_url = $url + '?p=' + $page )
                 <li><a href="$page_url" class="#if($page eq $active)current#end active">$page</a></li>
             #end
             #set( $next = $url + '?p=next' )

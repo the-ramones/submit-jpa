@@ -10,7 +10,7 @@
                     <ul>
                         <li><a href="#springUrl('/report/search?new_search')">#springMessage("menu.report.build.search")</a></li>
                         <li><a href="#springUrl('/report/detail')">#springMessage("menu.report.build.detail")</a></li>
-                        <li><a href="#springUrl('/registry')">#springMessage("menu.report.build.registry")</a></li>
+                        <li><a href="#springUrl('/registry?new')">#springMessage("menu.report.build.registry")</a></li>
                     </ul>
                 </li>
                 <li><a href="#springUrl('/report/suggest')">#springMessage("menu.report.ajax")</a></li>                                
