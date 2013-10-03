@@ -28,7 +28,7 @@ import sp.service.SuggestService;
  * @author Paul Kulitski
  * @see Controller
  */
-@Controller
+@Controller 
 @RequestMapping("/report/suggest/ajax")
 public class SuggestController {
 
@@ -112,6 +112,4 @@ public class SuggestController {
         }
         return re;
     }
-    
-    //@RequestMapping(value = "")
 }

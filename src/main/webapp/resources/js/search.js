@@ -58,6 +58,10 @@ $(document).ready(function() {
             opacity: "1",
             transition: "all"
         });
+        $("body").click(function(e) {
+            $(".subnav li").css({
+                visibility: 'hidden'});
+        });
     });
 
     /*

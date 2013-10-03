@@ -2,11 +2,8 @@ package sp.suggest;
 
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
-import org.springframework.context.annotation.Lazy;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import sp.model.Report;
-import sp.repository.ReportRepository;
 import sp.service.ReportService;
 
 /**
@@ -16,7 +13,7 @@ import sp.service.ReportService;
  */
 @Lazy
 @Component
-public class SuggestIndexCreator {
+public class SuggestIndexCreator implements IndexCreator {
 
     @Inject
     SuggestIndex suggestIndex;

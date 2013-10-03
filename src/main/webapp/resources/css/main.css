@@ -1,3 +1,21 @@
+/*index use check*/
+#index-check {
+    margin-top: 10px;
+    padding: 10px;
+    display: inline-block;
+    float: right;
+}
+
+#index-check checkbox {    
+    border-radius: 3px;  
+}
+
+#index-check label {
+    padding-left: 10px;
+    position: relative;
+    bottom: 2px;
+}
+
 /*statistics modal*/
 .statistics span {
     width: 100%;

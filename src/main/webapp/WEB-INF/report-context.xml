@@ -193,6 +193,7 @@
      <bean id="validator" class="org.springframework.validation.beanvalidation.LocalValidatorFactoryBean" />
     -->
     
-    <task:annotation-driven />    
+    <!-- CGLIB proxy or Java Interface Proxy-->
+    <task:annotation-driven mode="proxy"/>    
         
 </beans>
