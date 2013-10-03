@@ -5,8 +5,10 @@
             <input type="button" name="search-button" id="search_button" />
             <input type="text" name="search" value="" placeholder="#springMessage('content.search.placeholder')" autocompetion="off" />
             <div id="index-check">
-            <input type="checkbox" id="use-index-checkbox" name="use_index" checked />
-            <label>use index?</label>
+                <input id="use-index-checkbox" class="css-checkbox" type="checkbox" />
+                <label for="use-index-checkbox" name="use-index-checkbox" class="css-label">use index?</label>
+                <br /><progress id="index-progress" value="0" max="100" style="display: none;"></progress>
+                <br /><label for="index-progress" name="index-progress-label" style="display: none;"></label>
             </div>
             <ul class="subnav">
                 <li><a href="#">#springMessage('content.search.nothing')</a></li>
@@ -48,7 +50,9 @@
     var NOTHING_FOUND = "#springMessage('search.nothingfound')";
     var SELECT_ONE_MSG = "#springMessage('checklist.selectone')";
     var ADDED_TO_CHECKLIST_MSG = "#springMessage('checklist.added')";
-    var NOTADDED_TO_CHECKLIST_MSG = "#springessage('checklist.notadded')";
+    var NOTADDED_TO_CHECKLIST_MSG = "#springMessage('checklist.notadded')";
+    var CONTENT_NOTHING_FOUND = "#springMessage('content.notfound')";
+  
 
 #[[
     /*
@@ -89,32 +93,37 @@
         var $results = $(".results-wrap");
         $results.empty();
         var bound = reports.length;
-        if ($("table.table").size() === 0) {
-            $(tableHtml).appendTo($results);
-        }        
-        var $table = $results.find(".table tbody");
-        for (var i = 0; i < bound; i++) {
-            var report = reports[i];
-            var $row = $(rowHtml);
-            $children = $row.children();
-            $children.get(0).innerHTML = report.id;
-            $children.get(1).innerHTML = formatDate(new Date(report.startDate));
-            $children.get(2).innerHTML = formatDate(new Date(report.startDate));
-            $children.get(3).innerHTML = report.performer;
-            $children.get(4).innerHTML = report.activity;
-            $row.data("id", report.id);
-            $table.append($row);
-        }
-        $results.append($(buttonHtml));
-        $("p.stats span:first").text(bound);
-        $("p.stats").removeClass("invisible");
-        unload();
-        /*
-         * On-click modal appearing
-         */
+        if (bound > 0) {
+            if ($("table.table").size() === 0) {
+                $(tableHtml).appendTo($results);
+            }        
+            var $table = $results.find(".table tbody");
+            for (var i = 0; i < bound; i++) {
+                var report = reports[i];
+                var $row = $(rowHtml);
+                $children = $row.children();
+                $children.get(0).innerHTML = report.id;
+                $children.get(1).innerHTML = formatDate(new Date(report.startDate));
+                $children.get(2).innerHTML = formatDate(new Date(report.startDate));
+                $children.get(3).innerHTML = report.performer;
+                $children.get(4).innerHTML = report.activity;
+                $row.data("id", report.id);
+                $table.append($row);
+            }
+            $results.append($(buttonHtml));
+            /*
+            * On-click modal appearing
+            */
         $(".table tbody tr").click(function(event) {
             $(this).toggleClass("selected");
         });
+        } else {
+            $results.text(CONTENT_NOTHING_FOUND);
+        }
+        $("p.stats span:first").text(bound);
+        $("p.stats").removeClass("invisible");
+        unload();
+
         $('body').removeClass('stop-scrolling')
     }
 

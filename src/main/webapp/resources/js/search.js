@@ -3,10 +3,17 @@
  */
 $(document).ready(function() {
 
-    $(".subnav").on("click", "a", function() {
+    $(".subnav").on("click", "a", function(e) {
+        e.preventDefault();
+        /*
+         * Prevent unneccesary 'bounce' scrolling
+         */
+        $("html").addClass("stop-scrolling");
+
         $("input[name='search']").val($(this).text());
         $(".subnav li").css({
             visibility: 'hidden'});
+        $("html").removeClass("stop-scrolling");
     });
 
     $("input[name='search']").keydown(function(event) {
@@ -102,5 +109,36 @@ $(document).ready(function() {
         var buttons = $(".button-block");
         buttons.addClass("hidden");
     });
+
+    $("#use-index-checkbox").click(function(e) {
+        if ($(this).is(":checked")) {
+            var $pbar = $("#index-progress");
+            $pbar.show();
+            $('label[name="index-progress-label"]').show();
+            progress($pbar);
+        }
+    });
 });
+
+function progress($pbar) {
+    var time = 10;
+    var max = parseInt($pbar.attr('max'));
+    var percent = max / 100;
+    var animate = function() {
+        var value = parseInt($pbar.attr('value'));
+        if (value <= max) {
+            $pbar.attr('value', value + 1 * percent);
+            $('label[name="index-progress-label"]').html(value + '%');
+        } else {
+            clearInterval(interval);
+            $pbar.attr('value', 0);
+            $pbar.hide();
+            $('label[name="index-progress-label"]').hide();
+        }
+    };
+    var interval = setInterval(function() {
+        animate();
+    }, time);
+}
+
 
