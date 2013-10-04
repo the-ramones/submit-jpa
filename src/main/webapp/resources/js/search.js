@@ -111,27 +111,7 @@ function addSuggestToSearchInput() {
                 search.val(selected.find("a").text());
             }
         }
-    });
-
-    $("input[name='search']").keypress(function(event) {
-        if ($("#use-index-checkbox").is(":checked")) {
-            if ($(".subnav li").size() === 1) {
-                for (var i = 0; i < 3; i++) {
-                    $(".subnav li").clone().appendTo($(".subnav"));
-                }
-            }
-            $(".subnav li").css({
-                visibility: 'visible',
-                top: '120%',
-                opacity: "1",
-                transition: "all"
-            });
-            $("body").click(function(e) {
-                $(".subnav li").css({
-                    visibility: 'hidden'});
-            });
-        }
-    });
+    });   
 }
 
 function progress($pbar) {

@@ -39,5 +39,5 @@
  * Dynamic action button group
  *#
 #macro ( dynamic_button_group )
-<button class="action" onclick="addToChecklist()">#springMessage('content.list.button.addtowatchlist')</button> \
+<button id="addToWatchlist" class="action" onclick="addToChecklist()">#springMessage('content.list.button.addtowatchlist')</button> \
 #end

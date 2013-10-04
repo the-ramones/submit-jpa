@@ -27,6 +27,7 @@ div.pagination a {
     text-decoration: none; /* no underline */
     border-radius: 4px;
     color: rgb(221,221,221);
+    cursor: pointer;
 }
 div.pagination a:hover, div.pagination a:active {
     padding: 0.5em 0.64em 0.43em 0.64em;

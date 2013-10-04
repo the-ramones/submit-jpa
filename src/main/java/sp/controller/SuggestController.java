@@ -64,7 +64,10 @@ public class SuggestController {
 
     @ModelAttribute("suggest-pager")
     public SpLazyPager populatePager() {
-        return new SpLazyPager(0);
+        SpLazyPager pager = new SpLazyPager(0);
+        pager.setMaxOnPager(MAX_ON_PAGER);
+        pager.setPageSize(PAGINATION_THRESHOLD);
+        return pager;
     }
 
     @InitBinder
@@ -78,7 +81,7 @@ public class SuggestController {
     public ResponseEntity<ResultPager> getReprotsByQuery(
             @RequestParam("query") String query,
             @ModelAttribute("suggest-pager") SpLazyPager pager,
-            @RequestParam(value = "limit", required = false) Long limit,
+            @RequestParam(value = "limit", required = false) int limit,
             @RequestParam(value = "p", required = false) String page,
             @RequestParam(value = "useIndex", required = false) boolean useIndex,
             @RequestParam(value = "recent", required = false) boolean recent,
@@ -92,97 +95,57 @@ public class SuggestController {
         /*
          * Contsrain result of the rearch if recend records needed.
          */
-        if (recent) {
-            limit = Long.valueOf(PAGINATION_THRESHOLD);
+        if (recent || limit <= 0) {
+            limit = PAGINATION_THRESHOLD;
         }
+        /*
+         * Decision: paged or new search
+         */
+        boolean newSearch = pager.getSourceCount() == 0 ? true : page == null;
         if (useIndex) {
             /*
              * Search using index
              */
-            if (pager.getSourceCount() == 0) {
-                List<Long> ids = suggestService.getIdsByQuery(query, limit);
+            if (newSearch) {
+                List<Long> ids = suggestService.getIdsByQuery(query, Long.valueOf(limit));
                 pager.setSourceCount(suggestService.getAllCount(query).intValue());
-                if (limit != null && limit > 0) {
-                    pager.setPageSize(limit.intValue());
-                } else {
-                    pager.setPageSize(PAGINATION_THRESHOLD);
-                }
+                pager.setPageSize(limit);
                 pager.setPage(0);
                 Set<Long> idsSet = new HashSet();
                 idsSet.addAll(ids);
                 body.setPager(pager);
                 body.setResults(reportService.getReports(idsSet));
             } else {
-                if (page != null) {
-                    boolean correct = pager.setPage(page);
-                    if (correct) {
-                        List<Long> ids = suggestService.getIdsByQuery(query,
-                                limit, Long.valueOf(pager.getPageOffset()));
-                        Set<Long> idsSet = new HashSet();
-                        idsSet.addAll(ids);
-                        body.setPager(pager);
-                        body.setResults(reportService.getReports(idsSet));
-                    } else {
-                        body.setResults(new ArrayList<Report>(0));
-                    }
-                } else {
-                    /*
-                     * New search
-                     */
-                    List<Long> ids = suggestService.getIdsByQuery(query, limit);
-                    pager.setSourceCount(suggestService.getAllCount(query).intValue());
-                    if (limit != null && limit > 0) {
-                        pager.setPageSize(limit.intValue());
-                    } else {
-                        pager.setPageSize(PAGINATION_THRESHOLD);
-                    }
-                    pager.setPage(0);
+                boolean correct = pager.setPage(page);
+                if (correct) {
+                    List<Long> ids = suggestService.getIdsByQuery(query,
+                            Long.valueOf(limit), Long.valueOf(pager.getPageOffset()));
                     Set<Long> idsSet = new HashSet();
                     idsSet.addAll(ids);
                     body.setPager(pager);
                     body.setResults(reportService.getReports(idsSet));
+                } else {
+                    body.setResults(new ArrayList<Report>(0));
                 }
             }
         } else {
             /*
              * Direct search in database
              */
-            if (pager.getSourceCount() == 0) {
-                body.setResults(suggestService.getReportsByQuery(query, limit));
+            if (newSearch) {
+                body.setResults(suggestService.getReportsByQuery(query, Long.valueOf(limit)));
                 pager.setSourceCount(suggestService.getAllCount(query).intValue());
-                if (limit != null && limit > 0) {
-                    pager.setPageSize(limit.intValue());
-                } else {
-                    pager.setPageSize(PAGINATION_THRESHOLD);
-                }
+                pager.setPageSize(limit);
                 pager.setPage(0);
                 body.setPager(pager);
             } else {
-                if (page != null) {
-                    boolean correct = pager.setPage(page);
-                    if (correct) {
-                        body.setPager(pager);
-                        body.setResults(suggestService.getReportsByQuery(
-                                query, limit, Long.valueOf(pager.getPageOffset())));
-                    } else {
-                        body.setResults(new ArrayList<Report>(0));
-                    }
-                } else {
-                    /*
-                     * New search
-                     * TODO: manual cache handling
-                     */
-                    body.setResults(suggestService.getReportsByQuery(query, limit));
-                    pager.setSourceCount(suggestService.getAllCount(query).intValue());
-                    if (limit != null) {
-                        if (limit > 0) {
-                            pager.setPageSize(limit.intValue());
-                        }
-                    } else {
-                        pager.setPageSize(MAX_ON_PAGER);
-                    }
-                    pager.setPage(0);
+                boolean correct = pager.setPage(page);
+                if (correct) {
                     body.setPager(pager);
+                    body.setResults(suggestService.getReportsByQuery(query,
+                            Long.valueOf(limit), Long.valueOf(pager.getPageOffset())));
+                } else {
+                    body.setResults(new ArrayList<Report>(0));
                 }
             }
         }
@@ -204,6 +167,7 @@ public class SuggestController {
             @RequestParam(value = "limit", required = false) Long limit,
             Model model) {
         logger.debug("IN GET IDS BY QUERY");
+        
         HttpHeaders headers = new HttpHeaders();
         headers.add("Content-Type", "application/json;charset=utf-8");
         List<Long> body;
@@ -234,6 +198,7 @@ public class SuggestController {
             @RequestParam(value = "limit", required = false) Long limit,
             Model model) {
         logger.debug("IN GET PROMPTS");
+        
         HttpHeaders headers = new HttpHeaders();
         headers.add("Content-Type", "application/json;charset=utf-8");
         ResponseEntity<List<Prompt>> re;

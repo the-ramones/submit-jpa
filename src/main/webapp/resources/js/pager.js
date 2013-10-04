@@ -5,23 +5,31 @@
 // attempt to templating
 var PAGER_HTML = "#ajax_pager()";
 
+/*
+ * Create a pager and returns as a jQuery object (TODO: revert to native DOM object?)
+ * 
+ * @param {type} pager serialized lightweight pager object
+ * @param {type} settings settings to be applied to the pager (currently not used)
+ * @returns {Object} jQuery object that holds pager 
+ */
 function lazy_pager(pager, settings) {
     /* 
      * Defines pager appearance. If, for example equals 3,
      * then '<< 1 2 3 ... 'last' >>' will be drawn
      */
     // Max number of pages in pager
-    var maxOnPager = parseInt(settings.maxOnPager);
+    var maxOnPager = pager.maxOnPager;
     // Number of pages in pager
     var pages = pager.pageCount;
     // Current page
     var active = pager.page + 1;
-    var $pager = $('div').addClass('pagination clearfix');
-    $pager.append($('ul').addClass('clearfix'));
-    var $prev = $('<li><a href="">«</a></li>');
-    var $next = $('<li><a href="">»</a></li>');
+    //var $pager = $('<div>').addClass('pagination clearfix');
+    var $pager = $('<ul>');
+    $pager.addClass('clearfix');
+    var $prev = $('<li><a>«</a></li>');
+    var $next = $('<li><a>»</a></li>');
     var $spacer = $('<li class="spacer">…</li>');
-    var elem = '<li><a href=""></a></li>';
+    var elem = '<li><a></a></li>';
     if (pages > maxOnPager) {
         // draw 'spacer' and 'last available page' anchors
 
@@ -30,10 +38,10 @@ function lazy_pager(pager, settings) {
          * Otherwise: << 96 97 98 99 100 >>
          */
         var delta = pages - active;
-        if (active === 1) {
+        if (active !== 1) {
             // append 'prev' anchor
             $pager.append($prev);
-            $.prev.data('page', 'prev');
+            $prev.data('page', 'prev');
         }
         if (active > 1) {
             if (delta <= maxOnPager) {
@@ -50,22 +58,24 @@ function lazy_pager(pager, settings) {
             var $anchor = $(elem);
             $pager.append($anchor);
             if (i === active) {
-                $anchor.addClass('current');
+                $anchor.find('a').addClass('current');
             }
-            $anchor.addClass('active');
+            $anchor.find('a').addClass('active');
             $anchor.data('page', i);
+            $anchor.find('a').text(i);
         }
         if (delta > maxOnPager) {
             $pager.append($spacer);
         }
         var last = pages;
         $last = $(elem);
-        $pager.append($last)
-        $last.addClass('active');
+        $pager.append($last);
+        $last.find('a').addClass('active');
         if (last === active) {
-            $last.addClass('current');
+            $last.find('a').addClass('current');
         }
         $last.data('page', last);
+        $last.find('a').text(last);
         if (active < pages) {
             $pager.append($next);
             $next.data('page', 'next');
@@ -79,15 +89,19 @@ function lazy_pager(pager, settings) {
         for (var i = 1; i <= pages; i++) {
             $anchor = $(elem);
             $pager.append($anchor);
-            $anchor.addClass('active');
+            $anchor.find('a').addClass('active');
             if (i === active) {
-                $anchor.addClass('current');
+                $anchor.find('a').addClass('current');
             }
             $anchor.data('page', i);
+            $anchor.find('a').text(i);
         }
         if (active < pages) {
             $pager.append($next);
             $next.data('page', 'next');
         }
     }
+    var $wrapper = $('<div class="pagination clearfix"></div>');
+    $wrapper.html($pager);
+    return $wrapper;
 }

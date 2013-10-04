@@ -96,18 +96,18 @@
         });
     });
 
-    function onSearchSuccess(reports) {
+    function onSearchSuccess(resultsPager) {
         $('body').addClass('stop-scrolling')
         var $results = $(".results-wrap");
         $results.empty();
-        var bound = reports.length;
+        var bound = resultsPager.results.length;
         if (bound > 0) {
             if ($("table.table").size() === 0) {
                 $(tableHtml).appendTo($results);
             }        
             var $table = $results.find(".table tbody");
             for (var i = 0; i < bound; i++) {
-                var report = reports[i];
+                var report = resultsPager.results[i];
                 var $row = $(rowHtml);
                 $children = $row.children();
                 $children.get(0).innerHTML = report.id;
@@ -122,9 +122,13 @@
             /*
             * On-click modal appearing
             */
-        $(".table tbody tr").click(function(event) {
-            $(this).toggleClass("selected");
-        });
+            $(".table tbody tr").click(function(event) {
+                $(this).toggleClass("selected");
+            });
+            if (resultsPager.pager.pageCount > 1) {
+                var $pager = lazy_pager(resultsPager.pager);
+                $pager.insertBefore($('#addToWatchlist'));
+            }
         } else {
             $results.text(CONTENT_NOTHING_FOUND);
         }
@@ -147,8 +151,51 @@
     }  
    
     $(document).ready(function() {
-        //TODO:
+
+    /*
+     * Suggests
+     */        
+    $("input[name='search']").keypress(function(event) {
+        if ($("#use-index-checkbox").is(":checked")) {
+            if ($(".subnav li").size() === 1) {
+                for (var i = 0; i < 3; i++) {
+                    $(".subnav li").clone().appendTo($(".subnav"));
+                }
+            }
+        } else {
+            var query = $('input[name="search"]').val();
+            alert(query);
+            $.ajax(promptUrl, { 
+                   method: "GET",                  
+                   async: true;
+                   cached: false;
+                   dataType: 'json'
+                   data: {'query': query},
+                   success: makeSuggest
+            );
+        }
+            $(".subnav li").css({
+                visibility: 'visible',
+                top: '120%',
+                opacity: "1",
+                transition: "all"
+            });
+            $("body").click(function(e) {
+                $(".subnav li").css({
+                    visibility: 'hidden'});
+            });
     });
+
+    });
+
+    function makeSuggest(prompts) {
+        var bound = prompts.length;
+        for (var i = 0; i < bound; i++) {
+            var prompt = prompts[i];
+            $('<li>').
+        }
+
+    }
 ]]#
 </script>
 
