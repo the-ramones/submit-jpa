@@ -1,7 +1,15 @@
-form[name="search-form"] {
-    transition: resize ease-in-out 1s;
+#progress-container {
+    float: right;
+    display: inline-block;
+    padding-top: 14px;
 }
 
+#progress-container > label[name='index-progress-label'] {
+    text-align: center;
+    position: relative;        
+    display: block;
+    color: rgb(204, 103, 26);
+}
 /*progress bar*/
 progress {
     appearance: none;
@@ -54,7 +62,7 @@ input[type=checkbox].css-checkbox + label.css-label {
     font-size:15px;
     vertical-align:middle;
     cursor:pointer;
-    float: right;
+    float: left;
     top: 4px;
 }
 
@@ -71,13 +79,7 @@ input[type=checkbox].css-checkbox:checked + label.css-label {
     padding: 10px;
     display: inline-block;
     float: right;
-}
-
-#index-check > label[name='index-progress-label'] {
-    text-align: center;
-    position: relative;        
-    display: block;
-    color: rgb(204, 103, 26);
+    width: 25%;
 }
 
 #index-check checkbox {    

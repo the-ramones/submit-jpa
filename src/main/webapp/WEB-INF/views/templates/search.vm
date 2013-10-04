@@ -5,10 +5,13 @@
             <input type="button" name="search-button" id="search_button" />
             <input type="text" name="search" value="" placeholder="#springMessage('content.search.placeholder')" autocompetion="off" />
             <div id="index-check">
-
                 <input id="use-index-checkbox" class="css-checkbox" type="checkbox" />
                 <label for="use-index-checkbox" name="use-index-checkbox" class="css-label">#springMessage('content.useindex')</label>
                 <br />
+                <input id="only-recent-checkbox" class="css-checkbox" type="checkbox" />
+                <label for="only-recent-checkbox" name="use-index-checkbox" class="css-label">#springMessage('content.onlyrecent')</label>
+            </div>
+            <div id="progress-container">
                 </label><progress id="index-progress" value="0" max="100" style="display: none;"></progress>
                 <br />
                 <label for="index-progress" name="index-progress-label" style="display: none;">
@@ -65,8 +68,10 @@
         /*
          * query string
          */
+        var useIndex = document.getElementById("use-index-checkbox").checked;
+        var onlyRecent = document.getElementById("only-recent-checkbox").checked;        
         var query = 'query=' + encodeURI($("input[name='search']").val().trim()
-            + '&limit=' + limit);
+            + '&limit=' + limit + '&useIndex=' + useIndex + '&recent' + onlyRecent);
         //TODO: timings
         upload();
         var startTime = new Date();
@@ -86,12 +91,12 @@
                 $("p.stats").removeClass("invisible");
                 console.log("Error in ajax request to Suggest service");
             },
-            success: onSuggestSuccess,
+            success: onSearchSuccess,
             dataType: 'json'
         });
     });
 
-    function onSuggestSuccess(reports) {
+    function onSearchSuccess(reports) {
         $('body').addClass('stop-scrolling')
         var $results = $(".results-wrap");
         $results.empty();

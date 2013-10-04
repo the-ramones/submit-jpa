@@ -28,6 +28,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.SessionAttributes;
 import sp.model.Report;
 import sp.model.ajax.Prompt;
+import sp.model.ajax.ResultPager;
 import sp.service.ReportService;
 import sp.service.SuggestService;
 import sp.util.SpLazyPager;
@@ -74,73 +75,104 @@ public class SuggestController {
     }
 
     @RequestMapping(value = "", method = RequestMethod.GET)
-    public ResponseEntity<List<Report>> getReprotsByQuery(
+    public ResponseEntity<ResultPager> getReprotsByQuery(
             @RequestParam("query") String query,
             @ModelAttribute("suggest-pager") SpLazyPager pager,
             @RequestParam(value = "limit", required = false) Long limit,
             @RequestParam(value = "p", required = false) String page,
             @RequestParam(value = "useIndex", required = false) boolean useIndex,
+            @RequestParam(value = "recent", required = false) boolean recent,
             Model model) {
         logger.debug("IN GET REPORS BY QUERY");
 
         HttpHeaders headers = new HttpHeaders();
         headers.add("Content-Type", "application/json;charset=utf-8");
-        List<Report> body;
+        ResultPager body = new ResultPager();
 
+        /*
+         * Contsrain result of the rearch if recend records needed.
+         */
+        if (recent) {
+            limit = Long.valueOf(PAGINATION_THRESHOLD);
+        }
         if (useIndex) {
             /*
              * Search using index
              */
             if (pager.getSourceCount() == 0) {
-                List<Long> ids = suggestService.getIdsByQuery(query, null);
-                pager.setSourceCount(ids.size());
-                if (limit != null) {
-                    if (limit > 0) {
-                        pager.setPageSize(limit.intValue());
-                    } else {
-                        pager.setPageSize(PAGINATION_THRESHOLD);
-                    }
+                List<Long> ids = suggestService.getIdsByQuery(query, limit);
+                pager.setSourceCount(suggestService.getAllCount(query).intValue());
+                if (limit != null && limit > 0) {
+                    pager.setPageSize(limit.intValue());
                 } else {
                     pager.setPageSize(PAGINATION_THRESHOLD);
                 }
                 pager.setPage(0);
                 Set<Long> idsSet = new HashSet();
                 idsSet.addAll(ids);
-                body = reportService.getReports(idsSet);
+                body.setPager(pager);
+                body.setResults(reportService.getReports(idsSet));
             } else {
+                if (page != null) {
+                    boolean correct = pager.setPage(page);
+                    if (correct) {
+                        List<Long> ids = suggestService.getIdsByQuery(query,
+                                limit, Long.valueOf(pager.getPageOffset()));
+                        Set<Long> idsSet = new HashSet();
+                        idsSet.addAll(ids);
+                        body.setPager(pager);
+                        body.setResults(reportService.getReports(idsSet));
+                    } else {
+                        body.setResults(new ArrayList<Report>(0));
+                    }
+                } else {
+                    /*
+                     * New search
+                     */
+                    List<Long> ids = suggestService.getIdsByQuery(query, limit);
+                    pager.setSourceCount(suggestService.getAllCount(query).intValue());
+                    if (limit != null && limit > 0) {
+                        pager.setPageSize(limit.intValue());
+                    } else {
+                        pager.setPageSize(PAGINATION_THRESHOLD);
+                    }
+                    pager.setPage(0);
+                    Set<Long> idsSet = new HashSet();
+                    idsSet.addAll(ids);
+                    body.setPager(pager);
+                    body.setResults(reportService.getReports(idsSet));
+                }
             }
         } else {
             /*
              * Direct search in database
              */
             if (pager.getSourceCount() == 0) {
-                body = suggestService.getReportsByQuery(query, limit);
+                body.setResults(suggestService.getReportsByQuery(query, limit));
                 pager.setSourceCount(suggestService.getAllCount(query).intValue());
-                if (limit != null) {
-                    if (limit > 0) {
-                        pager.setPageSize(limit.intValue());
-                    } else {
-                        pager.setPageSize(PAGINATION_THRESHOLD);
-                    }
+                if (limit != null && limit > 0) {
+                    pager.setPageSize(limit.intValue());
                 } else {
                     pager.setPageSize(PAGINATION_THRESHOLD);
                 }
                 pager.setPage(0);
+                body.setPager(pager);
             } else {
                 if (page != null) {
                     boolean correct = pager.setPage(page);
                     if (correct) {
-                        body = suggestService.getReportsByQuery(
-                                query, limit, Long.valueOf(pager.getPageOffset()));
+                        body.setPager(pager);
+                        body.setResults(suggestService.getReportsByQuery(
+                                query, limit, Long.valueOf(pager.getPageOffset())));
                     } else {
-                        body = new ArrayList<Report>(0);
+                        body.setResults(new ArrayList<Report>(0));
                     }
                 } else {
                     /*
                      * New search
                      * TODO: manual cache handling
                      */
-                    body = suggestService.getReportsByQuery(query, limit);
+                    body.setResults(suggestService.getReportsByQuery(query, limit));
                     pager.setSourceCount(suggestService.getAllCount(query).intValue());
                     if (limit != null) {
                         if (limit > 0) {
@@ -150,6 +182,7 @@ public class SuggestController {
                         pager.setPageSize(MAX_ON_PAGER);
                     }
                     pager.setPage(0);
+                    body.setPager(pager);
                 }
             }
         }
@@ -161,7 +194,7 @@ public class SuggestController {
         logger.error("limit: {}", limit);
         logger.error("BODY: {}", body);
 
-        ResponseEntity<List<Report>> re = new ResponseEntity<List<Report>>(body, headers, HttpStatus.OK);
+        ResponseEntity<ResultPager> re = new ResponseEntity<ResultPager>(body, headers, HttpStatus.OK);
         return re;
     }
 
