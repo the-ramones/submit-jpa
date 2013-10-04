@@ -223,7 +223,7 @@ public class ReportController {
                 try {
                     Integer intPage = Integer.valueOf(page);
                     //TODO: fix validation                                        
-                    if ((intPage > 0) && (intPage < pager.getPageCount())) {
+                    if ((intPage > 0) && (intPage <= pager.getPageCount())) {
                         pager.setPage(intPage - 1);
                     }
                 } catch (NumberFormatException ex) {

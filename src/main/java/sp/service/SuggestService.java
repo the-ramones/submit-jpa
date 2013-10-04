@@ -17,9 +17,15 @@ public interface SuggestService {
 
     public List<Long> getIdsByQuery(String query, Long limit);
 
+    public List<Long> getIdsByQuery(String query, Long limit, Long offset);
+
     public List<Report> getReportsByQuery(String query);
 
     public List<Report> getReportsByQuery(String query, Long limit);
+
+    public List<Report> getReportsByQuery(String query, Long limit, Long offset);
+
+    public List<Prompt> getPrompts(String query);
 
     public List<Prompt> getPrompts(String query, Long limit);
 

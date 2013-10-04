@@ -44,9 +44,9 @@
                 <li><a href="$page_url" class="#if($page eq $active)current#end active">$page</a></li>
             #end
             #if($delta gt $maxOnPager)<li class="spacer">…</li>#end
-            #set( $last = $pages - 1)
+            #set( $last = $pages )
             #set( $last_url = $url + '?p=' + $last )
-            <li><a href="$last_url">$last</a></li>   
+            <li><a href="$last_url" class="#if($last eq $active)current#end active">$last</a></li>   
             #set( $next = $url + '?p=next' )
             <li><a href="$next" #if($active eq $pages)class="disabled"#end>»</a></li>
         #{else}

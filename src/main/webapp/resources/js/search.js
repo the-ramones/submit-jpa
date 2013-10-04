@@ -3,6 +3,66 @@
  */
 $(document).ready(function() {
 
+    addSuggestToSearchInput();
+
+    /*
+     * On-click modal appearing
+     */
+    $(".table tbody tr").click(function(event) {
+        if (!$(event.target).is(".button-block, .action")) {
+            var buttons = $(".button-block");
+            $(this).toggleClass("selected");
+        }
+        // TODO: add modal dialog
+    });
+
+    $(".table tbody tr").dblclick(function(event) {
+        var buttons = $(".button-block");
+        var tr = $(this);
+        buttons.css({
+            top: $(this).position().top + $(this).height(),
+            right: "20px"//$(this).position().left + $(this).width()
+        });
+        // storing ID of clicked report for use with Ajax CRUD operations
+        var id_val = tr.find("td:first").text().trim();
+        buttons.data("id", id_val);
+        tr.addClass("active-row");
+        // append buttons to the row
+        $(this).append(buttons);
+        buttons.removeClass("hidden");
+    });
+
+    /*
+     * Button-group addition
+     */
+    $(".table tbody tr").mouseenter(function(event) {
+        // TODO 
+    });
+
+    $(".table tbody tr").mouseleave(function(avent) {
+        var buttons = $(".button-block");
+        buttons.addClass("hidden");
+    });
+
+    /*
+     * Action on 'use-index' checkbox check
+     */
+    $("#use-index-checkbox").click(function(e) {
+        if ($(this).is(":checked")) {
+            var $pbar = $("#index-progress");
+            $pbar.show();
+            $('label[name="index-progress-label"]').show();
+            progress($pbar);
+        }
+    });
+});
+
+function addSuggestToSearchInput() {
+
+    /*
+     * Hide suggest list and fill in the search input with the test from
+     * the suggester was clicked on
+     */
     $(".subnav").on("click", "a", function(e) {
         e.preventDefault();
         /*
@@ -54,73 +114,31 @@ $(document).ready(function() {
     });
 
     $("input[name='search']").keypress(function(event) {
-        if ($(".subnav li").size() === 1) {
-            for (var i = 0; i < 3; i++) {
-                $(".subnav li").clone().appendTo($(".subnav"));
+        if ($("#use-index-checkbox").is(":checked")) {
+            if ($(".subnav li").size() === 1) {
+                for (var i = 0; i < 3; i++) {
+                    $(".subnav li").clone().appendTo($(".subnav"));
+                }
             }
-        }
-        $(".subnav li").css({
-            visibility: 'visible',
-            top: '120%',
-            opacity: "1",
-            transition: "all"
-        });
-        $("body").click(function(e) {
             $(".subnav li").css({
-                visibility: 'hidden'});
-        });
-    });
-
-    /*
-     * On-click modal appearing
-     */
-    $(".table tbody tr").click(function(event) {
-        if (!$(event.target).is(".button-block, .action")) {
-            var buttons = $(".button-block");
-            $(this).toggleClass("selected");
-        }
-        // TODO: add modal dialog
-    });
-
-    $(".table tbody tr").dblclick(function(event) {
-        var buttons = $(".button-block");
-        var tr = $(this);
-        buttons.css({
-            top: $(this).position().top + $(this).height(),
-            right: "20px"//$(this).position().left + $(this).width()
-        });
-        // storing ID of clicked report for use with Ajax CRUD operations
-        var id_val = tr.find("td:first").text().trim();
-        buttons.data("id", id_val);
-        tr.addClass("active-row");
-        // append buttons to the row
-        $(this).append(buttons);
-        buttons.removeClass("hidden");
-    });
-
-    /*
-     * Button-group addition
-     */
-    $(".table tbody tr").mouseenter(function(event) {
-        // TODO 
-    });
-
-    $(".table tbody tr").mouseleave(function(avent) {
-        var buttons = $(".button-block");
-        buttons.addClass("hidden");
-    });
-
-    $("#use-index-checkbox").click(function(e) {
-        if ($(this).is(":checked")) {
-            var $pbar = $("#index-progress");
-            $pbar.show();
-            $('label[name="index-progress-label"]').show();
-            progress($pbar);
+                visibility: 'visible',
+                top: '120%',
+                opacity: "1",
+                transition: "all"
+            });
+            $("body").click(function(e) {
+                $(".subnav li").css({
+                    visibility: 'hidden'});
+            });
         }
     });
-});
+}
 
 function progress($pbar) {
+    /*
+     * Prevent unneccesary 'bounce' scrolling
+     */
+    $("html").addClass("stop-scrolling");
     var time = 10;
     var max = parseInt($pbar.attr('max'));
     var percent = max / 100;
@@ -134,11 +152,16 @@ function progress($pbar) {
             $pbar.attr('value', 0);
             $pbar.hide();
             $('label[name="index-progress-label"]').hide();
+            /*
+             * Activate suggest feature after successful indexing completion on
+             * the server
+             */
         }
     };
     var interval = setInterval(function() {
         animate();
     }, time);
+    $("html").removeClass("stop-scrolling");
 }
 
 

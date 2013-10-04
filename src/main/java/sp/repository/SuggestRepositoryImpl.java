@@ -60,31 +60,16 @@ public class SuggestRepositoryImpl implements SuggestRepository {
 
     @Override
     public List<Long> getIdsByQuery(String query) {
-        if (query != null) {
-            String nQuery = normalizeQuery(query);
-
-            CriteriaBuilder cb = em.getCriteriaBuilder();
-            CriteriaQuery<Long> cq = cb.createQuery(Long.class);
-
-            Root<Report> report = cq.from(Report.class);
-
-            cq.select(report.get(Report_.id))
-                    .where(cb.or(
-                    cb.like(cb.lower(report.get(Report_.performer)), nQuery),
-                    cb.like(cb.lower(report.get(Report_.activity)), nQuery)));
-
-            cq.orderBy(cb.desc(report.get(Report_.startDate)));
-
-            TypedQuery<Long> idQuery = em.createQuery(cq);
-
-            return (List<Long>) idQuery.getResultList();
-        } else {
-            return null;
-        }
+        return getIdsByQuery(query, null, null);
     }
 
     @Override
     public List<Long> getIdsByQuery(String query, Long limit) {
+        return getIdsByQuery(query, limit, null);
+    }
+
+    @Override
+    public List<Long> getIdsByQuery(String query, Long limit, Long offset) {
         if (query != null) {
             String nQuery = normalizeQuery(query);
 
@@ -102,14 +87,19 @@ public class SuggestRepositoryImpl implements SuggestRepository {
 
             TypedQuery<Long> idQuery = em.createQuery(cq);
 
-            if (limit > 0) {
-                return (List<Long>) idQuery.setMaxResults(limit.intValue()).getResultList();
-            } else {
-                return (List<Long>) idQuery.getResultList();
+            if (limit != null) {
+                if (limit > 0) {
+                    idQuery.setMaxResults(limit.intValue());
+                }
             }
-        } else {
-            return null;
+            if (offset != null) {
+                if (offset > 0) {
+                    idQuery.setFirstResult(offset.intValue());
+                }
+            }
+            return idQuery.getResultList();
         }
+        return null;
     }
 
     /**
@@ -121,18 +111,24 @@ public class SuggestRepositoryImpl implements SuggestRepository {
      */
     @Override
     public List<Report> getReportsByQuery(String query) {
+        return getReportsByQuery(query, null, null);
+    }
+
+    @Override
+    public List<Report> getReportsByQuery(String query, Long limit) {
+        return getReportsByQuery(query, limit, null);
+    }
+
+    @Override
+    public List<Report> getReportsByQuery(String query, Long limit, Long offset) {
         if (query != null) {
             /*
              * Normalize query string
              */
             String nQuery = normalizeQuery(query);
-            logger.error("Normalized query: {}", nQuery);
             /*
              * Create a criteria builder and criteria query. Type-safe
              */
-            logger.error("Entity manager: {}", em);
-            logger.error("Entity manager properties: {}", em.getProperties());
-            logger.error("Entity manager properties: {}", em.isOpen());
             CriteriaBuilder cb = em.getCriteriaBuilder();
             CriteriaQuery<Report> cq = cb.createQuery(Report.class);
             /*
@@ -155,7 +151,17 @@ public class SuggestRepositoryImpl implements SuggestRepository {
             cq.orderBy(cb.desc(report.get(Report_.startDate)));
 
             TypedQuery<Report> reportQuery = em.createQuery(cq);
-            logger.error("Report query: {}", reportQuery.toString());
+
+            if (limit != null) {
+                if (limit > 0) {
+                    reportQuery.setMaxResults(limit.intValue());
+                }
+            }
+            if (offset != null) {
+                if (offset > 0) {
+                    reportQuery.setFirstResult(offset.intValue());
+                }
+            }
             return reportQuery.getResultList();
         } else {
             return null;
@@ -163,46 +169,8 @@ public class SuggestRepositoryImpl implements SuggestRepository {
     }
 
     @Override
-    public List<Report> getReportsByQuery(String query, Long limit) {
-        if (query != null) {
-            /*
-             * Normalize query string
-             */
-            String nQuery = normalizeQuery(query);
-            /*
-             * Create a criteria builder and criteria query. Type-safe
-             */
-            CriteriaBuilder cb = em.getCriteriaBuilder();
-            CriteriaQuery<Report> cq = cb.createQuery(Report.class);
-            /*
-             * Create a root element of a query. Additionally, can make joins, 
-             * multiple root elements
-             */
-            Root<Report> report = cq.from(Report.class);
-            /*
-             * Dynamic metamodel
-             */
-            Predicate predicatePerformer;
-            predicatePerformer = cb.like(cb.lower(report.get(Report_.performer)), nQuery);
-            Predicate predicateActivity;
-            predicateActivity = cb.like(cb.lower(report.get(Report_.activity)), nQuery);
-
-            cq.select(report)
-                    .where(cb.or(predicatePerformer, predicateActivity))
-                    .orderBy(cb.asc(report.get(Report_.performer)));
-
-            cq.orderBy(cb.desc(report.get(Report_.startDate)));
-
-            TypedQuery<Report> reportQuery = em.createQuery(cq);
-
-            if (limit > 0) {
-                return reportQuery.setMaxResults(limit.intValue()).getResultList();
-            } else {
-                return reportQuery.getResultList();
-            }
-        } else {
-            return null;
-        }
+    public List<Prompt> getPrompts(String query) {
+        return getPrompts(query, null);
     }
 
     @Override
@@ -228,7 +196,7 @@ public class SuggestRepositoryImpl implements SuggestRepository {
             cq.orderBy(cb.desc(report.get(Report_.startDate)));
 
             TypedQuery<Prompt> resultQuery = em.createQuery(cq);
-            if (limit > 0) {
+            if ((limit != null) && (limit > 0)) {
                 resultQuery.setMaxResults(limit.intValue());
             }
             return resultQuery.getResultList();

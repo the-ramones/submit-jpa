@@ -23,7 +23,7 @@
              * If $delta > $$maxOnPager, renders: << 2 3 4 5 ... 100 >>
              * Otherwise: << 96 97 98 99 100 >>
              *#
-            #set( $delta = $pages - $active )
+            #set( $delta = $pages - $active  )
             ## draw 'spacer' and 'last available page' anchor
             #set( $prev = $url + '?p=prev' + '&search_id=' + $search_id )
             <li><a href="$prev" #if($active eq 1)class="disabled"#end>«</a></li>            
@@ -44,9 +44,9 @@
                 <li><a href="$page_url" class="#if($page eq $active)current#end active">$page</a></li>
             #end
             #if($delta gt $maxOnPager)<li class="spacer">…</li>#end
-            #set( $last = $pages - 1)
-            #set( $last_url = $url + '?p=' + $last + '&search_id=' + $search_id )
-            <li><a href="$last_url">$last</a></li>   
+            #set( $last = $pages )
+            #set( $last_url = $url + '?p=' + $last + '&search_id=' + $search_id )            
+            <li><a href="$last_url" class="#if($last eq $active)current#end active">$last</a></li>   
             #set( $next = $url + '?p=next' + '&search_id=' + $search_id )
             <li><a href="$next" #if($active eq $pages)class="disabled"#end>»</a></li>
         #{else}

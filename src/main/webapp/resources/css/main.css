@@ -1,3 +1,7 @@
+form[name="search-form"] {
+    transition: resize ease-in-out 1s;
+}
+
 /*progress bar*/
 progress {
     appearance: none;
@@ -63,7 +67,6 @@ input[type=checkbox].css-checkbox:checked + label.css-label {
 }
 
 #index-check {
-    border: 1px dotted black;
     margin-top: 10px;
     padding: 10px;
     display: inline-block;

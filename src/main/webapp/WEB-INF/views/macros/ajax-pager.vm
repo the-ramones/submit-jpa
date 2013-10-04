@@ -1,0 +1,18 @@
+#*
+ * Defines a scaffoldings for a pager to be used with AJAX search.
+ *#
+#macro (ajax_pager $pager)
+#* 
+ * Defines pager appearance. 
+ * If, for example equals 3, then '<< 1 2 3 ... 'last' >>' will be drawn
+ *#
+<div class="pagination clearfix"> \
+    <ul class="clearfix"> \
+        <li><a href="" class="disabled">«</a></li> \
+        <li><a href="" class="current"></a></li> \
+        <li><a href=""></a></li> \
+        <li class="spacer">…</li> \
+        <li><a href="">»</a></li> \
+    </ul> \
+</div> \
+#end
