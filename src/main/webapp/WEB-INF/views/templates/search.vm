@@ -72,10 +72,12 @@
         /*
          * query string
          */
+        var suggest = document.getElementById("suggest-checkbox").checked;
         var useIndex = document.getElementById("use-index-checkbox").checked;
         var onlyRecent = document.getElementById("only-recent-checkbox").checked;        
         var query = 'query=' + encodeURI($("input[name='search']").val().trim()
-            + '&limit=' + limit + '&useIndex=' + useIndex + '&recent' + onlyRecent);
+            + '&limit=' + limit + '&useIndex=' + useIndex + '&recent=' + onlyRecent
+            + '&suggest=' + suggest);
         //TODO: timings
         upload();
         var startTime = new Date();

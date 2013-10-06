@@ -1,12 +1,11 @@
 package sp.suggest;
 
 import java.util.Date;
-import java.util.LinkedList;
 import java.util.List;
-import java.util.concurrent.ConcurrentHashMap;
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
-import org.springframework.context.annotation.Lazy;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 import sp.model.Report;
 import sp.service.ReportService;
@@ -16,7 +15,6 @@ import sp.service.ReportService;
  *
  * @author Paul Kulitski
  */
-@Lazy
 @Component
 public class SuggestIndexCreator implements IndexCreator {
 
@@ -24,10 +22,13 @@ public class SuggestIndexCreator implements IndexCreator {
     SuggestIndex suggestIndex;
     @Inject
     ReportService reportService;
+    private static final Logger logger = LoggerFactory.getLogger(SuggestIndexCreator.class);
 
     @PostConstruct
     public void initIndex() {
-        updateIndex();
+        logger.debug("Initializing a Reports! Suggest index. Update fixed rate has been set to {}", UPDATE_RATE_HOURLY);
+        reloadIndex();
+        logger.error("INDEX: {}", suggestIndex.getIndex());
     }
     private static int MILISECONDS_IN_HOUR = 1 * 60 * 60 * 1000;
 
@@ -46,8 +47,6 @@ public class SuggestIndexCreator implements IndexCreator {
             suggestIndex.getProcessLock().lock();
             suggestIndex.setProcessing(true);
 
-            ConcurrentHashMap<String, LinkedList> swapIndex =
-                    suggestIndex.getSwapIndex();
             List<Report> reports = reportService.getAllReports();
             iterateAndAddToSwap(reports);
             /*

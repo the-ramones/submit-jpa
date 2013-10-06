@@ -12,4 +12,6 @@ public interface IndexSearcher {
     List<Long> search(String query);
 
     List<Long> search(String query, int limit);
+    
+    Long count(String query);
 }

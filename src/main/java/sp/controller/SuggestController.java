@@ -110,23 +110,38 @@ public class SuggestController {
              * Search using index
              */
             if (newSearch) {
-                List<Long> ids = suggestService.getIdsByQuery(query, Long.valueOf(limit));
-                pager.setSourceCount(suggestService.getAllCount(query).intValue());
-                pager.setPageSize(limit);
-                pager.setPage(0);
-                Set<Long> idsSet = new HashSet();
-                idsSet.addAll(ids);
-                body.setPager(pager);
-                body.setResults(reportService.getReports(idsSet));
-            } else {
-                boolean correct = pager.setPage(page);
-                if (correct) {
-                    List<Long> ids = suggestService.getIdsByQuery(query,
-                            Long.valueOf(limit), Long.valueOf(pager.getPageOffset()));
+                List<Long> ids = indexSearcher.search(query, limit);
+
+                logger.error("!! IDS: {}", ids);
+
+                if (!ids.isEmpty()) {
+                    pager.setSourceCount(indexSearcher.count(query).intValue());
+                    pager.setPageSize(limit);
+                    pager.setPage(0);
                     Set<Long> idsSet = new HashSet();
                     idsSet.addAll(ids);
                     body.setPager(pager);
                     body.setResults(reportService.getReports(idsSet));
+                } else {
+                    body.setResults(new ArrayList<Report>(0));
+                }
+            } else {
+                boolean correct = pager.setPage(page);
+                if (correct) {
+                    List<Long> ids = indexSearcher.search(query, limit);
+                    ids = ids.subList(pager.getPageOffset(),
+                            pager.getPageOffset() + limit);
+
+                    logger.error("!! IDS: {}", ids);
+
+                    if (!ids.isEmpty()) {
+                        Set<Long> idsSet = new HashSet();
+                        idsSet.addAll(ids);
+                        body.setPager(pager);
+                        body.setResults(reportService.getReports(idsSet));
+                    } else {
+                        body.setResults(new ArrayList<Report>(0));
+                    }
                 } else {
                     body.setResults(new ArrayList<Report>(0));
                 }
