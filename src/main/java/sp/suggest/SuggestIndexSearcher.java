@@ -24,22 +24,22 @@ public class SuggestIndexSearcher implements IndexSearcher, IndexSuggester {
 
     private final static int MAX_RESULT_AMOUNT = 10000;
     
-    private String normalizeQuery(String query) {
+    private synchronized String normalizeQuery(String query) {
         return query.trim().toLowerCase();
     }
 
     @Override
-    public List<Long> search(String query) {
+    public synchronized List<Long> search(String query) {
         return search(query, MAX_RESULT_AMOUNT);
     }
 
     @Override
-    public List<String> suggest(String query) {
+    public synchronized List<String> suggest(String query) {
         return suggest(query, MAX_RESULT_AMOUNT);
     }
 
     @Override
-    public List<Long> search(String query, int limit) {
+    public synchronized List<Long> search(String query, int limit) {
         int count = 0;
         String nQuery = normalizeQuery(query);
         Set<String> keys = suggestIndex.getKeys();
@@ -66,7 +66,7 @@ public class SuggestIndexSearcher implements IndexSearcher, IndexSuggester {
     }
 
     @Override
-    public List<String> suggest(String query, int limit) {
+    public synchronized List<String> suggest(String query, int limit) {
         String nQuery = normalizeQuery(query);
         int count = 0;
         StringBuilder sb = new StringBuilder(nQuery.length());

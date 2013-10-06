@@ -19,7 +19,6 @@ public interface Index {
     /**
      * Should not change elements
      *
-     * @param limit
      * @return
      */
     Set<String> getKeys();

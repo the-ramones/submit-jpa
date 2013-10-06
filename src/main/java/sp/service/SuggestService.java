@@ -30,4 +30,6 @@ public interface SuggestService {
     public List<Prompt> getPrompts(String query, Long limit);
 
     public List<String> getPromptsAsString(String query, Long limit);
+
+    public List<String> getPromptStrings(String query, Long limit);
 }

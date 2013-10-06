@@ -82,4 +82,9 @@ public class SuggestServiceImpl implements SuggestService {
     public List<Prompt> getPrompts(String query) {
         return suggestRepository.getPrompts(query);
     }
+
+    @Override
+    public List<String> getPromptStrings(String query, Long limit) {
+        return suggestRepository.getPromptStrings(query, limit);
+    }
 }

@@ -31,6 +31,7 @@ import sp.model.ajax.Prompt;
 import sp.model.ajax.ResultPager;
 import sp.service.ReportService;
 import sp.service.SuggestService;
+import sp.suggest.SuggestIndexSearcher;
 import sp.util.SpLazyPager;
 
 /**
@@ -53,6 +54,8 @@ public class SuggestController {
     private int MAX_ON_PAGER;
     @Value("${pagination.threshold}")
     private int PAGINATION_THRESHOLD;
+    @Value("${prompt.limit.default}")
+    private int DEFAULT_LIMIT;
 
     @ModelAttribute("settings")
     public Map<String, String> populateReferenceData() {
@@ -167,7 +170,7 @@ public class SuggestController {
             @RequestParam(value = "limit", required = false) Long limit,
             Model model) {
         logger.debug("IN GET IDS BY QUERY");
-        
+
         HttpHeaders headers = new HttpHeaders();
         headers.add("Content-Type", "application/json;charset=utf-8");
         List<Long> body;
@@ -195,19 +198,51 @@ public class SuggestController {
 
     @RequestMapping(value = "prompt", method = RequestMethod.GET)
     public ResponseEntity<List<Prompt>> getPrompts(@RequestParam("query") String query,
-            @RequestParam(value = "limit", required = false) Long limit,
+            @RequestParam(value = "limit", required = false) int limit,
             Model model) {
         logger.debug("IN GET PROMPTS");
-        
+
         HttpHeaders headers = new HttpHeaders();
         headers.add("Content-Type", "application/json;charset=utf-8");
         ResponseEntity<List<Prompt>> re;
         if (limit > 0) {
             re = new ResponseEntity<List<Prompt>>(
-                    suggestService.getPrompts(query, limit), headers, HttpStatus.OK);
+                    suggestService.getPrompts(query, Long.valueOf(limit)), headers, HttpStatus.OK);
         } else {
             re = new ResponseEntity<List<Prompt>>(
-                    suggestService.getPrompts(query, -1L), headers, HttpStatus.OK);
+                    suggestService.getPrompts(query, Long.valueOf(DEFAULT_LIMIT)), headers, HttpStatus.OK);
+        }
+        return re;
+    }
+    @Inject
+    SuggestIndexSearcher indexSearcher;
+
+    @RequestMapping(value = "prompt-strings", method = RequestMethod.GET)
+    public ResponseEntity<List<String>> getPromptsAsString(@RequestParam("query") String query,
+            @RequestParam(value = "limit", required = false) int limit,
+            @RequestParam(value = "useIndex", required = false) boolean useIndex,
+            Model model) {
+        logger.debug("IN GET PROMPTS AS STRINGS");
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("Content-Type", "application/json;charset=utf-8");
+        ResponseEntity<List<String>> re;
+        if (useIndex) {
+            if (limit > 0) {
+                re = new ResponseEntity<List<String>>(
+                        indexSearcher.suggest(query, limit), headers, HttpStatus.OK);
+            } else {
+                re = new ResponseEntity<List<String>>(
+                        indexSearcher.suggest(query), headers, HttpStatus.OK);
+            }
+        } else {
+            if (limit > 0) {
+                re = new ResponseEntity<List<String>>(
+                        suggestService.getPromptStrings(query, Long.valueOf(limit)), headers, HttpStatus.OK);
+            } else {
+                re = new ResponseEntity<List<String>>(
+                        suggestService.getPromptStrings(query, Long.valueOf(DEFAULT_LIMIT)), headers, HttpStatus.OK);
+            }
         }
         return re;
     }

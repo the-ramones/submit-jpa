@@ -3,24 +3,26 @@
     <h2>#springMessage('content.search.title')</h2>
     <form name="search-form" method="POST" action="#springUrl('/report/suggest')" >       
             <input type="button" name="search-button" id="search_button" />
-            <input type="text" name="search" value="" placeholder="#springMessage('content.search.placeholder')" autocompetion="off" />
+            <input type="text" name="search" value="" placeholder="#springMessage('content.search.placeholder')" autocomplete="off" />
             <div id="index-check">
-                <input id="use-index-checkbox" class="css-checkbox" type="checkbox" />
+                <input id="suggest-checkbox" class="css-checkbox" type="checkbox" checked/>
+                <label for="suggest-checkbox" name="use-index-checkbox" class="css-label">#springMessage('content.suggest')</label>
+                <br />
+                <input id="use-index-checkbox" class="css-checkbox" type="checkbox" checked/>
                 <label for="use-index-checkbox" name="use-index-checkbox" class="css-label">#springMessage('content.useindex')</label>
                 <br />
                 <input id="only-recent-checkbox" class="css-checkbox" type="checkbox" />
                 <label for="only-recent-checkbox" name="use-index-checkbox" class="css-label">#springMessage('content.onlyrecent')</label>
             </div>
             <div id="progress-container">
-                </label><progress id="index-progress" value="0" max="100" style="display: none;"></progress>
+                <progress id="index-progress" value="0" max="100" style="display: none;"></progress>
                 <br />
-                <label for="index-progress" name="index-progress-label" style="display: none;">
+                <label for="index-progress" name="index-progress-label" style="display: none;"></label>
             </div>
             <ul class="subnav">
-                <li><a href="#">#springMessage('content.search.nothing')</a></li>
             </ul>       
     </form>
-    <p class="stats invisible">#springMessage('content.search.result'): <span></span> (<span></span> #springMessage('content.search.second').) </span></p>    
+    <p class="stats invisible">#springMessage('content.search.result'): <span></span> (<span></span> #springMessage('content.search.second').) </p>    
 </div>
 
 #hint()
@@ -42,6 +44,7 @@
      * Suggest url
      */
     var promptUrl = "#springUrl('/report/suggest/ajax/prompt')";
+    var promptStringsUrl = "#springUrl('/report/suggest/ajax/prompt-strings')";
     var suggestUrl = "#springUrl('/report/suggest/ajax')";
     var addToChecklistUrl = "#springUrl('/report/ajax/watch')";
 
@@ -58,7 +61,8 @@
     var ADDED_TO_CHECKLIST_MSG = "#springMessage('checklist.added')";
     var NOTADDED_TO_CHECKLIST_MSG = "#springMessage('checklist.notadded')";
     var CONTENT_NOTHING_FOUND = "#springMessage('content.notfound')";
-  
+    
+    var INDEXING = "#springMessage('search.indexing')";
 
 #[[
     /*
@@ -150,52 +154,109 @@
         $("#ajax-overlay").remove();
     }  
    
+    const DEFAULT_PROMPT_COUNT_LIMIT = 8;
+    const SUGGEST_VALID_CHARS_REGEXP = new RegExp('^[ 0-9a-zа-я-#@%&\\$]{1,255}(?!-)$', 'i');
+
     $(document).ready(function() {
 
     /*
+     * Prevent default on-click form submission
+     */
+    $('form[name="search-form"]').keypress(function(e) {
+        if (e.which === 13) {
+            e.preventDefault();
+            return false;
+        }
+    });
+     
+    /*
      * Suggests
      */        
-    $("input[name='search']").keypress(function(event) {
-        if ($("#use-index-checkbox").is(":checked")) {
-            if ($(".subnav li").size() === 1) {
-                for (var i = 0; i < 3; i++) {
-                    $(".subnav li").clone().appendTo($(".subnav"));
+    $("input[name='search']").keyup(function(event) {
+        if (event.which === 13) {
+            event.preventDefault();
+            $("#search_button").click();
+            return false;
+        }
+        //alert(event.which + ' : ' + [33,34,37,38,39,40].indexOf(event.which));
+        if ([33,34,37,38,39,40].indexOf(event.which) === -1) {
+            if ($("#suggest-checkbox").is(":checked")) {            
+                var query = $('input[name="search"]').val();            
+                var queryTrimmed = query.trim();
+                if (queryTrimmed !== '' && SUGGEST_VALID_CHARS_REGEXP.test(queryTrimmed)) {
+                    $.ajax(promptStringsUrl, { 
+                        method: "GET",                  
+                        async: true,
+                        cached: false,
+                        dataType: 'json',
+                        data: {'query': query, limit: DEFAULT_PROMPT_COUNT_LIMIT},
+                        success: makeSuggest
+                    });
+                } else {
+                    var $base = $('.subnav');
+                    $base.empty();
                 }
             }
-        } else {
-            var query = $('input[name="search"]').val();
-            alert(query);
-            $.ajax(promptUrl, { 
-                   method: "GET",                  
-                   async: true;
-                   cached: false;
-                   dataType: 'json'
-                   data: {'query': query},
-                   success: makeSuggest
-            );
         }
-            $(".subnav li").css({
-                visibility: 'visible',
-                top: '120%',
-                opacity: "1",
-                transition: "all"
-            });
-            $("body").click(function(e) {
-                $(".subnav li").css({
-                    visibility: 'hidden'});
-            });
     });
 
     });
 
     function makeSuggest(prompts) {
+        var $base = $('.subnav');
+        $base.empty();
         var bound = prompts.length;
         for (var i = 0; i < bound; i++) {
             var prompt = prompts[i];
-            $('<li>').
+            var $suggest = $('<a>');
+            $suggest.attr('href', '#');
+            $suggest.html(prompt);
+            var $wrapper = $("<li>");
+            $wrapper.html($suggest);
+            $base.append($wrapper);
         }
-
+        $(".subnav li").css({
+            visibility: 'visible',
+            top: '120%',
+            opacity: "1",
+            transition: "all"
+        });
+        $("body").click(function(e) {
+            $(".subnav li").css({
+               visibility: 'hidden'});
+        });
     }
+
+function progress($pbar) {
+    /*
+     * Prevent unneccesary 'bounce' scrolling
+     */
+    $("html").addClass("stop-scrolling");
+    var time = 10;
+    var max = parseInt($pbar.attr('max'));
+    var percent = max / 100;
+    var animate = function() {
+        var value = parseInt($pbar.attr('value'));
+        if (value <= max) {
+            $pbar.attr('value', value + 1 * percent);
+            $('label[name="index-progress-label"]').html(INDEXING + value + '%');
+        } else {
+            clearInterval(interval);
+            $pbar.attr('value', 0);
+            $pbar.hide();
+            $('label[name="index-progress-label"]').hide();
+            /*
+             * Activate suggest feature after successful indexing completion on
+             * the server
+             */
+        }
+    };
+    var interval = setInterval(function() {
+        animate();
+    }, time);
+    $("html").removeClass("stop-scrolling");
+}
+
 ]]#
 </script>
 

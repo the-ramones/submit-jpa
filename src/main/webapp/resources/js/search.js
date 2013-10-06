@@ -76,7 +76,7 @@ function addSuggestToSearchInput() {
         $("html").removeClass("stop-scrolling");
     });
 
-    $("input[name='search']").keydown(function(event) {
+    $("input[name='search']").keyup(function(event) {
         var key = event.which;
         console.log(key);
         var lis = $(".subnav li");
@@ -114,34 +114,5 @@ function addSuggestToSearchInput() {
     });   
 }
 
-function progress($pbar) {
-    /*
-     * Prevent unneccesary 'bounce' scrolling
-     */
-    $("html").addClass("stop-scrolling");
-    var time = 10;
-    var max = parseInt($pbar.attr('max'));
-    var percent = max / 100;
-    var animate = function() {
-        var value = parseInt($pbar.attr('value'));
-        if (value <= max) {
-            $pbar.attr('value', value + 1 * percent);
-            $('label[name="index-progress-label"]').html(value + '%');
-        } else {
-            clearInterval(interval);
-            $pbar.attr('value', 0);
-            $pbar.hide();
-            $('label[name="index-progress-label"]').hide();
-            /*
-             * Activate suggest feature after successful indexing completion on
-             * the server
-             */
-        }
-    };
-    var interval = setInterval(function() {
-        animate();
-    }, time);
-    $("html").removeClass("stop-scrolling");
-}
 
 

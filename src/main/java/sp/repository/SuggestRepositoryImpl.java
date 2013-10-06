@@ -30,8 +30,9 @@ public class SuggestRepositoryImpl implements SuggestRepository {
     EntityManager em;
 
     private String normalizeQuery(String query) {
+        String escapeQuery = query.replaceAll("[?%:]", "");
         StringBuilder sb = new StringBuilder(query.length() + 2);
-        sb.append('%').append(query.trim().toLowerCase()).append('%');
+        sb.append('%').append(escapeQuery.trim().toLowerCase()).append('%');
         return sb.toString();
     }
 
@@ -200,6 +201,47 @@ public class SuggestRepositoryImpl implements SuggestRepository {
                 resultQuery.setMaxResults(limit.intValue());
             }
             return resultQuery.getResultList();
+        } else {
+            return null;
+        }
+    }
+
+    @Override
+    public List<String> getPromptStrings(String query, Long limit) {
+
+        if (query != null) {
+            List<String> results;
+            String nQuery = normalizeQuery(query);
+
+            CriteriaBuilder cb = em.getCriteriaBuilder();
+            CriteriaQuery<String> cqPerformers = cb.createQuery(String.class);
+
+            Root<Report> report = cqPerformers.from(Report.class);
+
+            cqPerformers.select(report.get(Report_.performer)).where(
+                    cb.like(cb.lower(report.get(Report_.performer)), nQuery));
+
+            cqPerformers.groupBy(report.get(Report_.performer));
+
+            TypedQuery<String> resultQuery = em.createQuery(cqPerformers);
+            if ((limit != null) && (limit > 0)) {
+                resultQuery.setMaxResults(limit.intValue() / 2 + 1);
+            }
+            results = resultQuery.getResultList();
+
+            CriteriaQuery<String> cqActivity = cb.createQuery(String.class);
+
+            cqActivity.select(report.get(Report_.activity)).where(
+                    cb.like(cb.lower(report.get(Report_.activity)), nQuery));
+            
+            cqActivity.groupBy(report.get(Report_.activity));
+            
+            resultQuery = em.createQuery(cqActivity);
+            if ((limit != null) && (limit > 0)) {
+                resultQuery.setMaxResults(limit.intValue() / 2);
+            }
+            results.addAll(resultQuery.getResultList());            
+            return results;
         } else {
             return null;
         }

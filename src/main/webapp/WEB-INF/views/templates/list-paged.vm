@@ -157,7 +157,7 @@
         modal.open({ content: html });
         $("#close-btn").click(function() {
             $("#close").click();
-            /* W# HTML5 Button Specification
+            /* W3C HTML5 Button Specification
              * default behaviour : submit the form (what is exactly occurs in 
              * Chrome & Opera, with Firefox everything OK)
              * tweak: return false; - to prevent default form submission

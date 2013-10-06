@@ -29,4 +29,6 @@ public interface SuggestRepository {
     public List<Prompt> getPrompts(String query);
 
     public List<Prompt> getPrompts(String query, Long limit);
+    
+    public List<String> getPromptStrings(String query, Long limit);
 }
