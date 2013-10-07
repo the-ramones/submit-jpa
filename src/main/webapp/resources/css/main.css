@@ -1,3 +1,80 @@
+/*admin console*/
+.tabs {
+    position: relative;
+    margin: 0 auto;
+    width: 90%;
+}
+.tabs label {
+    color: #222;
+    text-shadow: 5px 5px 5px rgba(204, 103, 26, 0.25);
+    background:  rgb(224, 133, 36);
+    cursor: pointer;
+    display: block;
+    float: left;
+    width: 10%;
+    height: 45px;
+    line-height: 45px;
+    position: relative;
+    top: 2px;
+    text-align: center;
+    border-radius: 6px 6px 0 0;
+    padding: 0 10px;
+    border: 1px solid rgb(204, 103, 16);
+    border-bottom: 2px solid #c43c35;
+}
+
+.tabs label:hover  {
+    background:  rgba(224, 133, 26, 1.7);
+    background: linear-gradient(top, rgba(204, 103, 26, 1.7) 0%, rgba(234, 133, 36, 1) 100%);
+    background: -moz-linear-gradient(top, rgba(204, 103, 26, 1.7) 0%, rgba(234, 133, 36, 1) 100%);
+    background: -webkit-linear-gradient(top, rgba(204, 103, 26, 0.7) 0%,rgba(234, 133, 36, 1) 10  0%);
+}
+
+.tabs input {
+    position: absolute;
+    left: -9999px;
+}
+
+#tab_front:checked  ~ #tab_frontl,
+#tab_back:checked  ~ #tab_backl,
+#tab_const:checked  ~ #tab_constl {
+    background: rgb(224, 133, 26);
+    height: 47px;
+    border-bottom: 2px solid #d14;
+    color: #fff;
+    top: 0;
+    z-index: 3;
+}
+
+.tab_contents {
+    background: rgba(255,255,255,0.5);
+    position: relative;
+    z-index: 2;
+    height: 230px;
+    border-radius: 0 6px 6px 6px;
+    box-shadow:  2px 4px 4px rgba(0, 0, 0, 0.2);
+    padding: 20px 25px;
+}
+
+.tab_contents > div {
+    position: absolute;
+    left: -9999px;
+    top: 0;
+    opacity: 0;
+    -moz-transition: opacity .5s ease-in-out;
+    -webkit-transition: opacity .5s ease-in-out;
+    transition: opacity .5s ease-in-out;
+}
+
+#tab_front:checked ~ .tab_contents #tab_frontc,
+#tab_back:checked ~ .tab_contents #tab_backc,
+#tab_const:checked ~ .tab_contents #tab_constc {
+    position: static;
+    left: 0;
+    opacity: 1;
+}
+
+/*progress bar*/
 #progress-container {
     float: right;
     display: inline-block;

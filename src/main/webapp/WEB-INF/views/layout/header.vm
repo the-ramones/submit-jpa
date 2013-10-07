@@ -16,6 +16,7 @@
                 <li><a href="#springUrl('/report/suggest')">#springMessage("menu.report.ajax")</a></li>                                
             </ul>
         </li>
+        <li><a href="#springUrl('/admin')">#springMessage('menu.manager')</a></li>
         <li><a  href="#springUrl('/contact')">#springMessage("menu.contact")</a>
             <ul>
                 <li><a href="#springUrl('/instruction')">#springMessage("menu.contact.instructions")</a></li>
