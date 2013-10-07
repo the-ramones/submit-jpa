@@ -55,9 +55,6 @@ public class SuggestIndexSearcher implements IndexSearcher, IndexSuggester {
             bound = length - TRANC_AMOUNT;
         }
 
-        logger.debug("IN SEARCHER SEARCH: query={}, limit={}, keys={}, index={}",
-                query, limit, keys, index);
-
         for (int i = 0; i < bound; i++) {
             attempt = sb.substring(0, length - i - 1);
             if (keys.contains(attempt)) {
@@ -86,9 +83,6 @@ public class SuggestIndexSearcher implements IndexSearcher, IndexSuggester {
         Set<String> keys = suggestIndex.getKeys();
         Iterator<String> keysIt = keys.iterator();
         String key;
-
-        logger.debug("IN SUGGESTER SEARCH: query={}, limit={}, keys={}, index={}",
-                query, limit, keys);
 
         List<String> result = new ArrayList();
         while (keysIt.hasNext()) {
