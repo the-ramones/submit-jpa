@@ -81,7 +81,7 @@ public class SuggestController {
     }
 
     @RequestMapping(value = "", method = RequestMethod.GET)
-    public ResponseEntity<ResultPager> getReprotsByQuery(
+    public ResponseEntity<ResultPager> getReportsByQuery(
             @RequestParam("query") String query,
             @ModelAttribute("suggest-pager") SpLazyPager pager,
             @RequestParam(value = "limit", required = false) int limit,
@@ -129,6 +129,9 @@ public class SuggestController {
                 boolean correct = pager.setPage(page);
                 if (correct) {
                     List<Long> ids = indexSearcher.search(query, limit);
+                    
+                    logger.error("!! IDS BEFORE: {}", ids);
+                    
                     ids = ids.subList(pager.getPageOffset(),
                             pager.getPageOffset() + limit);
 

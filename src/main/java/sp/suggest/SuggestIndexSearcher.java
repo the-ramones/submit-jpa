@@ -1,10 +1,12 @@
 package sp.suggest;
 
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.logging.Level;
 import java.util.regex.Pattern;
 import javax.inject.Inject;
 import org.slf4j.Logger;
@@ -26,8 +28,14 @@ public class SuggestIndexSearcher implements IndexSearcher, IndexSuggester {
     SuggestIndex suggestIndex;
     private final static int MAX_RESULT_AMOUNT = 10000;
 
-    private synchronized String normalizeQuery(String query) {
-        return query.trim().toLowerCase();
+    private synchronized String normalizeQuery(String query){
+        String nQuery = query.trim().toLowerCase();
+        try {
+            nQuery = new String(nQuery.getBytes("utf-8"),"utf-16");
+        } catch (UnsupportedEncodingException ex) {
+            logger.warn("Cannot convert to specified encoding: {}", nQuery);
+        }
+        return nQuery;
     }
 
     @Override
@@ -40,35 +48,50 @@ public class SuggestIndexSearcher implements IndexSearcher, IndexSuggester {
         return suggest(query, MAX_RESULT_AMOUNT);
     }
 
+    private static final String ALLOWED_CHARS_REGEXP = "[ 0-9a-zа-я-#@%&\\$]*";
+    private static final String PATTERN_ENCODING = "utf-8";
+    
     @Override
     public synchronized List<Long> search(String query, int limit) {
-        int count = 0;
         String nQuery = normalizeQuery(query);
         Set<String> keys = suggestIndex.getKeys();
         Map index = suggestIndex.getIndex();
-        StringBuilder sb = new StringBuilder(nQuery);
         List<Long> result = new ArrayList();
-        String attempt;
-        int length = sb.length();
-        int bound = 0;
-        if (length > 3) {
-            bound = length - TRANC_AMOUNT;
+        int count = 0;
+
+        logger.debug("IN SEARCH: query={}, keys={}",
+                query, keys);
+
+        StringBuilder patternBuilder;
+        List<Pattern> patterns = new ArrayList<Pattern>();
+        for (String keyPart : nQuery.split(" ")) {
+            patternBuilder = new StringBuilder("(?iu)");
+            try {
+                patternBuilder.append(ALLOWED_CHARS_REGEXP)
+                        .append(new String(keyPart.getBytes("ISO-8859-1"), "utf-8"))
+                        .append(ALLOWED_CHARS_REGEXP);
+            } catch (UnsupportedEncodingException ex) {
+                logger.warn("Cannot construct regexp with the given encoding: {}");
+            }
+            patterns.add(Pattern.compile(patternBuilder.toString()));
         }
 
-        for (int i = 0; i < bound; i++) {
-            attempt = sb.substring(0, length - i - 1);
-            if (keys.contains(attempt)) {
-                List<Long> resultList = (List) index.get(attempt);
-                if (resultList != null) {
-                    if ((count + resultList.size()) >= limit) {
-                        result.addAll(resultList.subList(0, limit - count - 1));
+        for (String key : keys) {
+            for (Pattern pattern : patterns) {
+                logger.debug("MATCH {} : {}", key, pattern.matcher(key).matches());
+                if (pattern.matcher(key).matches()) {
+                    List<Long> partResults = (List<Long>) index.get(key);
+                    if ((count + partResults.size()) >= limit) {
+                        result.addAll(partResults.subList(0, limit - count - 1));
                         break;
                     } else {
-                        result.addAll(resultList);
+                        count = count + partResults.size();
+                        result.addAll(partResults);
                     }
                 }
             }
         }
+
         return result;
     }
 
@@ -83,6 +106,9 @@ public class SuggestIndexSearcher implements IndexSearcher, IndexSuggester {
         Set<String> keys = suggestIndex.getKeys();
         Iterator<String> keysIt = keys.iterator();
         String key;
+
+        logger.debug("IN SUGGEST: query={}, keys={}",
+                query, keys);
 
         List<String> result = new ArrayList();
         while (keysIt.hasNext()) {
@@ -114,7 +140,7 @@ public class SuggestIndexSearcher implements IndexSearcher, IndexSuggester {
             bound = length - TRANC_AMOUNT;
         }
 
-        logger.debug("IN COUNTER SEARCH: query={}, limit={}, keys={}, index={}",
+        logger.debug("IN COUNTER SEARCH: query={}, keys={}",
                 query, keys);
 
         for (int i = 0; i < length - bound; i++) {
