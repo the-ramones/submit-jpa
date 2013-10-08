@@ -11,6 +11,7 @@
 #foreach ($report in $reports)
 <div class="tile-container">
     <h2>Details of activity №${report.id}</h2>
+    <span class="detail-small" data-icon="#[[&#128247;]]#"></span>
     <dl class="dl-horizontal">
         <dt>id</dt>
         <dd>${report.id}</dd>

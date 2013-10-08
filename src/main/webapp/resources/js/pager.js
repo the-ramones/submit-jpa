@@ -41,7 +41,7 @@ function lazy_pager(pager, settings) {
         if (active !== 1) {
             // append 'prev' anchor
             $pager.append($prev);
-            $prev.data('page', 'prev');
+            $prev.find('a').data('page', 'prev');
         }
         if (active > 1) {
             if (delta <= maxOnPager) {
@@ -49,7 +49,7 @@ function lazy_pager(pager, settings) {
             } else {
                 var lowerBound = active - 1;
             }
-            var upperBound = loverBound + maxOnPager - 1;
+            var upperBound = lowerBound + maxOnPager - 1;
         } else {
             var lowerBound = active;
             var upperBound = active + maxOnPager;
@@ -61,7 +61,7 @@ function lazy_pager(pager, settings) {
                 $anchor.find('a').addClass('current');
             }
             $anchor.find('a').addClass('active');
-            $anchor.data('page', i);
+            $anchor.find('a').data('page', i);
             $anchor.find('a').text(i);
         }
         if (delta > maxOnPager) {
@@ -74,17 +74,17 @@ function lazy_pager(pager, settings) {
         if (last === active) {
             $last.find('a').addClass('current');
         }
-        $last.data('page', last);
+        $last.find('a').data('page', last);
         $last.find('a').text(last);
         if (active < pages) {
             $pager.append($next);
-            $next.data('page', 'next');
+            $next.find('a').data('page', 'next');
         }
     } else {
         // draw all page's anchors without spacer
         if (active > 1) {
             $pager.append($prev);
-            $prev.data('page', 'prev');
+            $prev.find('a').data('page', 'prev');
         }
         for (var i = 1; i <= pages; i++) {
             $anchor = $(elem);
@@ -93,12 +93,12 @@ function lazy_pager(pager, settings) {
             if (i === active) {
                 $anchor.find('a').addClass('current');
             }
-            $anchor.data('page', i);
+            $anchor.find('a').data('page', i);
             $anchor.find('a').text(i);
         }
         if (active < pages) {
             $pager.append($next);
-            $next.data('page', 'next');
+            $next.find('a').data('page', 'next');
         }
     }
     var $wrapper = $('<div class="pagination clearfix"></div>');

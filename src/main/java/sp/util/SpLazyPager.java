@@ -155,7 +155,6 @@ public class SpLazyPager {
                 return true;
             }
         } catch (NumberFormatException ex) {
-            logger.info("Wrong page number string. Stay on the same page");
         }
         Pattern regexp = Pattern.compile("^next|prev|last|first$", Pattern.CASE_INSENSITIVE);
         if (p == null) {

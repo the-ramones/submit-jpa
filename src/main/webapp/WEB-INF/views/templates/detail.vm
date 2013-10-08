@@ -3,6 +3,7 @@
 <div class="form-container">
 
 <h2>#springMessage("content.detail.title")</h2>
+<span class="detail" data-icon="#[[&#128179;]]#"></span>
 <dl class="dl-horizontal">
     <dt>id</dt>
     <dd>${report.id}</dd>

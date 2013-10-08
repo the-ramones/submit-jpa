@@ -4,6 +4,7 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.text.DateFormat;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -98,22 +99,23 @@ public class SuggestController {
         headers.add("Content-Type", "application/json;charset=utf-8");
         ResultPager body = new ResultPager();
 
-        System.out.println("Request encoding: " + request.getCharacterEncoding());
-        System.out.println("QUERY: " + query);
-        try {
-            String querya = new String(query.getBytes("utf-8"), "utf-8");
-            System.out.println("QUERY AFTER: " + querya);
-        } catch (UnsupportedEncodingException ex) {
-            logger.error("Cannot convert search query because encoding is not supported");
-        }
-
-        String queryb = null;
-        try {
-            queryb = URLDecoder.decode(query, "utf-8");
-        } catch (UnsupportedEncodingException ex) {
-            logger.error("Cannot convert search query because encoding is not supported");            
-        }
-        System.out.println("QUERY B: " + queryb);
+//        System.out.println("Request encoding: " + request.getCharacterEncoding());
+//        System.out.println("QUERY: " + query);
+//        try {
+//            String querya = new String(query.getBytes("utf-8"), "utf-8");
+//            System.out.println("QUERY AFTER: " + querya);
+//        } catch (UnsupportedEncodingException ex) {
+//            logger.error("Cannot convert search query because encoding is not supported");
+//        }
+//
+//        String queryb = null;
+//        try {
+//            queryb = URLDecoder.decode(query, "utf-8");
+//        } catch (UnsupportedEncodingException ex) {
+//            logger.error("Cannot convert search query because encoding is not supported");
+//        }
+//        System.out.println("QUERY B: " + queryb);
+        logger.error("WATCH Pager: {}", pager);
 
         /*
          * Contsrain result of the rearch if recend records needed.
@@ -132,16 +134,20 @@ public class SuggestController {
             if (newSearch) {
                 List<Long> ids = indexSearcher.search(query, limit);
 
-                logger.error("!! IDS: {}", ids);
+                logger.error("!! NEW SEARCH IDS: {}", ids);
 
                 if (!ids.isEmpty()) {
-                    pager.setSourceCount(indexSearcher.count(query).intValue());
+                    pager.setSourceCount(ids.size());
+                    logger.error("SIZE OF IDS: {}", ids.size());
                     pager.setPageSize(limit);
                     pager.setPage(0);
-                    Set<Long> idsSet = new HashSet();
-                    idsSet.addAll(ids);
                     body.setPager(pager);
+                    
+                    Set<Long> idsSet = new HashSet();
+                    idsSet.addAll(ids.subList(0, limit));                    
                     body.setResults(reportService.getReports(idsSet));
+                    
+                    logger.error("NEW SEARCH PAGER: {}", pager);
                 } else {
                     body.setResults(new ArrayList<Report>(0));
                 }
@@ -150,16 +156,21 @@ public class SuggestController {
                 if (correct) {
                     List<Long> ids = indexSearcher.search(query, limit);
 
-                    logger.error("!! IDS BEFORE: {}", ids);
-
-                    ids = ids.subList(pager.getPageOffset(),
-                            pager.getPageOffset() + limit);
-
+                    logger.error("!!OLD SEARCH IDS BEFORE: {}", ids);
+                    logger.error("Pager: offset={}, size={}", pager.getPageOffset(), pager.getPageSize());
                     logger.error("!! IDS: {}", ids);
 
                     if (!ids.isEmpty()) {
+                        
+                        logger.error("IN GET PAGER");
+                        
                         Set<Long> idsSet = new HashSet();
-                        idsSet.addAll(ids);
+                        idsSet.addAll(ids.subList(pager.getPageOffset(),
+                                pager.getPageOffset() + pager.getPageSize()));
+
+                        logger.error("!! IDS: {}", ids.subList(pager.getPageOffset(),
+                                pager.getPageOffset() + pager.getPageSize()));
+
                         body.setPager(pager);
                         body.setResults(reportService.getReports(idsSet));
                     } else {

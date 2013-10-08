@@ -2,11 +2,7 @@
 <h1 class="title">#springMessage("title")</h1>   
 <div id="nav">
     <ul>
-        <li><a href="#springUrl('/home')">#springMessage("menu.home")</a>
-            <ul>
-                <li><a href="#springUrl('/admin')">#springMessage('menu.manager')</a></li>
-            </ul>
-        </li>
+        <li><a href="#springUrl('/home')">#springMessage("menu.home")</a></li>
         <li><a href="#springUrl('/report?new_search')">#springMessage("menu.reports")</a>
             <ul>
                 <li><a href="#springUrl('/report/add')">#springMessage("menu.report.add")</a></li>
@@ -17,7 +13,12 @@
                         <li><a href="#springUrl('/registry?new')">#springMessage("menu.report.build.registry")</a></li>
                     </ul>
                 </li>
-                <li><a href="#springUrl('/report/suggest')">#springMessage("menu.report.ajax")</a></li>                                
+                <li><a href="#springUrl('/report/suggest')">#springMessage("menu.report.ajax")</a></li>
+                
+                <ul>
+                    <li><a href="#springUrl('/suggest-solr')">#springMessage('menu.solr')</a></li>
+                    <li><a href="#springUrl('/admin')">#springMessage('menu.manager')</a></li>
+                </ul>
             </ul>
         </li>        
         <li><a  href="#springUrl('/contact')">#springMessage("menu.contact")</a>

@@ -79,6 +79,7 @@
             + '&limit=' + limit + '&useIndex=' + useIndex + '&recent=' + onlyRecent
             + '&suggest=' + suggest);
         //TODO: timings
+        search_lock = true;
         upload();
         var startTime = new Date();
         $.ajax(suggestUrl, {
@@ -88,9 +89,11 @@
             data: query,            
             complete: function(data) {
                 unload();
+                hidePrompts();
                 var requestTime = (new Date()) - startTime;
                 var formattedRequestTime = parseInt(requestTime / 1000) + ',' + (requestTime % 1000);
                 $("p.stats span:last").text(formattedRequestTime);
+                search_lock = false;
             },
             error: function() {
                 $("p.stats span:first").text(NOTHING_FOUND);
@@ -101,6 +104,8 @@
             dataType: 'json'
         });
     });
+
+    var search_lock = false;
 
     function onSearchSuccess(resultsPager) {
         $('body').addClass('stop-scrolling')
@@ -135,6 +140,12 @@
                 var $pager = lazy_pager(resultsPager.pager);
                 $pager.insertBefore($('#addToWatchlist'));
             }
+            /*
+             * Add actions to page links, except 'curent' page
+             */
+            $('.pagination ul li a').not('.current').click(function(e) {
+                pageClickAction(this);
+            });
         } else {
             $results.text(CONTENT_NOTHING_FOUND);
         }
@@ -145,9 +156,13 @@
         $('body').removeClass('stop-scrolling')
     }
 
-    function upload() {
+    function upload(base) {
        var $load = $("<div id='ajax-overlay'></div>");
-       $("body").append($load);
+       if (base == undefined) {
+           $("body").append($load);
+       } else {
+           $(base).append($load);
+       }
        $load.fadeIn();
     }
 
@@ -180,23 +195,24 @@
             $("#search_button").click();
             return false;
         }
-        //alert(event.which + ' : ' + [33,34,37,38,39,40].indexOf(event.which));
         if ([33,34,37,38,39,40].indexOf(event.which) === -1) {
-            if ($("#suggest-checkbox").is(":checked")) {            
-                var query = $('input[name="search"]').val();            
-                var queryTrimmed = query.trim();
-                if (queryTrimmed !== '' && SUGGEST_VALID_CHARS_REGEXP.test(queryTrimmed)) {
-                    $.ajax(promptStringsUrl, { 
-                        method: "GET",                  
-                        async: true,
-                        cached: false,
-                        dataType: 'json',
-                        data: {'query': query, limit: DEFAULT_PROMPT_COUNT_LIMIT},
-                        success: makeSuggest
-                    });
-                } else {
-                    var $base = $('.subnav');
-                    $base.empty();
+            if (!search_lock) {
+                if ($("#suggest-checkbox").is(":checked")) {            
+                    var query = $('input[name="search"]').val();            
+                    var queryTrimmed = query.trim();
+                    if (queryTrimmed !== '' && SUGGEST_VALID_CHARS_REGEXP.test(queryTrimmed)) {
+                        $.ajax(promptStringsUrl, { 
+                            method: "GET",                  
+                            async: true,
+                            cached: false,
+                            dataType: 'json',
+                            data: {'query': query, limit: DEFAULT_PROMPT_COUNT_LIMIT},
+                                success: makeSuggest
+                        });
+                    } else {
+                        var $base = $('.subnav');
+                        $base.empty();
+                    }
                 }
             }
         }
@@ -259,6 +275,47 @@ function progress($pbar) {
     $("html").removeClass("stop-scrolling");
 }
 
+    function pageClickAction(page) {
+        var $page = $(page);
+        var p = $page.data('page');
+        loadPage(p);
+    }
+
+    function loadPage(page) {
+        //TODO: timings
+        search_lock = true;
+        upload('.results-wrap');
+
+        var useIndex = document.getElementById("use-index-checkbox").checked;
+        var query = 'query=' + encodeURI($("input[name='search']").val().trim()
+            + '&limit=' + limit + '&useIndex=' + useIndex + '&p=' + page);
+        var startTime = new Date();
+        $.ajax(suggestUrl, {
+            method: "GET",
+            async: true,
+            cache: false,
+            data: query,            
+            complete: function(data) {
+                unload();
+                hidePrompts();
+                search_lock = false;
+            },
+            error: function() {
+                $("p.stats span:first").text(NOTHING_FOUND);
+                $("p.stats").removeClass("invisible");
+                console.log("Error in ajax request to Suggest service");
+            },
+            success: onSearchSuccess,
+            dataType: 'json'
+        });
+    }
+
+    function hidePrompts() {
+        $(".subnav li").css({
+            visibility: 'hidden'}
+        );
+    }
+    
 ]]#
 </script>
 
