@@ -31,7 +31,7 @@ public class SuggestIndexSearcher implements IndexSearcher, IndexSuggester {
     private synchronized String normalizeQuery(String query){
         String nQuery = query.trim().toLowerCase();
         try {
-            nQuery = new String(nQuery.getBytes("utf-8"),"utf-16");
+            nQuery = new String(nQuery.getBytes("utf-8"),"utf-8");
         } catch (UnsupportedEncodingException ex) {
             logger.warn("Cannot convert to specified encoding: {}", nQuery);
         }

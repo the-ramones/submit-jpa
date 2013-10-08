@@ -12,7 +12,7 @@ import org.springframework.stereotype.Component;
  * @author Paul Kulitski
  */
 @Component
-@PropertySource("classpath:email.config.properties, report-servlet.properties, report.properties ")
+//PropertySource@PropertySource("classpath:email.config.properties, report-servlet.properties, report.properties ")
 public class ManagerUtil {
 
     @Autowired

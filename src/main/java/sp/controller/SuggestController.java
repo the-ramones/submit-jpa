@@ -1,5 +1,7 @@
 package sp.controller;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -10,6 +12,7 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 import javax.inject.Inject;
+import javax.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -88,12 +91,29 @@ public class SuggestController {
             @RequestParam(value = "p", required = false) String page,
             @RequestParam(value = "useIndex", required = false) boolean useIndex,
             @RequestParam(value = "recent", required = false) boolean recent,
-            Model model) {
+            Model model, HttpServletRequest request) {
         logger.debug("IN GET REPORS BY QUERY");
 
         HttpHeaders headers = new HttpHeaders();
         headers.add("Content-Type", "application/json;charset=utf-8");
         ResultPager body = new ResultPager();
+
+        System.out.println("Request encoding: " + request.getCharacterEncoding());
+        System.out.println("QUERY: " + query);
+        try {
+            String querya = new String(query.getBytes("utf-8"), "utf-8");
+            System.out.println("QUERY AFTER: " + querya);
+        } catch (UnsupportedEncodingException ex) {
+            logger.error("Cannot convert search query because encoding is not supported");
+        }
+
+        String queryb = null;
+        try {
+            queryb = URLDecoder.decode(query, "utf-8");
+        } catch (UnsupportedEncodingException ex) {
+            logger.error("Cannot convert search query because encoding is not supported");            
+        }
+        System.out.println("QUERY B: " + queryb);
 
         /*
          * Contsrain result of the rearch if recend records needed.
@@ -129,9 +149,9 @@ public class SuggestController {
                 boolean correct = pager.setPage(page);
                 if (correct) {
                     List<Long> ids = indexSearcher.search(query, limit);
-                    
+
                     logger.error("!! IDS BEFORE: {}", ids);
-                    
+
                     ids = ids.subList(pager.getPageOffset(),
                             pager.getPageOffset() + limit);
 
