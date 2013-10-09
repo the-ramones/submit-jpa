@@ -195,6 +195,7 @@
             $("#search_button").click();
             return false;
         }
+        var uIndex = document.getElementById("use-index-checkbox").checked;
         if ([33,34,37,38,39,40].indexOf(event.which) === -1) {
             if (!search_lock) {
                 if ($("#suggest-checkbox").is(":checked")) {            
@@ -202,11 +203,11 @@
                     var queryTrimmed = query.trim();
                     if (queryTrimmed !== '' && SUGGEST_VALID_CHARS_REGEXP.test(queryTrimmed)) {
                         $.ajax(promptStringsUrl, { 
-                            method: "GET",                  
+                            method: "POST",                  
                             async: true,
                             cached: false,
                             dataType: 'json',
-                            data: {'query': query, limit: DEFAULT_PROMPT_COUNT_LIMIT},
+                            data: {'query': query, limit: DEFAULT_PROMPT_COUNT_LIMIT, useIndex: uIndex},
                                 success: makeSuggest
                         });
                     } else {

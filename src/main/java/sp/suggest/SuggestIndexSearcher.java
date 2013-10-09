@@ -67,13 +67,9 @@ public class SuggestIndexSearcher implements IndexSearcher, IndexSuggester {
         List<Pattern> patterns = new ArrayList<Pattern>();
         for (String keyPart : nQuery.split(" ")) {
             patternBuilder = new StringBuilder("(?iu)");
-            try {
-                patternBuilder.append(ALLOWED_CHARS_REGEXP)
-                        .append(new String(keyPart.getBytes("ISO-8859-1"), "utf-8"))
-                        .append(ALLOWED_CHARS_REGEXP);
-            } catch (UnsupportedEncodingException ex) {
-                logger.warn("Cannot construct regexp with the given encoding: {}");
-            }
+            patternBuilder.append(ALLOWED_CHARS_REGEXP)
+                    .append(keyPart)
+                    .append(ALLOWED_CHARS_REGEXP);
             patterns.add(Pattern.compile(patternBuilder.toString()));
         }
 

@@ -245,11 +245,13 @@ public class SuggestController {
 
     @RequestMapping(value = "count", method = {RequestMethod.GET, RequestMethod.POST})
     public ResponseEntity<Long> getCount(@RequestParam("query") String query,
+            @RequestParam("useIndex") boolean useIndex,
             Model model) {
         HttpHeaders headers = new HttpHeaders();
         headers.add("Content-Type", "application/json;charset=utf-8");
         ResponseEntity<Long> re = new ResponseEntity<Long>(
-                suggestService.getAllCount(query), headers, HttpStatus.OK);
+                (useIndex ? indexSearcher.count(query) : suggestService.getAllCount(query)),
+                headers, HttpStatus.OK);
         return re;
     }
 
