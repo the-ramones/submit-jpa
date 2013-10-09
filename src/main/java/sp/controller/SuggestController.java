@@ -1,10 +1,7 @@
 package sp.controller;
 
-import java.io.UnsupportedEncodingException;
-import java.net.URLDecoder;
 import java.text.DateFormat;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -37,6 +34,7 @@ import sp.service.ReportService;
 import sp.service.SuggestService;
 import sp.suggest.SuggestIndexSearcher;
 import sp.util.SpLazyPager;
+import sp.util.SpLightPager;
 
 /**
  * Controller for Suggest features of application
@@ -70,8 +68,8 @@ public class SuggestController {
     }
 
     @ModelAttribute("suggest-pager")
-    public SpLazyPager populatePager() {
-        SpLazyPager pager = new SpLazyPager(0);
+    public SpLightPager populatePager() {
+        SpLightPager pager = new SpLightPager(0);
         pager.setMaxOnPager(MAX_ON_PAGER);
         pager.setPageSize(PAGINATION_THRESHOLD);
         return pager;
@@ -87,7 +85,7 @@ public class SuggestController {
     @RequestMapping(value = "", method = RequestMethod.GET)
     public ResponseEntity<ResultPager> getReportsByQuery(
             @RequestParam("query") String query,
-            @ModelAttribute("suggest-pager") SpLazyPager pager,
+            @ModelAttribute("suggest-pager") SpLightPager pager,
             @RequestParam(value = "limit", required = false) int limit,
             @RequestParam(value = "p", required = false) String page,
             @RequestParam(value = "useIndex", required = false) boolean useIndex,
@@ -141,12 +139,13 @@ public class SuggestController {
                     logger.error("SIZE OF IDS: {}", ids.size());
                     pager.setPageSize(limit);
                     pager.setPage(0);
+                    pager.setIds(ids);
                     body.setPager(pager);
-                    
+
                     Set<Long> idsSet = new HashSet();
-                    idsSet.addAll(ids.subList(0, limit));                    
+                    idsSet.addAll(ids.subList(0, (limit) > ids.size() ? ids.size() : limit));
                     body.setResults(reportService.getReports(idsSet));
-                    
+
                     logger.error("NEW SEARCH PAGER: {}", pager);
                 } else {
                     body.setResults(new ArrayList<Report>(0));
@@ -154,22 +153,25 @@ public class SuggestController {
             } else {
                 boolean correct = pager.setPage(page);
                 if (correct) {
-                    List<Long> ids = indexSearcher.search(query, limit);
+                    //List<Long> ids = indexSearcher.search(query, limit);
+                    List<Long> ids = pager.getIds();
 
                     logger.error("!!OLD SEARCH IDS BEFORE: {}", ids);
                     logger.error("Pager: offset={}, size={}", pager.getPageOffset(), pager.getPageSize());
                     logger.error("!! IDS: {}", ids);
 
                     if (!ids.isEmpty()) {
-                        
-                        logger.error("IN GET PAGER");
-                        
-                        Set<Long> idsSet = new HashSet();
-                        idsSet.addAll(ids.subList(pager.getPageOffset(),
-                                pager.getPageOffset() + pager.getPageSize()));
 
-                        logger.error("!! IDS: {}", ids.subList(pager.getPageOffset(),
-                                pager.getPageOffset() + pager.getPageSize()));
+                        logger.error("IN GET PAGER");
+
+                        Set<Long> idsSet = new HashSet();
+                        if (pager.getPage() + 1 < pager.getPageCount()) {
+                            idsSet.addAll(ids.subList(pager.getPageOffset(),
+                                    pager.getPageOffset() + pager.getPageSize()));
+                        } else {
+                            idsSet.addAll(ids.subList(pager.getPageOffset(),
+                                    ids.size() - 1));
+                        }
 
                         body.setPager(pager);
                         body.setResults(reportService.getReports(idsSet));

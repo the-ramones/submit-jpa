@@ -14,11 +14,12 @@
                     </ul>
                 </li>
                 <li><a href="#springUrl('/report/suggest')">#springMessage("menu.report.ajax")</a></li>
-                
-                <ul>
-                    <li><a href="#springUrl('/suggest-solr')">#springMessage('menu.solr')</a></li>
-                    <li><a href="#springUrl('/admin')">#springMessage('menu.manager')</a></li>
-                </ul>
+                <li><a href="#springUrl('/report/additional')">#springMessage("menu.additional")</a>
+                    <ul>
+                        <li><a href="#springUrl('/suggest-solr')">#springMessage('menu.solr')</a></li>
+                        <li><a href="#springUrl('/admin')">#springMessage('menu.manager')</a></li>
+                    </ul>
+                </li>
             </ul>
         </li>        
         <li><a  href="#springUrl('/contact')">#springMessage("menu.contact")</a>

@@ -70,13 +70,13 @@ public class SuggestIndexCreator implements IndexCreator {
             id = report.getId();
             for (String key : report.getActivity().split("\\s")) {
                 key = key.toLowerCase();
-                System.out.println("KEY ACTIVITY: " + new String(key.getBytes("iso-8859-1"), "utf-8"));
+              //  System.out.println("KEY ACTIVITY: " + new String(key.getBytes("iso-8859-1"), "utf-8"));
                 suggestIndex.addToSwapIndex(key, id);
             }
             for (String key : report.getPerformer().split("\\s")) {
-                System.out.println("NATIVE PERFORMER: " + report.getPerformer());
-                System.out.println("KEY PERFORMER: " + key);
-                System.out.println("KEY PERFORMER ENCODED: " + new String(key.getBytes("iso-8859-1"), "utf-8"));
+//                System.out.println("NATIVE PERFORMER: " + report.getPerformer());
+//                System.out.println("KEY PERFORMER: " + key);
+//                System.out.println("KEY PERFORMER ENCODED: " + new String(key.getBytes("iso-8859-1"), "utf-8"));
                 key = key.toLowerCase();
                 suggestIndex.addToSwapIndex(key, id);
             }
