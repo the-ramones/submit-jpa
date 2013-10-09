@@ -1,6 +1,8 @@
 package sp.suggest;
 
 import java.io.UnsupportedEncodingException;
+import java.text.Normalizer;
+import java.text.Normalizer;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -28,10 +30,10 @@ public class SuggestIndexSearcher implements IndexSearcher, IndexSuggester {
     SuggestIndex suggestIndex;
     private final static int MAX_RESULT_AMOUNT = 10000;
 
-    private synchronized String normalizeQuery(String query){
+    private synchronized String normalizeQuery(String query) {
         String nQuery = query.trim().toLowerCase();
         try {
-            nQuery = new String(nQuery.getBytes("utf-8"),"utf-8");
+            nQuery = new String(nQuery.getBytes("utf-8"), "utf-8");
         } catch (UnsupportedEncodingException ex) {
             logger.warn("Cannot convert to specified encoding: {}", nQuery);
         }
@@ -47,10 +49,9 @@ public class SuggestIndexSearcher implements IndexSearcher, IndexSuggester {
     public synchronized List<String> suggest(String query) {
         return suggest(query, MAX_RESULT_AMOUNT);
     }
-
     private static final String ALLOWED_CHARS_REGEXP = "[ 0-9a-zа-я-#@%&\\$]*";
     private static final String PATTERN_ENCODING = "utf-8";
-    
+
     @Override
     public synchronized List<Long> search(String query, int limit) {
         String nQuery = normalizeQuery(query);
@@ -91,7 +92,6 @@ public class SuggestIndexSearcher implements IndexSearcher, IndexSuggester {
                 }
             }
         }
-
         return result;
     }
 
@@ -100,8 +100,10 @@ public class SuggestIndexSearcher implements IndexSearcher, IndexSuggester {
         String nQuery = normalizeQuery(query);
         int count = 0;
         StringBuilder sb = new StringBuilder(nQuery.length());
-        String allowedChars = "[ 0-9a-zа-я-#@%&\\$]{1,255}";
-        sb.append("^(?iu)").append(allowedChars).append(nQuery).append(allowedChars).append('$');
+        sb.append("^(?iu)").append(ALLOWED_CHARS_REGEXP)
+                .append(nQuery)
+                .append(ALLOWED_CHARS_REGEXP)
+                .append('$');
         Pattern pattern = Pattern.compile(sb.toString());
         Set<String> keys = suggestIndex.getKeys();
         Iterator<String> keysIt = keys.iterator();
@@ -123,35 +125,43 @@ public class SuggestIndexSearcher implements IndexSearcher, IndexSuggester {
         }
         return result;
     }
-    private final int TRANC_AMOUNT = 3;
 
+    /*
+     * Collator collator = Collator.getInstance();
+     * Normalizer.(Normalizer.Form.NFC)
+     * 
+     */
     @Override
     public synchronized Long count(String query) {
         long count = 0L;
         String nQuery = normalizeQuery(query);
         Set<String> keys = suggestIndex.getKeys();
         Map index = suggestIndex.getIndex();
-        StringBuilder sb = new StringBuilder(nQuery);
-        List<Long> result = new ArrayList();
-        String attempt;
-        int length = sb.length();
-        int bound = 0;
-        if (length > 3) {
-            bound = length - TRANC_AMOUNT;
-        }
 
-        logger.debug("IN COUNTER SEARCH: query={}, keys={}",
+        logger.debug("IN SEARCH: query={}, keys={}",
                 query, keys);
 
-        for (int i = 0; i < length - bound; i++) {
-            attempt = sb.substring(0, length - i - 1);
-            if (keys.contains(attempt)) {
-                List<Long> resultList = (List) index.get(attempt);
-                if (resultList != null) {
-                    count += resultList.size();
+        StringBuilder patternBuilder;
+        List<Pattern> patterns = new ArrayList<Pattern>();
+        for (String keyPart : nQuery.split(" ")) {
+            patternBuilder = new StringBuilder("(?iu)");
+            patternBuilder.append(ALLOWED_CHARS_REGEXP);
+            keyPart = Normalizer.normalize(keyPart, Normalizer.Form.NFD);
+            patternBuilder.append(keyPart)
+                    .append(ALLOWED_CHARS_REGEXP);
+            patterns.add(Pattern.compile(patternBuilder.toString()));
+        }
+
+        for (String key : keys) {
+            for (Pattern pattern : patterns) {
+
+                logger.debug("MATCH {} : {}", key, pattern.matcher(key).matches());
+
+                if (pattern.matcher(key).matches()) {
+                    count += ((List<Long>) index.get(key)).size();
                 }
             }
         }
-        return Long.valueOf(count);
+        return count;
     }
 }

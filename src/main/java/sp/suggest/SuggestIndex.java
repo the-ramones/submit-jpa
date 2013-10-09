@@ -1,6 +1,5 @@
 package sp.suggest;
 
-import java.lang.ref.WeakReference;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
@@ -101,6 +100,8 @@ public class SuggestIndex implements Index {
                 entry.add(docId);
 
                 logger.error("ADDING to INDEX: {} : {}", key, docId);
+            } else {
+                index.put(key, ids);
             }
 
         } catch (InterruptedException ex) {
@@ -120,6 +121,8 @@ public class SuggestIndex implements Index {
             if (tempSwapIndex.containsKey(key)) {
                 LinkedList entry = (LinkedList) tempSwapIndex.get(key);
                 entry.add(docId);
+            } else {
+                index.put(key, ids);
             }
 
         } catch (InterruptedException ex) {

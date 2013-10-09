@@ -1,5 +1,7 @@
 package sp.controller;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -11,6 +13,7 @@ import java.util.Map;
 import java.util.Set;
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -33,7 +36,6 @@ import sp.model.ajax.ResultPager;
 import sp.service.ReportService;
 import sp.service.SuggestService;
 import sp.suggest.SuggestIndexSearcher;
-import sp.util.SpLazyPager;
 import sp.util.SpLightPager;
 
 /**
@@ -90,29 +92,30 @@ public class SuggestController {
             @RequestParam(value = "p", required = false) String page,
             @RequestParam(value = "useIndex", required = false) boolean useIndex,
             @RequestParam(value = "recent", required = false) boolean recent,
-            Model model, HttpServletRequest request) {
+            Model model, HttpServletRequest request, HttpSession session) {
         logger.debug("IN GET REPORS BY QUERY");
 
         HttpHeaders headers = new HttpHeaders();
         headers.add("Content-Type", "application/json;charset=utf-8");
         ResultPager body = new ResultPager();
 
-//        System.out.println("Request encoding: " + request.getCharacterEncoding());
-//        System.out.println("QUERY: " + query);
-//        try {
-//            String querya = new String(query.getBytes("utf-8"), "utf-8");
-//            System.out.println("QUERY AFTER: " + querya);
-//        } catch (UnsupportedEncodingException ex) {
-//            logger.error("Cannot convert search query because encoding is not supported");
-//        }
-//
-//        String queryb = null;
-//        try {
-//            queryb = URLDecoder.decode(query, "utf-8");
-//        } catch (UnsupportedEncodingException ex) {
-//            logger.error("Cannot convert search query because encoding is not supported");
-//        }
-//        System.out.println("QUERY B: " + queryb);
+        System.out.println("Request encoding: " + request.getCharacterEncoding());
+        System.out.println("Request query: " + request.getParameter("query"));
+        System.out.println("QUERY: " + query);
+        try {
+            String querya = new String(query.getBytes("utf-8"), "utf-8");
+            System.out.println("QUERY AFTER: " + querya);
+        } catch (UnsupportedEncodingException ex) {
+            logger.error("Cannot convert search query because encoding is not supported");
+        }
+
+        String queryb = null;
+        try {
+            queryb = URLDecoder.decode(query, "utf-8");
+        } catch (UnsupportedEncodingException ex) {
+            logger.error("Cannot convert search query because encoding is not supported");
+        }
+        System.out.println("QUERY B: " + queryb);
         logger.error("WATCH Pager: {}", pager);
 
         /*
@@ -179,6 +182,7 @@ public class SuggestController {
                         body.setResults(new ArrayList<Report>(0));
                     }
                 } else {
+                    body.setPager(null);
                     body.setResults(new ArrayList<Report>(0));
                 }
             }
@@ -199,6 +203,7 @@ public class SuggestController {
                     body.setResults(suggestService.getReportsByQuery(query,
                             Long.valueOf(limit), Long.valueOf(pager.getPageOffset())));
                 } else {
+                    body.setPager(null);
                     body.setResults(new ArrayList<Report>(0));
                 }
             }
@@ -265,6 +270,7 @@ public class SuggestController {
         }
         return re;
     }
+    
     @Inject
     SuggestIndexSearcher indexSearcher;
 

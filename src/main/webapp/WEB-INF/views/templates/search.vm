@@ -287,7 +287,7 @@ function progress($pbar) {
         upload('.results-wrap');
 
         var useIndex = document.getElementById("use-index-checkbox").checked;
-        var query = 'query=' + encodeURI($("input[name='search']").val().trim()
+        var query = 'query=' + encodeURIComponent($("input[name='search']").val().trim()
             + '&limit=' + limit + '&useIndex=' + useIndex + '&p=' + page);
         var startTime = new Date();
         $.ajax(suggestUrl, {
@@ -298,6 +298,9 @@ function progress($pbar) {
             complete: function(data) {
                 unload();
                 hidePrompts();
+                var requestTime = (new Date()) - startTime;
+                var formattedRequestTime = parseInt(requestTime / 1000) + ',' + (requestTime % 1000);
+                $("p.stats span:last").text(formattedRequestTime);
                 search_lock = false;
             },
             error: function() {
@@ -306,6 +309,8 @@ function progress($pbar) {
                 console.log("Error in ajax request to Suggest service");
             },
             success: onSearchSuccess,
+            contentType: 'application/x-www-form-urlencoded; charset=UTF-8',
+            mimeType: "application/json; charset=UTF-8",
             dataType: 'json'
         });
     }

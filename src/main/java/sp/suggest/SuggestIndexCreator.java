@@ -1,6 +1,7 @@
 package sp.suggest;
 
 import java.io.UnsupportedEncodingException;
+import java.text.Normalizer;
 import java.util.Date;
 import java.util.List;
 import java.util.logging.Level;
@@ -28,7 +29,8 @@ public class SuggestIndexCreator implements IndexCreator {
 
     @PostConstruct
     public void initIndex() {
-        logger.debug("Initializing a Reports! Suggest index. Update fixed rate has been set to {}", UPDATE_RATE_HOURLY);
+        logger.debug("Initializing a Reports! Suggest index. "
+                + "Update fixed rate has been set to {}", UPDATE_RATE_HOURLY);
         reloadIndex();
         logger.error("INDEX: {}", suggestIndex.getIndex());
     }
@@ -57,7 +59,7 @@ public class SuggestIndexCreator implements IndexCreator {
             suggestIndex.switchIndexes();
 
         } catch (UnsupportedEncodingException ex) {
-            java.util.logging.Logger.getLogger(SuggestIndexCreator.class.getName()).log(Level.SEVERE, null, ex);
+            logger.error("Cannot convert to specified character encoding");
         } finally {
             suggestIndex.setProcessing(false);
             suggestIndex.getProcessLock().unlock();
@@ -70,7 +72,8 @@ public class SuggestIndexCreator implements IndexCreator {
             id = report.getId();
             for (String key : report.getActivity().split("\\s")) {
                 key = key.toLowerCase();
-              //  System.out.println("KEY ACTIVITY: " + new String(key.getBytes("iso-8859-1"), "utf-8"));
+                Normalizer.normalize(key, Normalizer.Form.NFD);
+                //  System.out.println("KEY ACTIVITY: " + new String(key.getBytes("iso-8859-1"), "utf-8"));
                 suggestIndex.addToSwapIndex(key, id);
             }
             for (String key : report.getPerformer().split("\\s")) {
@@ -78,6 +81,7 @@ public class SuggestIndexCreator implements IndexCreator {
 //                System.out.println("KEY PERFORMER: " + key);
 //                System.out.println("KEY PERFORMER ENCODED: " + new String(key.getBytes("iso-8859-1"), "utf-8"));
                 key = key.toLowerCase();
+                Normalizer.normalize(key, Normalizer.Form.NFD);
                 suggestIndex.addToSwapIndex(key, id);
             }
         }
@@ -89,10 +93,12 @@ public class SuggestIndexCreator implements IndexCreator {
             id = report.getId();
             for (String key : report.getActivity().split("\\s")) {
                 key = key.toLowerCase();
+                Normalizer.normalize(key, Normalizer.Form.NFD);
                 suggestIndex.addToIndex(key, id);
             }
             for (String key : report.getPerformer().split("\\s")) {
                 key = key.toLowerCase();
+                Normalizer.normalize(key, Normalizer.Form.NFD);
                 suggestIndex.addToIndex(key, id);
             }
         }
