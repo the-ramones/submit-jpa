@@ -1,6 +1,6 @@
 package sp.suggest;
 
-import java.util.LinkedList;
+import java.util.LinkedHashSet;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -14,7 +14,7 @@ public interface Index {
 
     void addToIndex(String key, Long docId);
 
-    ConcurrentHashMap<String, LinkedList> getIndex();
+    ConcurrentHashMap<String, LinkedHashSet> getIndex();
 
     /**
      * Should not change elements

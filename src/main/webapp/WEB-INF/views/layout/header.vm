@@ -13,13 +13,13 @@
                         <li><a href="#springUrl('/registry?new')">#springMessage("menu.report.build.registry")</a></li>
                     </ul>
                 </li>
-                <li><a href="#springUrl('/report/suggest')">#springMessage("menu.report.ajax")</a></li>
-                <li><a href="#springUrl('/report/additional')">#springMessage("menu.additional")</a>
+                <li><a>#springMessage("menu.search")</a>
                     <ul>
-                        <li><a href="#springUrl('/suggest-solr')">#springMessage('menu.solr')</a></li>
-                        <li><a href="#springUrl('/admin')">#springMessage('menu.manager')</a></li>
+                        <li><a href="#springUrl('/report/suggest')">#springMessage("menu.report.ajax")</a></li>
+                        <li><a href="#springUrl('/suggest-solr')">#springMessage("menu.solr")</a></li>                        
                     </ul>
                 </li>
+                <li><a href="#springUrl('/admin')">#springMessage('menu.manager')</a></li>
             </ul>
         </li>        
         <li><a  href="#springUrl('/contact')">#springMessage("menu.contact")</a>

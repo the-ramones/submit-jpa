@@ -297,8 +297,8 @@ input[type=checkbox].css-checkbox:checked + label.css-label {
 .detail {
     font-size: 200px; 
     position:absolute; 
-    right: 20px; 
-    top:  50px; 
+    right: 5%; 
+    top:  30%; 
     color:rgb(224, 133, 36); 
     text-shadow: 1px 1px 2px black;
 }

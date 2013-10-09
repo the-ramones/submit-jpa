@@ -1,14 +1,13 @@
 package sp.suggest;
 
-import java.io.UnsupportedEncodingException;
-import java.text.Normalizer;
 import java.text.Normalizer;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Iterator;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.logging.Level;
 import java.util.regex.Pattern;
 import javax.inject.Inject;
 import org.slf4j.Logger;
@@ -32,11 +31,6 @@ public class SuggestIndexSearcher implements IndexSearcher, IndexSuggester {
 
     private synchronized String normalizeQuery(String query) {
         String nQuery = query.trim().toLowerCase();
-        try {
-            nQuery = new String(nQuery.getBytes("utf-8"), "utf-8");
-        } catch (UnsupportedEncodingException ex) {
-            logger.warn("Cannot convert to specified encoding: {}", nQuery);
-        }
         return nQuery;
     }
 
@@ -66,10 +60,12 @@ public class SuggestIndexSearcher implements IndexSearcher, IndexSuggester {
         StringBuilder patternBuilder;
         List<Pattern> patterns = new ArrayList<Pattern>();
         for (String keyPart : nQuery.split(" ")) {
-            patternBuilder = new StringBuilder("(?iu)");
-            patternBuilder.append(ALLOWED_CHARS_REGEXP)
-                    .append(keyPart)
-                    .append(ALLOWED_CHARS_REGEXP);
+            patternBuilder = new StringBuilder("^(?iu)");
+            patternBuilder.append(ALLOWED_CHARS_REGEXP);
+            keyPart = Normalizer.normalize(keyPart, Normalizer.Form.NFD);
+            patternBuilder.append(keyPart)
+                    .append(ALLOWED_CHARS_REGEXP)
+                    .append('$');
             patterns.add(Pattern.compile(patternBuilder.toString()));
         }
 
@@ -77,9 +73,10 @@ public class SuggestIndexSearcher implements IndexSearcher, IndexSuggester {
             for (Pattern pattern : patterns) {
                 logger.debug("MATCH {} : {}", key, pattern.matcher(key).matches());
                 if (pattern.matcher(key).matches()) {
-                    List<Long> partResults = (List<Long>) index.get(key);
-                    if ((count + partResults.size()) >= limit) {
-                        result.addAll(partResults.subList(0, limit - count - 1));
+                    List<Long> partResults = Arrays.asList(
+                            ((LinkedHashSet<Long>) index.get(key)).toArray(new Long[0]));
+                    if ((count + partResults.size()) > limit) {
+                        result.addAll(partResults.subList(0, limit - count));
                         break;
                     } else {
                         count = count + partResults.size();
@@ -96,8 +93,9 @@ public class SuggestIndexSearcher implements IndexSearcher, IndexSuggester {
         String nQuery = normalizeQuery(query);
         int count = 0;
         StringBuilder sb = new StringBuilder(nQuery.length());
-        sb.append("^(?iu)").append(ALLOWED_CHARS_REGEXP)
-                .append(nQuery)
+        sb.append("^(?iu)").append(ALLOWED_CHARS_REGEXP);
+        nQuery = Normalizer.normalize(nQuery, Normalizer.Form.NFD);
+        sb.append(nQuery)
                 .append(ALLOWED_CHARS_REGEXP)
                 .append('$');
         Pattern pattern = Pattern.compile(sb.toString());
@@ -140,11 +138,12 @@ public class SuggestIndexSearcher implements IndexSearcher, IndexSuggester {
         StringBuilder patternBuilder;
         List<Pattern> patterns = new ArrayList<Pattern>();
         for (String keyPart : nQuery.split(" ")) {
-            patternBuilder = new StringBuilder("(?iu)");
+            patternBuilder = new StringBuilder("^(?iu)");
             patternBuilder.append(ALLOWED_CHARS_REGEXP);
             keyPart = Normalizer.normalize(keyPart, Normalizer.Form.NFD);
             patternBuilder.append(keyPart)
-                    .append(ALLOWED_CHARS_REGEXP);
+                    .append(ALLOWED_CHARS_REGEXP)
+                    .append('$');
             patterns.add(Pattern.compile(patternBuilder.toString()));
         }
 
@@ -154,7 +153,7 @@ public class SuggestIndexSearcher implements IndexSearcher, IndexSuggester {
                 logger.debug("MATCH {} : {}", key, pattern.matcher(key).matches());
 
                 if (pattern.matcher(key).matches()) {
-                    count += ((List<Long>) index.get(key)).size();
+                    count += ((LinkedHashSet<Long>) index.get(key)).size();
                 }
             }
         }

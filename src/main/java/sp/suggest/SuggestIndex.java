@@ -1,5 +1,6 @@
 package sp.suggest;
 
+import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
@@ -42,11 +43,11 @@ public class SuggestIndex implements Index {
     /*
      * Indexes
      */
-    private ConcurrentHashMap<String, LinkedList> index;
-    private ConcurrentHashMap<String, LinkedList> swapIndex;
+    private ConcurrentHashMap<String, LinkedHashSet> index;
+    private ConcurrentHashMap<String, LinkedHashSet> swapIndex;
 
     @Override
-    public ConcurrentHashMap<String, LinkedList> getIndex() {
+    public ConcurrentHashMap<String, LinkedHashSet> getIndex() {
         return index;
     }
 
@@ -67,18 +68,18 @@ public class SuggestIndex implements Index {
      * @param key
      * @return
      */
-    public List<Long> getValues(String key) {
+    public LinkedHashSet<Long> getValues(String key) {
         return index.get(key);
     }
 
-    public ConcurrentHashMap<String, LinkedList> getSwapIndex() {
+    public ConcurrentHashMap<String, LinkedHashSet> getSwapIndex() {
         try {
             processLock.lock();
             if (swapIndex != null) {
                 return swapIndex;
             } else {
                 logger.warn("CREATING A NEW SWAP INDEX");
-                swapIndex = new ConcurrentHashMap<String, LinkedList>(
+                swapIndex = new ConcurrentHashMap<String, LinkedHashSet>(
                         INITIAL_CATACITY, LOAD_FACTOR, CONCURRENCY_LEVEL);
                 return swapIndex;
             }
@@ -93,10 +94,10 @@ public class SuggestIndex implements Index {
         try {
             writeLock.lockInterruptibly();
 
-            LinkedList ids = new LinkedList<Long>();
+            LinkedHashSet ids = new LinkedHashSet<Long>();
             index.putIfAbsent(key, ids);
             if (index.containsKey(key)) {
-                LinkedList entry = (LinkedList) index.get(key);
+                LinkedHashSet entry = (LinkedHashSet) index.get(key);
                 entry.add(docId);
 
                 logger.error("ADDING to INDEX: {} : {}", key, docId);
@@ -115,14 +116,14 @@ public class SuggestIndex implements Index {
         try {
             processLock.lockInterruptibly();
 
-            ConcurrentHashMap<String, LinkedList> tempSwapIndex = getSwapIndex();
-            LinkedList ids = new LinkedList<Long>();
+            ConcurrentHashMap<String, LinkedHashSet> tempSwapIndex = getSwapIndex();
+            LinkedHashSet ids = new LinkedHashSet<Long>();
             tempSwapIndex.putIfAbsent(key, ids);
             if (tempSwapIndex.containsKey(key)) {
-                LinkedList entry = (LinkedList) tempSwapIndex.get(key);
+                LinkedHashSet entry = (LinkedHashSet) tempSwapIndex.get(key);
                 entry.add(docId);
             } else {
-                index.put(key, ids);
+                //index.put(key, ids);
             }
 
         } catch (InterruptedException ex) {

@@ -1,12 +1,12 @@
 package sp.controller;
 
-import java.io.UnsupportedEncodingException;
-import java.net.URLDecoder;
 import java.text.DateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -30,7 +30,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.SessionAttributes;
-import org.springframework.web.filter.CharacterEncodingFilter;
 import sp.model.Report;
 import sp.model.ajax.Prompt;
 import sp.model.ajax.ResultPager;
@@ -100,30 +99,14 @@ public class SuggestController {
         headers.add("Content-Type", "application/json;charset=utf-8");
         ResultPager body = new ResultPager();
 
-        System.out.println("Request encoding: " + request.getCharacterEncoding());
-        System.out.println("Request query: " + request.getParameter("query"));
-        System.out.println("QUERY: " + query);
-        try {
-            String querya = new String(query.getBytes("utf-8"), "utf-8");
-            System.out.println("QUERY AFTER: " + querya);
-        } catch (UnsupportedEncodingException ex) {
-            logger.error("Cannot convert search query because encoding is not supported");
-        }
-
-        String queryb = null;
-        try {
-            queryb = URLDecoder.decode(query, "utf-8");
-        } catch (UnsupportedEncodingException ex) {
-            logger.error("Cannot convert search query because encoding is not supported");
-        }
-        System.out.println("QUERY B: " + queryb);
-        logger.error("WATCH Pager: {}", pager);
-
         /*
          * Contsrain result of the rearch if recend records needed.
          */
         if (recent || limit <= 0) {
             limit = PAGINATION_THRESHOLD;
+        }
+        if (limit == null) {
+            limit = Integer.MAX_VALUE;
         }
         /*
          * Decision: paged or new search
@@ -134,13 +117,15 @@ public class SuggestController {
              * Search using index
              */
             if (newSearch) {
-                List<Long> ids = indexSearcher.search(query, limit);
+                List<Long> ids = (List<Long>) indexSearcher.search(query,
+                        Integer.MAX_VALUE);
 
+                Long count = indexSearcher.count(query);
                 logger.error("!! NEW SEARCH IDS: {}", ids);
 
                 if (!ids.isEmpty()) {
-                    pager.setSourceCount(ids.size());
-                    logger.error("SIZE OF IDS: {}", ids.size());
+                    pager.setSourceCount(count.intValue());
+                    logger.error("SIZE OF IDS: {}", count);
                     pager.setPageSize(limit);
                     pager.setPage(0);
                     pager.setIds(ids);
@@ -273,7 +258,6 @@ public class SuggestController {
         }
         return re;
     }
-    
     @Inject
     SuggestIndexSearcher indexSearcher;
 

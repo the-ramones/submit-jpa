@@ -4,7 +4,6 @@ import java.io.UnsupportedEncodingException;
 import java.text.Normalizer;
 import java.util.Date;
 import java.util.List;
-import java.util.logging.Level;
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 import org.slf4j.Logger;
@@ -73,13 +72,9 @@ public class SuggestIndexCreator implements IndexCreator {
             for (String key : report.getActivity().split("\\s")) {
                 key = key.toLowerCase();
                 Normalizer.normalize(key, Normalizer.Form.NFD);
-                //  System.out.println("KEY ACTIVITY: " + new String(key.getBytes("iso-8859-1"), "utf-8"));
                 suggestIndex.addToSwapIndex(key, id);
             }
             for (String key : report.getPerformer().split("\\s")) {
-//                System.out.println("NATIVE PERFORMER: " + report.getPerformer());
-//                System.out.println("KEY PERFORMER: " + key);
-//                System.out.println("KEY PERFORMER ENCODED: " + new String(key.getBytes("iso-8859-1"), "utf-8"));
                 key = key.toLowerCase();
                 Normalizer.normalize(key, Normalizer.Form.NFD);
                 suggestIndex.addToSwapIndex(key, id);
