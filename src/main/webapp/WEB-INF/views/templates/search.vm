@@ -83,7 +83,7 @@
         upload();
         var startTime = new Date();
         $.ajax(suggestUrl, {
-            method: "GET",
+            method: "POST",
             async: true,
             cache: false,
             data: query,            
@@ -291,7 +291,7 @@ function progress($pbar) {
             + '&limit=' + limit + '&useIndex=' + useIndex + '&p=' + page);
         var startTime = new Date();
         $.ajax(suggestUrl, {
-            method: "GET",
+            method: "POST",
             async: true,
             cache: false,
             data: query,            

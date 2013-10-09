@@ -30,6 +30,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.SessionAttributes;
+import org.springframework.web.filter.CharacterEncodingFilter;
 import sp.model.Report;
 import sp.model.ajax.Prompt;
 import sp.model.ajax.ResultPager;
@@ -84,7 +85,7 @@ public class SuggestController {
         binder.registerCustomEditor(Date.class, new CustomDateEditor(df, true));
     }
 
-    @RequestMapping(value = "", method = RequestMethod.GET)
+    @RequestMapping(value = "", method = {RequestMethod.GET, RequestMethod.POST})
     public ResponseEntity<ResultPager> getReportsByQuery(
             @RequestParam("query") String query,
             @ModelAttribute("suggest-pager") SpLightPager pager,
@@ -220,7 +221,7 @@ public class SuggestController {
         return re;
     }
 
-    @RequestMapping(value = "ids", method = RequestMethod.GET)
+    @RequestMapping(value = "ids", method = {RequestMethod.GET, RequestMethod.POST})
     public ResponseEntity<List<Long>> getIdsByQuery(
             @RequestParam("query") String query,
             @RequestParam(value = "limit", required = false) Long limit,
@@ -242,7 +243,7 @@ public class SuggestController {
         return re;
     }
 
-    @RequestMapping(value = "count", method = RequestMethod.GET)
+    @RequestMapping(value = "count", method = {RequestMethod.GET, RequestMethod.POST})
     public ResponseEntity<Long> getCount(@RequestParam("query") String query,
             Model model) {
         HttpHeaders headers = new HttpHeaders();
@@ -274,7 +275,7 @@ public class SuggestController {
     @Inject
     SuggestIndexSearcher indexSearcher;
 
-    @RequestMapping(value = "prompt-strings", method = RequestMethod.GET)
+    @RequestMapping(value = "prompt-strings", method = {RequestMethod.GET, RequestMethod.POST})
     public ResponseEntity<List<String>> getPromptsAsString(@RequestParam("query") String query,
             @RequestParam(value = "limit", required = false) int limit,
             @RequestParam(value = "useIndex", required = false) boolean useIndex,
