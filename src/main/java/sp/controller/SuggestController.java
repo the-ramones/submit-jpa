@@ -89,7 +89,7 @@ public class SuggestController {
     public ResponseEntity<ResultPager> getReportsByQuery(
             @RequestParam("query") String query,
             @ModelAttribute("suggest-pager") SpLightPager pager,
-            @RequestParam(value = "limit", required = false) int limit,
+            @RequestParam(value = "limit", required = false) Integer limit,
             @RequestParam(value = "p", required = false) String page,
             @RequestParam(value = "useIndex", required = false) boolean useIndex,
             @RequestParam(value = "recent", required = false) boolean recent,
@@ -257,7 +257,7 @@ public class SuggestController {
 
     @RequestMapping(value = "prompt", method = RequestMethod.GET)
     public ResponseEntity<List<Prompt>> getPrompts(@RequestParam("query") String query,
-            @RequestParam(value = "limit", required = false) int limit,
+            @RequestParam(value = "limit", required = false) Integer limit,
             Model model) {
         logger.debug("IN GET PROMPTS");
 
@@ -279,7 +279,7 @@ public class SuggestController {
 
     @RequestMapping(value = "prompt-strings", method = {RequestMethod.GET, RequestMethod.POST})
     public ResponseEntity<List<String>> getPromptsAsString(@RequestParam("query") String query,
-            @RequestParam(value = "limit", required = false) int limit,
+            @RequestParam(value = "limit", required = false) Integer limit,
             @RequestParam(value = "useIndex", required = false) boolean useIndex,
             Model model) {
         logger.debug("IN GET PROMPTS AS STRINGS");

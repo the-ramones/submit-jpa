@@ -288,8 +288,9 @@ function progress($pbar) {
         upload('.results-wrap');
 
         var useIndex = document.getElementById("use-index-checkbox").checked;
-        var query = 'query=' + encodeURIComponent($("input[name='search']").val().trim()
+        var query = 'query=' + encodeURI($("input[name='search']").val().trim()
             + '&limit=' + limit + '&useIndex=' + useIndex + '&p=' + page);
+        alert(query);
         var startTime = new Date();
         $.ajax(suggestUrl, {
             method: "POST",
