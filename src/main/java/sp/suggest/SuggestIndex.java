@@ -127,7 +127,7 @@ public class SuggestIndex implements Index {
             }
 
         } catch (InterruptedException ex) {
-            logger.warn("Cannot acquire write lock on the index");
+            logger.warn("Cannot acquire write lock on the index", ex);
         } finally {
             processLock.unlock();
         }
