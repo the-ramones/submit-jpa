@@ -2,17 +2,40 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>sp</groupId>
-    <artifactId>sp-final</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <groupId>reports</groupId>
+    <artifactId>reports.app</artifactId>
+    <version>0.1.2</version>
     <packaging>war</packaging>
+    <name>Reports! Application</name>
+    
+    <description>Reports! Application
 
-    <name>sp-final</name>
+String framework based web application allows to track your activities.
+
+Tools:
+   String framework
+   Velocity Template Engine
+   jQuery
+   EclipseLink JPA Provider	  
+   Hibernate Validator	
+   Bitronix JTA Provider
+
+Additional:
+   Apache Commons Mail - JavaMail   	
+   iText PDF library</description>
 
     <properties>
         <endorsed.dir>${project.build.directory}/endorsed</endorsed.dir>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
+    
+    <developers>
+        <developer>
+            <id>paul-kulitski</id>
+            <name>Paul Kulitski</name>
+            <timezone>+3</timezone>
+        </developer>
+    </developers>
 
     <dependencies>
         <dependency>
@@ -214,4 +237,5 @@
             </plugin>
         </plugins>
     </build>
+
 </project>
