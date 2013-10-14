@@ -13,7 +13,6 @@ import org.apache.commons.mail.SimpleEmail;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.MessageSource;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import sp.model.ajax.Statistics;
 import sp.util.SpDateFormatFactory;
@@ -28,7 +27,6 @@ import sp.util.SpStatsPdfBuilder;
 @Service
 public class EmailServiceImpl implements EmailService {
 
-    
     private static final Logger logger = LoggerFactory.getLogger(EmailServiceImpl.class);
     @Inject
     Session emailSession;
@@ -38,6 +36,11 @@ public class EmailServiceImpl implements EmailService {
     
     private static final String DEFAULT_CHARSET = "UTF-8";
     private static final String FROM = "areports@mail.ru";
+    private static final String STATISTICS_SUBJECT_I18N_KEY = "email.statistics.subject";
+    private static final String STATISTICS_ASOF_I18N_KEY = "email.statistics.asof";
+    private static final String PDF_ATTACHMENT_DESCRIPTION_KEY = "email.pdf.description";
+    private static final String PDF_ATTACHMENT_NAME_KEY = "email.pdf.name";
+
     /**
      * Sends a generic text email message to the list of specified recipients
      *
@@ -66,11 +69,10 @@ public class EmailServiceImpl implements EmailService {
     public void sendEmailWithStatistics(String htmlContent, Statistics stats, String... recipients) {
         sendEmailWithStatistics(htmlContent, stats, Locale.ENGLISH, recipients);
     }
-    private static final String STATISTICS_SUBJECT_I18N_KEY = "email.statistics.subject";
-    private static final String STATISTICS_ASOF_I18N_KEY = "email.statistics.asof";
 
     /*
      * TODO: Interceptors place?
+     * TODO: @Async or just count on AJAX async nature?
      */
     @Override
     public void sendEmailWithStatistics(String htmlContent, Statistics stats, Locale locale, String... recipients) {
@@ -98,14 +100,11 @@ public class EmailServiceImpl implements EmailService {
     public void sendEmailWithStatisticsAndPdfAttachment(String htmlContent, Statistics stats, String username, String... recipients) {
         sendEmailWithStatisticsAndPdfAttachment(htmlContent, stats, username, Locale.ENGLISH, recipients);
     }
-    private static final String PDF_ATTACHMENT_DESCRIPTION_KEY = "email.pdf.description";
-    private static final String PDF_ATTACHMENT_NAME_KEY = "email.pdf.name";
 
     @Override
     public void sendEmailWithStatisticsAndPdfAttachment(String htmlContent, Statistics stats, String username, Locale locale, String... recipients) {
-        
-        logger.error("IN EMAILSERVICE SEND EMAIL WITH STATISTICS");
-        
+        logger.debug("IN EMAILSERVICE SEND EMAIL WITH STATISTICS");
+
         HtmlEmail email = new HtmlEmail();
         email.setMailSession(emailSession);
         email.setCharset(DEFAULT_CHARSET);
@@ -119,11 +118,11 @@ public class EmailServiceImpl implements EmailService {
          * Build an PDF file corresponding to the specified Statistics object and
          * username
          */
-        SpStatsPdfBuilder statsBuilder = new SpStatsPdfBuilder();        
+        SpStatsPdfBuilder statsBuilder = new SpStatsPdfBuilder();
         statsBuilder.setStatistics(stats);
         statsBuilder.setUsername(username);
         statsBuilder.setMessageSource(messageSource);
-        statsBuilder.setLocale(locale);        
+        statsBuilder.setLocale(locale);
         statsBuilder.setDate(new Date());
         String path = statsBuilder.build();
         EmailAttachment attachment = null;
@@ -137,13 +136,14 @@ public class EmailServiceImpl implements EmailService {
         try {
             email.attach(attachment);
             email.setFrom(FROM);
-            email.addTo(recipients);            
+            email.addTo(recipients);
+            //TODO: clean-up
             email.addTo("kulickipavel@gmail.com");
             email.setHtmlMsg(htmlContent);
             //TODO: add fallback plain text message
             email.setTextMsg(" ");
             email.send();
-            logger.error("Email has been sended");
+            logger.debug("Email has been sended");
         } catch (EmailException ex) {
             logger.error("Cannot send an email", ex);
         }

@@ -2,14 +2,8 @@ package sp.controller;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.CookieHandler;
-import java.net.CookieManager;
-import java.net.CookiePolicy;
-import java.net.CookieStore;
-import java.net.HttpCookie;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
-import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.util.List;
@@ -182,15 +176,8 @@ public class ChecklistController {
                 /*
                  * Session Ids
                  */
-                logger.error("JSESSION ID FROM SESSION: {}", session.getId());
-                logger.error("JSESSION ID FROM @CookieValue: {}", sessionId);
-                String reqSessionId = null;
-                for (Cookie cookie : request.getCookies()) {
-                    if (cookie.getName().equals("JSESSIONID")) {
-                        reqSessionId = cookie.getValue();
-                    }
-                }
-                logger.error("JSESSION ID FROM REQUEST: {}", reqSessionId);
+                logger.debug("JSESSION ID FROM SESSION: {}", session.getId());
+                logger.debug("JSESSION ID FROM @CookieValue: {}", sessionId);
 
                 String emailHtml = null;
                 /*
@@ -198,6 +185,7 @@ public class ChecklistController {
                  */
                 StringBuffer rawUrl = request.getRequestURL();
                 int index = rawUrl.indexOf("/checklist/email");
+                int responseCode = 0;
                 if (index != -1) {
                     String baseUrl = rawUrl.substring(0, index);
                     try {
@@ -206,42 +194,20 @@ public class ChecklistController {
                         URL url = new URL(baseUrl + "/email/statistics");
                         HttpURLConnection connection =
                                 (HttpURLConnection) url.openConnection();
-                        if (!StringUtils.isEmpty(reqSessionId)) {
+                        if (!StringUtils.isEmpty(sessionId)) {
                             connection.setRequestProperty("Cookie", "JSESSIONID="
-                                    + URLEncoder.encode(reqSessionId, "UTF-8"));
+                                    + URLEncoder.encode(sessionId, "UTF-8"));
                         }
                         connection.setReadTimeout(10000);
                         connection.setRequestMethod("GET");
                         connection.setDoOutput(true);
 
-                        int responseCode = connection.getResponseCode();
-                        logger.error("NEW VERSION RESPONSE CODE: " + responseCode);
+                        responseCode = connection.getResponseCode();
 
-                        // #new version
-//                        CookieManager cm = new CookieManager();
-//                        cm.setCookiePolicy(CookiePolicy.ACCEPT_ORIGINAL_SERVER);
-//                        CookieHandler.setDefault(cm);
-//                        CookieStore cookieJar = cm.getCookieStore();
-//                        HttpCookie sessionCookie = new HttpCookie("JSESSIONID", reqSessionId);
-//
-//                        URL emailUrl = new URL(baseUrl + "/email/statistics");
-//                        try {
-//                            cookieJar.add(emailUrl.toURI(), sessionCookie);
-//                        } catch (URISyntaxException uex) {
-//                            logger.warn("Error in URI syntax");
-//                        }
-//
-//                        HttpURLConnection con = (HttpURLConnection) emailUrl.openConnection();
                         InputStream in = connection.getInputStream();
                         String encoding = connection.getContentEncoding();
                         encoding = encoding == null ? "UTF-8" : encoding;
-                        byte[] b = new byte[1024];
-                        int c = 0;
                         emailHtml = new String(IOUtils.toByteArray(in), encoding);
-//
-//                        for (HttpCookie cookie : cm.getCookieStore().getCookies()) {
-//                            System.out.println("AFTER COOKIE: " + cookie.toString());
-//                        }
                     } catch (MalformedURLException ex) {
                         logger.warn("Malformed URL when constructing path to email controller", ex);
                     } catch (IOException ioex) {
@@ -251,9 +217,10 @@ public class ChecklistController {
 
                 //TODO: replace mock implementation with Spring Security artifacts
                 User user = userService.getUserById(1);
-
-                logger.error("user, stats, locale, reciever: {} {} {} {}", stats, user.getFullname(), locale, user.getEmail());
-
+                
+                /*
+                 * Sending an e-mail
+                 */
                 emailService.sendEmailWithStatisticsAndPdfAttachment(
                         emailHtml, stats, user.getFullname(), locale, user.getEmail());
                 return "success";

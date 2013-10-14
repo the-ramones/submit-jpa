@@ -27,7 +27,7 @@ import sp.model.ajax.Statistics;
 public class EmailController {
 
     private static final Logger logger = LoggerFactory.getLogger(EmailController.class);
-    
+
     @ModelAttribute("statistics")
     public Statistics populateStatistics() {
         return new Statistics();
@@ -45,17 +45,18 @@ public class EmailController {
     public String getHtmlWithStatistics(@ModelAttribute("statistics") Statistics stats,
             Model model, HttpServletRequest req, HttpServletResponse res, HttpSession session) {
         logger.debug("IN SEND EMAIL WITH STATISTICS");
-        
+
         model.addAttribute("statistics", stats);
-        
-        for(Cookie c: req.getCookies()) {
+
+        //TODO: clean-up
+        for (Cookie c : req.getCookies()) {
             logger.error("Request COOKIES : " + c.getName() + ' ' + c.getValue() + ' ' + c.getDomain() + ' ' + c.getPath());
         }
-        logger.error("REQUEST requested session: ", req.getRequestedSessionId());
-        logger.error("REQUEST URL: ", req.getRequestURI());
-        logger.error("SESSION ID: {}", session.getId());
-        logger.error("stats: {}", session.getAttribute("statistics"));
-        
+        logger.debug("REQUEST requested session: ", req.getRequestedSessionId());
+        logger.debug("REQUEST URL: ", req.getRequestURI());
+        logger.debug("SESSION ID: {}", session.getId());
+        logger.debug("stats: {}", session.getAttribute("statistics"));
+
         return "stats-email";
     }
 }
