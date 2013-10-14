@@ -143,6 +143,7 @@ public class EmailServiceImpl implements EmailService {
             //TODO: add fallback plain text message
             email.setTextMsg(" ");
             email.send();
+            logger.error("Email has been sended");
         } catch (EmailException ex) {
             logger.error("Cannot send an email", ex);
         }

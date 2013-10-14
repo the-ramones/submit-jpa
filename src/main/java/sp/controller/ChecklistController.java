@@ -11,6 +11,7 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.net.URLEncoder;
 import java.util.List;
 import java.util.Locale;
 import java.util.Set;
@@ -18,6 +19,7 @@ import javax.inject.Inject;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import org.apache.commons.lang.StringUtils;
 import org.apache.pdfbox.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -163,9 +165,8 @@ public class ChecklistController {
         }
         return null;
     }
-
     private static final String JSESSION_KEY = "JSESSIONID";
-    
+
     @RequestMapping(value = "email", method = RequestMethod.GET)
     public @ResponseBody
     String sendStatisticsOnEmail(HttpSession session, HttpServletRequest request,
@@ -177,20 +178,20 @@ public class ChecklistController {
             if (!checklist.isEmpty()) {
                 Statistics stats = SpStatisticsGenerator.generateStatistics(checklist);
                 session.setAttribute("statistics", stats);
-                
+
                 /*
                  * Session Ids
                  */
                 logger.error("JSESSION ID FROM SESSION: {}", session.getId());
                 logger.error("JSESSION ID FROM @CookieValue: {}", sessionId);
                 String reqSessionId = null;
-                for (Cookie cookie: request.getCookies()) {
+                for (Cookie cookie : request.getCookies()) {
                     if (cookie.getName().equals("JSESSIONID")) {
                         reqSessionId = cookie.getValue();
                     }
                 }
                 logger.error("JSESSION ID FROM REQUEST: {}", reqSessionId);
-                
+
                 String emailHtml = null;
                 /*
                  * Make a request to '/email/statistics'
@@ -200,30 +201,47 @@ public class ChecklistController {
                 if (index != -1) {
                     String baseUrl = rawUrl.substring(0, index);
                     try {
-                        CookieManager cm = new CookieManager();
-                        cm.setCookiePolicy(CookiePolicy.ACCEPT_ORIGINAL_SERVER);
-                        CookieHandler.setDefault(cm);
-                        CookieStore cookieJar = cm.getCookieStore();
-                        HttpCookie sessionCookie = new HttpCookie("JSESSIONID", reqSessionId);
+                        // application-speecific Session ID sending
 
-                        URL emailUrl = new URL(baseUrl + "/email/statistics");
-                        try {
-                            cookieJar.add(emailUrl.toURI(), sessionCookie);
-                        } catch(URISyntaxException uex) {
-                            logger.warn("Error in URI syntax");
+                        URL url = new URL(baseUrl + "/email/statistics");
+                        HttpURLConnection connection =
+                                (HttpURLConnection) url.openConnection();
+                        if (!StringUtils.isEmpty(reqSessionId)) {
+                            connection.setRequestProperty("Cookie", "JSESSIONID="
+                                    + URLEncoder.encode(reqSessionId, "UTF-8"));
                         }
+                        connection.setReadTimeout(10000);
+                        connection.setRequestMethod("GET");
+                        connection.setDoOutput(true);
 
-                        HttpURLConnection con = (HttpURLConnection) emailUrl.openConnection();
-                        InputStream in = con.getInputStream();
-                        String encoding = con.getContentEncoding();
+                        int responseCode = connection.getResponseCode();
+                        logger.error("NEW VERSION RESPONSE CODE: " + responseCode);
+
+                        // #new version
+//                        CookieManager cm = new CookieManager();
+//                        cm.setCookiePolicy(CookiePolicy.ACCEPT_ORIGINAL_SERVER);
+//                        CookieHandler.setDefault(cm);
+//                        CookieStore cookieJar = cm.getCookieStore();
+//                        HttpCookie sessionCookie = new HttpCookie("JSESSIONID", reqSessionId);
+//
+//                        URL emailUrl = new URL(baseUrl + "/email/statistics");
+//                        try {
+//                            cookieJar.add(emailUrl.toURI(), sessionCookie);
+//                        } catch (URISyntaxException uex) {
+//                            logger.warn("Error in URI syntax");
+//                        }
+//
+//                        HttpURLConnection con = (HttpURLConnection) emailUrl.openConnection();
+                        InputStream in = connection.getInputStream();
+                        String encoding = connection.getContentEncoding();
                         encoding = encoding == null ? "UTF-8" : encoding;
                         byte[] b = new byte[1024];
                         int c = 0;
                         emailHtml = new String(IOUtils.toByteArray(in), encoding);
-                        
-                        for (HttpCookie cookie: cm.getCookieStore().getCookies()) {
-                            System.out.println("AFTER COOKIE: " + cookie.toString());
-                        }
+//
+//                        for (HttpCookie cookie : cm.getCookieStore().getCookies()) {
+//                            System.out.println("AFTER COOKIE: " + cookie.toString());
+//                        }
                     } catch (MalformedURLException ex) {
                         logger.warn("Malformed URL when constructing path to email controller", ex);
                     } catch (IOException ioex) {

@@ -1,5 +1,7 @@
 package sp.controller;
 
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import org.slf4j.Logger;
@@ -40,10 +42,17 @@ public class EmailController {
      * @return view name
      */
     @RequestMapping(value = "statistics", method = RequestMethod.GET)
-    public String getHtmlWithStatistics(@ModelAttribute Statistics stats,
-            Model model, HttpServletResponse res, HttpSession session) {
+    public String getHtmlWithStatistics(@ModelAttribute("statistics") Statistics stats,
+            Model model, HttpServletRequest req, HttpServletResponse res, HttpSession session) {
         logger.debug("IN SEND EMAIL WITH STATISTICS");
         
+        model.addAttribute("statistics", stats);
+        
+        for(Cookie c: req.getCookies()) {
+            logger.error("Request COOKIES : " + c.getName() + ' ' + c.getValue() + ' ' + c.getDomain() + ' ' + c.getPath());
+        }
+        logger.error("REQUEST requested session: ", req.getRequestedSessionId());
+        logger.error("REQUEST URL: ", req.getRequestURI());
         logger.error("SESSION ID: {}", session.getId());
         logger.error("stats: {}", session.getAttribute("statistics"));
         
