@@ -17,8 +17,10 @@ import javax.validation.constraints.Past;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
+import org.apache.solr.client.solrj.beans.Field;
 import org.hibernate.validator.constraints.NotEmpty;
 import org.springframework.format.annotation.DateTimeFormat;
+import sp.model.searchable.ReportSearchable;
 import sp.validation.ReportDate;
 import sp.validation.ValidReport;
 
@@ -42,28 +44,33 @@ import sp.validation.ValidReport;
 })
 @XmlRootElement
 @ValidReport
-public class Report implements Serializable {
+public class Report implements Serializable, ReportSearchable {
 
+    @Field(ReportSearchable.ID_FIELD)
     private Long id;
     
     @NotNull()
     @Past() 
     @DateTimeFormat(pattern = "dd MMM yyyy")
     @ReportDate
+    @Field(ReportSearchable.START_DATE_FIELD)
     private Date startDate;
     
     @DateTimeFormat(pattern = "dd MMM yyyy")
     @ReportDate
+    @Field(ReportSearchable.END_DATE_FIELD)
     private Date endDate; 
     
     @NotEmpty()
     @Size(min = 1, max = 255)
     @Pattern(regexp = "^(?iu)[a-zа-я][ 0-9a-zа-я-#@%&\\$]{1,255}(?<!-)$")
+    @Field(ReportSearchable.PERFORMER_FIELD)
     private String performer;
     
     @NotEmpty()
     @Size(min = 1, max = 255)
     @Pattern(regexp = "^(?iu)[a-zа-я0-9 #@%&\\$]{1,255}(?<!-)$")
+    @Field(ReportSearchable.ACTIVITY_FIELD)
     private String activity;
 
     @Id

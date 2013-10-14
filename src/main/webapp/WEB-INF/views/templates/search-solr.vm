@@ -25,7 +25,21 @@
     <p class="stats invisible">#springMessage('content.search.result'): <span></span> (<span></span> #springMessage('content.search.second').) </p>    
 </div>
 
-#hint()
+<div class="form-container" id="cloud-performer" style="border-top-width:15px;float:right; display:inline-block; margin-left: 10px; width: auto; max-width: 35%; color: rgb(204, 103, 26); text-decoration: none;">
+    <h2>Cloud of performers</h2>
+    <a href="#"><span style="font-style:bold;">Bruce Willis<span></a>
+    <a href="#"><span style="font-style:bold;">Bruce Willis<span></a>
+    <a href="#"><span style="font-style:bold;">Bruce Willis<span></a>
+    <a href="#"><span style="font-style:bold;">Bruce Willis<span></a>
+    <a href="#"><span style="font-style:bold;">Bruce Willis<span></a>
+    <a href="#"><span style="font-style:bold;">Bruce Willis<span></a>
+    <a href="#"><span style="font-style:bold;">Jogn Callagher<span></a>
+    <a href="#"><span style="font-style:bold;">Jogn Callagher<span></a>
+    <a href="#"><span style="font-style:bold;">Jogn Callagher<span></a>
+    <a href="#"><span style="font-style:bold;">Jogn Callagher<span></a>
+    <a href="#"><span style="font-style:bold;">Jogn Callagher<span></a>
+    <a href="#"><span style="font-style:bold;">Jogn Callagher<span></a>
+</div>
 
 <div class="results-wrap clearfix">
   
@@ -64,7 +78,17 @@
     
     var INDEXING = "#springMessage('search.indexing')";
 
+    
 #[[
+    /*
+     * Solr performer-activity cloude
+     */
+    fillInHashCloud() {
+        
+    }
+     
+
+
     /*
      * Search Button action
      */

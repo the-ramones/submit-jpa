@@ -10,19 +10,19 @@
     
     <description>Reports! Application
 
-String framework based web application allows to track your activities.
+        String framework based web application allows to track your activities.
 
-Tools:
-   String framework
-   Velocity Template Engine
-   jQuery
-   EclipseLink JPA Provider	  
-   Hibernate Validator	
-   Bitronix JTA Provider
+        Tools:
+        String framework
+        Velocity Template Engine
+        jQuery
+        EclipseLink JPA Provider	  
+        Hibernate Validator	
+        Bitronix JTA Provider
 
-Additional:
-   Apache Commons Mail - JavaMail   	
-   iText PDF library</description>
+        Additional:
+        Apache Commons Mail - JavaMail   	
+        iText PDF library</description>
 
     <properties>
         <endorsed.dir>${project.build.directory}/endorsed</endorsed.dir>
@@ -179,6 +179,11 @@ Additional:
             <groupId>org.apache.pdfbox</groupId>
             <artifactId>pdfbox</artifactId>
             <version>1.8.2</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.data</groupId>
+            <artifactId>spring-data-solr</artifactId>
+            <version>1.0.0.RELEASE</version>
         </dependency>
         <dependency>
             <groupId>javax</groupId>

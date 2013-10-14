@@ -15,6 +15,7 @@
        xmlns:cache="http://www.springframework.org/schema/cache"
        xmlns:mvc="http://www.springframework.org/schema/mvc"
        xmlns:task="http://www.springframework.org/schema/task"
+       xmlns:solr="http://www.springframework.org/schema/data/solr"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.1.xsd
           http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-3.1.xsd
           http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.1.xsd
@@ -28,6 +29,7 @@
           http://www.springframework.org/schema/cache http://www.springframework.org/schema/cache/spring-cache-3.1.xsd
           http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-3.1.xsd
           http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task-3.1.xsd
+          http://www.springframework.org/schema/data/solr http://www.springframework.org/schema/data/solr/spring-solr-1.0.xsd
 ">
     
     <!-- context -->
@@ -46,6 +48,16 @@
     
     <context:property-placeholder location="classpath:report.properties" />
         
+    <!-- solr -->
+    
+    <solr:solr-server id="reportsSolrServer" url="${solr.host}"
+                      timeout="15000" 
+                      maxConnections="16" />
+    
+    <bean id="solrTemplate" class="org.springframework.data.solr.core.SolrTemplate">
+        <constructor-arg ref="reportsSolrServer" />
+    </bean>
+    
     <!-- persistence -->    
 
     <bean  id="reportsDS" class="org.springframework.jdbc.datasource.DriverManagerDataSource">

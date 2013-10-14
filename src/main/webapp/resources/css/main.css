@@ -1,4 +1,4 @@
-/*admin console*/
+c/*admin console*/
 .tabs {
     position: relative;
     margin: 0 auto;
@@ -190,7 +190,7 @@ input[type=checkbox].css-checkbox:checked + label.css-label {
 /* Confirmation float window */
 #confirm {
     color: #222;
-    background-color: rgb(224, 133, 36) ;
+    background-color: rgb(224, 133, 36);
     box-shadow: 0 0 5px black;
     border-radius: 6px;
     padding: 20px 20px;
