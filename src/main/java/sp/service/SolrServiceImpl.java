@@ -13,7 +13,7 @@ import sp.repository.SolrRepository;
  *
  * @author Paul Kulitski
  */
-@Lazy
+//@Lazy
 @Service
 public class SolrServiceImpl implements SolrService {
 

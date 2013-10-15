@@ -8,9 +8,6 @@
                 <input id="suggest-checkbox" class="css-checkbox" type="checkbox" checked/>
                 <label for="suggest-checkbox" name="use-index-checkbox" class="css-label">#springMessage('content.suggest')</label>
                 <br />
-                <input id="use-index-checkbox" class="css-checkbox" type="checkbox" checked/>
-                <label for="use-index-checkbox" name="use-index-checkbox" class="css-label">#springMessage('content.useindex')</label>
-                <br />
                 <input id="only-recent-checkbox" class="css-checkbox" type="checkbox" />
                 <label for="only-recent-checkbox" name="use-index-checkbox" class="css-label">#springMessage('content.onlyrecent')</label>
             </div>
@@ -25,21 +22,20 @@
     <p class="stats invisible">#springMessage('content.search.result'): <span></span> (<span></span> #springMessage('content.search.second').) </p>    
 </div>
 
-<div class="form-container" id="cloud-performer" style="border-top-width:15px;float:right; display:inline-block; margin-left: 10px; width: auto; max-width: 35%; color: rgb(204, 103, 26); text-decoration: none;">
+#if($cloud)
+<div class="form-container" id="cloud-performer">
     <h2>Cloud of performers</h2>
-    <a href="#"><span style="font-style:bold;">Bruce Willis<span></a>
-    <a href="#"><span style="font-style:bold;">Bruce Willis<span></a>
-    <a href="#"><span style="font-style:bold;">Bruce Willis<span></a>
-    <a href="#"><span style="font-style:bold;">Bruce Willis<span></a>
-    <a href="#"><span style="font-style:bold;">Bruce Willis<span></a>
-    <a href="#"><span style="font-style:bold;">Bruce Willis<span></a>
-    <a href="#"><span style="font-style:bold;">Jogn Callagher<span></a>
-    <a href="#"><span style="font-style:bold;">Jogn Callagher<span></a>
-    <a href="#"><span style="font-style:bold;">Jogn Callagher<span></a>
-    <a href="#"><span style="font-style:bold;">Jogn Callagher<span></a>
-    <a href="#"><span style="font-style:bold;">Jogn Callagher<span></a>
-    <a href="#"><span style="font-style:bold;">Jogn Callagher<span></a>
+    #foreach($elem in $cloud)
+        #if($maxOccurrence)
+            #set($fontSize = $math.div($elem.getValueCount(),$maxOccurrence))
+            #set($fontSize = 1 + $fontSize)
+            <a class="cloud-element" href="#" style="font-size: ${fontSize}em;">$elem.getValue()</a>
+        #{else}
+            <a class="cloud-element" href="#">$elem.getValue()</a>
+        #end
+    #end
 </div>
+#end
 
 <div class="results-wrap clearfix">
   
@@ -57,15 +53,18 @@
     /*
      * Suggest url
      */
-    var promptUrl = "#springUrl('/report/suggest/ajax/prompt')";
-    var promptStringsUrl = "#springUrl('/report/suggest/ajax/prompt-strings')";
-    var suggestUrl = "#springUrl('/report/suggest/ajax')";
+    var suggestUrl = "#springUrl('/suggest-solr/suggest')";
+    var searchUrl = "#springUrl('/suggest-solr/search')";
+    var cloudUrl = "#springUrl('/suggest-solr/cloud')";
     var addToChecklistUrl = "#springUrl('/report/ajax/watch')";
 
     /*
-     * Constants
+     * Variables, Constants
      */
     var limit = 10;
+    var search_lock = false;
+    const DEFAULT_PROMPT_COUNT_LIMIT = 8;
+    const SUGGEST_VALID_CHARS_REGEXP = new RegExp('^[ 0-9a-zа-я-#@%&\\$]{1,255}(?!-)$', 'i');
 
     /*
      * Messages
@@ -83,11 +82,9 @@
     /*
      * Solr performer-activity cloude
      */
-    fillInHashCloud() {
-        
+    function fillInHashCloud() {
+        //TODO: clean-up
     }
-     
-
 
     /*
      * Search Button action
@@ -97,16 +94,14 @@
          * query string
          */
         var suggest = document.getElementById("suggest-checkbox").checked;
-        var useIndex = document.getElementById("use-index-checkbox").checked;
         var onlyRecent = document.getElementById("only-recent-checkbox").checked;        
         var query = 'query=' + encodeURI($("input[name='search']").val().trim()
-            + '&limit=' + limit + '&useIndex=' + useIndex + '&recent=' + onlyRecent
-            + '&suggest=' + suggest);
+            + '&limit=' + limit + '&recent=' + onlyRecent);
         //TODO: timings
         search_lock = true;
         upload();
         var startTime = new Date();
-        $.ajax(suggestUrl, {
+        $.ajax(searchUrl, {
             method: "POST",
             async: true,
             cache: false,
@@ -122,27 +117,25 @@
             error: function() {
                 $("p.stats span:first").text(NOTHING_FOUND);
                 $("p.stats").removeClass("invisible");
-                console.log("Error in ajax request to Suggest service");
+                console.log("Error in ajax request to Solr Suggest service");
             },
             success: onSearchSuccess,
             dataType: 'json'
         });
     });
 
-    var search_lock = false;
-
     function onSearchSuccess(resultsPager) {
         $('body').addClass('stop-scrolling')
         var $results = $(".results-wrap");
         $results.empty();
-        var bound = resultsPager.results.length;
+        var bound = resultsPager.content.length;
         if (bound > 0) {
             if ($("table.table").size() === 0) {
                 $(tableHtml).appendTo($results);
             }        
             var $table = $results.find(".table tbody");
             for (var i = 0; i < bound; i++) {
-                var report = resultsPager.results[i];
+                var report = resultsPager[i];
                 var $row = $(rowHtml);
                 $children = $row.children();
                 $children.get(0).innerHTML = report.id;
@@ -160,9 +153,9 @@
             $(".table tbody tr").click(function(event) {
                 $(this).toggleClass("selected");
             });
-            if (resultsPager.pager.pageCount > 1) {
-                var $pager = lazy_pager(resultsPager.pager);
-                $pager.insertBefore($('#addToWatchlist'));
+            if (resultsPager.totalPages > 1) {
+                //var $pager = lazy_pager(resultsPager.pager);
+                //$pager.insertBefore($('#addToWatchlist'));
             }
             /*
              * Add actions to page links, except 'curent' page
@@ -194,9 +187,6 @@
         $("#ajax-overlay").fadeOut();
         $("#ajax-overlay").remove();
     }  
-   
-    const DEFAULT_PROMPT_COUNT_LIMIT = 8;
-    const SUGGEST_VALID_CHARS_REGEXP = new RegExp('^[ 0-9a-zа-я-#@%&\\$]{1,255}(?!-)$', 'i');
 
     $(document).ready(function() {
 
@@ -219,20 +209,19 @@
             $("#search_button").click();
             return false;
         }
-        var uIndex = document.getElementById("use-index-checkbox").checked;
         if ([33,34,37,38,39,40].indexOf(event.which) === -1) {
             if (!search_lock) {
                 if ($("#suggest-checkbox").is(":checked")) {            
                     var query = $('input[name="search"]').val();            
                     var queryTrimmed = query.trim();
                     if (queryTrimmed !== '' && SUGGEST_VALID_CHARS_REGEXP.test(queryTrimmed)) {
-                        $.ajax(promptStringsUrl, { 
+                        $.ajax(suggestUrl, { 
                             method: "POST",                  
                             async: true,
                             cached: false,
                             dataType: 'json',
-                            data: {'query': query, limit: DEFAULT_PROMPT_COUNT_LIMIT, useIndex: uIndex},
-                                success: makeSuggest
+                            data: {'query': query, limit: DEFAULT_PROMPT_COUNT_LIMIT},
+                            success: makeSuggest
                         });
                     } else {
                         var $base = $('.subnav');
@@ -242,7 +231,7 @@
             }
         }
     });
-
+    // #end keyup()
     });
 
     function makeSuggest(prompts) {
@@ -313,9 +302,9 @@ function progress($pbar) {
 
         var useIndex = document.getElementById("use-index-checkbox").checked;
         var query = 'query=' + encodeURI($("input[name='search']").val().trim()
-            + '&limit=' + limit + '&useIndex=' + useIndex + '&p=' + page);
+            + '&limit=' + limit + '&p=' + page);
         var startTime = new Date();
-        $.ajax(suggestUrl, {
+        $.ajax(searchUrl, {
             method: "POST",
             async: true,
             cache: false,

@@ -1,11 +1,16 @@
 package sp.controller;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import javax.inject.Inject;
 import javax.servlet.http.HttpSession;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.solr.core.query.result.TermsFieldEntry;
+import org.springframework.data.solr.core.query.result.TermsPage;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -41,6 +46,22 @@ public class SolrSuggestController {
 
     @RequestMapping(value = "", method = RequestMethod.GET)
     public String setupForm(SessionStatus status, Model model) {
+        /*
+         * Add Search Cloud to the page
+         */
+        System.out.println("SOLR SERVICE: " + solrService);
+        long maxOccurrence = 0;
+        for (TermsFieldEntry entry : solrService.getSearchCloud().getContent()) {
+            System.out.println(entry.getKey() + " : " + entry.getValue() + " : " + entry.getValueCount());
+            
+            if (entry.getValueCount() > maxOccurrence) {
+                maxOccurrence = entry.getValueCount();
+            }
+        }
+        Iterator cloud = solrService.getSearchCloud().getContent().iterator();
+        
+        model.addAttribute("maxOccurrence", maxOccurrence);
+        model.addAttribute("cloud", cloud);
         return "search-solr";
     }
 
@@ -63,16 +84,16 @@ public class SolrSuggestController {
 
     @RequestMapping(value = "search", method = {RequestMethod.GET, RequestMethod.POST})
     public @ResponseBody
-    List<Report> search(@RequestParam("query") String query,
+    Page<Report> search(@RequestParam("query") String query,
             @RequestParam(value = "limit", required = false) Integer limit,
             HttpSession session, Model model) {
         if (query != null) {
             if (limit == null || limit <= 0) {
                 limit = DEFAULT_SEARCH_LIMIT;
             }
-            return solrService.search(query).getContent();
+            return solrService.search(query);
         } else {
-            return new ArrayList(0);
+            return new PageImpl<Report>(new ArrayList<Report>(0));
         }
     }
 
@@ -81,16 +102,16 @@ public class SolrSuggestController {
     
     @RequestMapping(value = "suggest", method = {RequestMethod.GET, RequestMethod.POST})
     public @ResponseBody
-    List<Report> suggest(@RequestParam("query") String query,
+    Page<Report> suggest(@RequestParam("query") String query,
             @RequestParam(value = "limit", required = false) Integer limit,
             HttpSession session, Model model) {
         if (query != null) {
             if (limit == null || limit <= 0) {
                 limit = DEFAULT_SUGGEST_LIMIT;
             }            
-            return solrService.search(query).getContent();
+            return solrService.search(query);
         } else {
-            return new ArrayList<Report>(0);
+            return new PageImpl<Report>(new ArrayList<Report>(0));
         }
     }
 }

@@ -20,7 +20,7 @@ import sp.model.searchable.ReportSearchableField;
  *
  * @author Paul Kulitski
  */
-@Lazy
+//@Lazy
 @Repository
 public class SolrRepositoryImpl implements SolrRepository {
 
