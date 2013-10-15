@@ -115,28 +115,9 @@ public class EmailServiceImpl implements EmailService {
         StringBuilder sb = new StringBuilder(subject.length() * 2);
         sb.append(subject).append(' ').append(asof).append(' ').append(currentDate);
         email.setSubject(sb.toString());
+
         /*
-         * Build an PDF file corresponding to the specified Statistics object and
-         * username
-         */
-        SpPdfBoxPdfBuilder statsBuilder = new SpPdfBoxPdfBuilder();
-        statsBuilder.setStatistics(stats);
-        statsBuilder.setUsername(username);
-        statsBuilder.setMessageSource(messageSource);
-        statsBuilder.setLocale(locale);
-        statsBuilder.setDate(new Date());
-        String path = statsBuilder.build();
-        EmailAttachment attachment = null;
-        if (path != null) {
-            attachment = new EmailAttachment();
-            attachment.setDisposition(EmailAttachment.ATTACHMENT);
-            attachment.setDescription(messageSource.getMessage(PDF_ATTACHMENT_DESCRIPTION_KEY, null, locale));
-            attachment.setPath(path);
-            attachment.setName(messageSource.getMessage(PDF_ATTACHMENT_NAME_KEY, null, locale));
-        }
-        
-        /*
-         * Test for SpStatsITextPdfBuilder
+         * Attachment is created by SpStatsITextPdfBuilder
          */
         SpStatsITextPdfBuilder itextBuilder = new SpStatsITextPdfBuilder();
         itextBuilder.setStatistics(stats);
@@ -154,7 +135,6 @@ public class EmailServiceImpl implements EmailService {
             iAttachment.setName(messageSource.getMessage(PDF_ATTACHMENT_NAME_KEY, null, locale));
         }        
         try {
-            email.attach(attachment);
             email.attach(iAttachment);
             email.setFrom(FROM);
             email.addTo(recipients);

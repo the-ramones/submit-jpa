@@ -323,7 +323,6 @@ public class SpStatsITextPdfBuilder implements SpPdfBuilder {
          * Base font for Unicode. Cyrilic fonts are rendered just right
          */
         try {
-            System.out.println("FILE FONT BASE: " + new File("").getAbsolutePath());
             /*
              * TODO: think of that way
              * FontFactory.register(fontPath, "Bitstream Cyberbit");
