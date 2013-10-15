@@ -7,6 +7,7 @@ import com.itextpdf.text.Document;
 import com.itextpdf.text.DocumentException;
 import com.itextpdf.text.Element;
 import com.itextpdf.text.Font;
+import com.itextpdf.text.FontFactory;
 import com.itextpdf.text.List;
 import com.itextpdf.text.ListItem;
 import com.itextpdf.text.PageSize;
@@ -322,6 +323,11 @@ public class SpStatsITextPdfBuilder implements SpPdfBuilder {
          * Base font for Unicode. Cyrilic fonts are rendered just right
          */
         try {
+            System.out.println("FILE FONT BASE: " + new File("").getAbsolutePath());
+            /*
+             * TODO: think of that way
+             * FontFactory.register(fontPath, "Bitstream Cyberbit");
+             */ 
             bf = BaseFont.createFont(fontPath, BaseFont.IDENTITY_H, BaseFont.EMBEDDED);
             titleFont = new Font(bf, 22, Font.BOLD);
             titleOrangeFont = new Font(bf, 22, Font.BOLD, new BaseColor(204, 103, 26));

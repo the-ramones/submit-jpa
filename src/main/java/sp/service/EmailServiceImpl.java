@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 import sp.model.ajax.Statistics;
 import sp.util.SpDateFormatFactory;
 import sp.util.SpPdfBoxPdfBuilder;
+import sp.util.SpStatsITextPdfBuilder;
 
 /**
  * Apache Commons Email based implementation of {@link EmailService}
@@ -133,8 +134,28 @@ public class EmailServiceImpl implements EmailService {
             attachment.setPath(path);
             attachment.setName(messageSource.getMessage(PDF_ATTACHMENT_NAME_KEY, null, locale));
         }
+        
+        /*
+         * Test for SpStatsITextPdfBuilder
+         */
+        SpStatsITextPdfBuilder itextBuilder = new SpStatsITextPdfBuilder();
+        itextBuilder.setStatistics(stats);
+        itextBuilder.setMessageSource(messageSource);
+        itextBuilder.setLocale(locale);
+        itextBuilder.setDate(new Date());
+        itextBuilder.setUsername(username);
+        String iPath = itextBuilder.build();
+        EmailAttachment iAttachment = null;
+        if (iPath != null) {
+            iAttachment = new EmailAttachment();
+            iAttachment.setDisposition(EmailAttachment.ATTACHMENT);
+            iAttachment.setDescription(messageSource.getMessage(PDF_ATTACHMENT_DESCRIPTION_KEY, null, locale));            
+            iAttachment.setPath(iPath);
+            iAttachment.setName(messageSource.getMessage(PDF_ATTACHMENT_NAME_KEY, null, locale));
+        }        
         try {
             email.attach(attachment);
+            email.attach(iAttachment);
             email.setFrom(FROM);
             email.addTo(recipients);
             //TODO: clean-up

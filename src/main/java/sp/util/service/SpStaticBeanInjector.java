@@ -1,10 +1,11 @@
 package sp.util.service;
 
+import java.net.URL;
 import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
-import javax.inject.Inject;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.FileSystemResource;
 import org.springframework.stereotype.Component;
 import sp.repository.ReportRepository;
 import sp.util.SpStatisticsGenerator;
@@ -42,7 +43,6 @@ public class SpStaticBeanInjector {
     @Resource
     @Qualifier(value = "reportRepositoryImpl")
     private ReportRepository reportRepository;
-    
     @Value("${font.cyberbit}")
     private String fontPath;
 
@@ -53,6 +53,25 @@ public class SpStaticBeanInjector {
          * field.
          */
         SpStatisticsGenerator.setReportRepository(reportRepository);
+        URL url = Thread.currentThread().getContextClassLoader().getResource(fontPath);
+        System.out.println("================ TEST ================");
+        System.out.println("CLASSLOADER: " + Thread.currentThread().getContextClassLoader());
+        System.out.println("DEFAULT RESOURCE: " + Thread.currentThread().getContextClassLoader().getResource("."));
+        System.out.println("DEFAULT RESOURCE PROJECT: " + Thread.currentThread().getContextClassLoader().getResource("/"));
+        System.out.println("======================================");
+        String realFontPath = "";
+        if (url != null) {
+            realFontPath = url.getPath();
+        }        
+        System.out.println("FONT PATH:" + fontPath);
+        System.out.println("URL:" + url);
+        System.out.println("REAL PATH: " + realFontPath);
+        FileSystemResource fileSystemResource = new FileSystemResource(fontPath);
+        System.out.println("FILE PATH: " + fileSystemResource.getPath());
+        System.out.println("FILE NAME: " + fileSystemResource.getFilename());
+        System.out.println("FILE: " + fileSystemResource.getFile());
+        
+        System.out.println("=============== WEBAPP CLASSLOADER ===============");
         SpStatsITextPdfBuilder.setFontPath(fontPath);
     }
 }
