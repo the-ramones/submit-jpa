@@ -2,10 +2,13 @@ package sp.util.service;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
+import javax.inject.Inject;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import sp.repository.ReportRepository;
 import sp.util.SpStatisticsGenerator;
+import sp.util.SpStatsITextPdfBuilder;
 
 /**
  * Service bean for injecting dependencies into static fields of singletons.
@@ -39,6 +42,9 @@ public class SpStaticBeanInjector {
     @Resource
     @Qualifier(value = "reportRepositoryImpl")
     private ReportRepository reportRepository;
+    
+    @Value("${font.cyberbit}")
+    private String fontPath;
 
     @PostConstruct
     public void postConstruct() {
@@ -47,5 +53,6 @@ public class SpStaticBeanInjector {
          * field.
          */
         SpStatisticsGenerator.setReportRepository(reportRepository);
+        SpStatsITextPdfBuilder.setFontPath(fontPath);
     }
 }

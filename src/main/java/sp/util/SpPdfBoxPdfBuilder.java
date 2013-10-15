@@ -18,6 +18,7 @@ import org.apache.pdfbox.pdmodel.font.PDType1Font;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.MessageSource;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 import sp.model.ajax.Statistics;
 
@@ -25,14 +26,15 @@ import sp.model.ajax.Statistics;
  * Builder of PDF files. Renders statistics that represents by
  * {@link Statistics} instances. Have to be synchronized if shared between
  * multiple threads.
- * 
- * NOTE: unresolved issue with Cyrylic and Unicode symbols. PDFBoc implementation
- *       will be dropped
+ *
+ * NOTE: unresolved issue with Cyrylic and Unicode symbols. PDFBoc
+ * implementation will be dropped
  *
  * @author Paul Kulitski
  */
+@Lazy
 @Component
-public class SpStatsPdfBuilder {
+public class SpPdfBoxPdfBuilder implements SpPdfBuilder {
 
     private MessageSource messageSource;
     private Statistics statistics;
@@ -40,38 +42,47 @@ public class SpStatsPdfBuilder {
     private Locale locale;
     private Date date;
 
+    @Override
     public void setMessageSource(MessageSource messageSource) {
         this.messageSource = messageSource;
     }
 
+    @Override
     public Statistics getStatistics() {
         return statistics;
     }
 
+    @Override
     public void setStatistics(Statistics statistics) {
         this.statistics = statistics;
     }
 
+    @Override
     public String getUsername() {
         return username;
     }
 
+    @Override
     public void setUsername(String username) {
         this.username = username;
     }
 
+    @Override
     public Locale getLocale() {
         return locale;
     }
 
+    @Override
     public void setLocale(Locale locale) {
         this.locale = locale;
     }
 
+    @Override
     public Date getDate() {
         return date;
     }
 
+    @Override
     public void setDate(Date date) {
         this.date = date;
     }
@@ -114,9 +125,9 @@ public class SpStatsPdfBuilder {
      */
     float vertPos = 0;
     float horPos = 0;
-    private static Logger logger = LoggerFactory.getLogger(SpStatsPdfBuilder.class);
+    private static Logger logger = LoggerFactory.getLogger(SpPdfBoxPdfBuilder.class);
     private DateFormat dateFormat;
-    private static final String PDF_PATH_PREFIX = "files/";
+    
 
     /**
      * Build a PDF file with statistics to be used as a attachment to an e-mail.
@@ -125,9 +136,8 @@ public class SpStatsPdfBuilder {
      * before invocation.
      *
      * @return s path to PDF file
-     * @throws IOException
-     * @throws COSVisitorException
      */
+    @Override
     public String build() {
         if ((username != null) && (statistics != null)) {
             StringBuilder sb = new StringBuilder(64);
@@ -140,7 +150,7 @@ public class SpStatsPdfBuilder {
                 date = new Date();
             }
             String userDirectory = sb.toString();
-            CheckOrCreatePath(userDirectory);
+            checkOrCreatePath(userDirectory);
             String currentDate = dateFormat.format(date).replace(' ', '_');
             sb.append("stats_").append(currentDate).append(".pdf");
             setDate(date);
@@ -157,7 +167,7 @@ public class SpStatsPdfBuilder {
         return null;
     }
 
-    private boolean CheckOrCreatePath(String path) {
+    private boolean checkOrCreatePath(String path) {
         File file = new File(path);
         if (!file.exists()) {
             file.mkdirs();
@@ -165,14 +175,6 @@ public class SpStatsPdfBuilder {
         }
         return true;
     }
-    private static final String PDF_TITLE_KEY = "email.pdf.title";
-    private static final String PDF_AMOUNTPERFORMERS_KEY = "email.pdf.countperformers";
-    private static final String PDF_AMOUTACTIVITIES_KEY = "email.pdf.countactivities";
-    private static final String PDF_PERFORMER_KEY = "email.pdf.performers";
-    private static final String PDF_ACTIVITIES_KEY = "email.pdf.activities";
-    private static final String PDF_AVG_KEY = "email.pdf.avg";
-    private static final String PDF_FOOTER_KEY = "email.pdf.footer";
-    private static final String PDF_DAYS_KEY = "email.pdf.days";
 
     /**
      * Create a linear PDF file. Uses simple PDF page positioning and splitting

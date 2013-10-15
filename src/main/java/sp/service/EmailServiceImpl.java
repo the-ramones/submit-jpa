@@ -16,7 +16,7 @@ import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Service;
 import sp.model.ajax.Statistics;
 import sp.util.SpDateFormatFactory;
-import sp.util.SpStatsPdfBuilder;
+import sp.util.SpPdfBoxPdfBuilder;
 
 /**
  * Apache Commons Email based implementation of {@link EmailService}
@@ -118,7 +118,7 @@ public class EmailServiceImpl implements EmailService {
          * Build an PDF file corresponding to the specified Statistics object and
          * username
          */
-        SpStatsPdfBuilder statsBuilder = new SpStatsPdfBuilder();
+        SpPdfBoxPdfBuilder statsBuilder = new SpPdfBoxPdfBuilder();
         statsBuilder.setStatistics(stats);
         statsBuilder.setUsername(username);
         statsBuilder.setMessageSource(messageSource);
