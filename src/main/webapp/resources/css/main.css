@@ -1,11 +1,65 @@
+/*
+.form-container {
+    box-shadow: 0 5px 10px #aaa;
+    padding: 20px; 
+    padding-top: 10px;
+    border-radius: 8px;
+    float: left;
+    width:50%; 
+
+    display:block-inline;
+
+    border-top: 30px solid rgba(224, 133, 36, 1);        
+    position: relative;
+}
+
+.form-container h2 {
+    margin: 0 auto;
+    padding: 20px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    text-align: center;
+    color: rgb(204, 103, 26);
+}
+
+.form-container input.btn {
+    display:block;
+    padding: 5px 16px;
+    margin: 0 auto;
+}
+*/
+
+.search-container {
+    position: relative;
+    box-shadow: 0 5px 10px #aaa;
+    padding: 20px; 
+    padding-top: 10px;
+    border-radius: 8px;
+    margin-bottom: 10px;
+    display:block-inline;
+    border-top: 30px solid rgba(224, 133, 36, 1);        
+    position: relative;
+}
+
+.search-container h2 {
+    margin: 0 auto;
+    padding: 20px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    text-align: center;
+    color: rgb(204, 103, 26);
+}
+
 /*cloud*/
 #cloud-performer {
     border-top-width:15px;
-    float:right; 
-    display:inline-block; 
-    margin-left: 10px; 
+    /*float:right;*/ 
+    float: none;
+    /*display:inline-block;*/ 
+    /*margin-left: 10px;*/ 
     width: auto;
-    max-width: 35%; 
+    /*    max-width: 35%; */
+    /*width: 100%;*/
     color: rgb(204, 103, 26); 
     text-decoration: none;
     text-align: justify;
@@ -35,7 +89,7 @@ a.cloud-element:hover {
     cursor: pointer;
     display: block;
     float: left;
-    width: 10%;
+    width: 100px;
     height: 45px;
     line-height: 45px;
     position: relative;
@@ -180,7 +234,7 @@ input[type=checkbox].css-checkbox:checked + label.css-label {
     padding: 10px;
     display: inline-block;
     float: right;
-    width: 25%;
+    width: 40%;
 }
 
 #index-check checkbox {    
@@ -338,13 +392,13 @@ input[type=checkbox].css-checkbox:checked + label.css-label {
 div.login-wrap{
     position: fixed;
     display: block;   
-    left: -1px;
+    left: -18px;
     top: 20%;
 }
 
 div.login-stick {
     position: relative;
-    top: 30%;
+    top: 20%;
     padding: .1em;
     background: rgb(224, 133, 36);
     float: left;
@@ -630,13 +684,12 @@ input[type="checkbox"] {
     box-shadow: 0 5px 10px #aaa;
     padding: 20px; 
     padding-top: 10px;
-    border-radius: 8px; 
-    float: left;
-    width:50%; 
-    /*display:block-inline;*/
-    display:block;
+    border-radius: 8px;
+    display:block-inline;
     border-top: 30px solid rgba(224, 133, 36, 1);        
-    /*position: relative;*/
+    position: relative;
+    margin-bottom: 10px;
+    /*margin-left: 30px;*/
 }
 
 .form-container h2 {
@@ -735,7 +788,7 @@ dd {
 
 /*sticky footer*/
 html, body {
-    height: 100%;    
+    height: 100%; 
 }
 
 body {
@@ -829,7 +882,7 @@ body {
     z-index: 10;
     position: relative;
     float: right;
-    margin: 10px 20px 10px 20px;    
+    margin: 10px 0px 10px 20px;    
 }
 
 #nav ul ul {
@@ -1038,6 +1091,10 @@ body {
 .footer-container div {
     color: white;
     padding: 10px 0;
+}
+
+.footer-container div a h3 {
+    display: none;
 }
 
 /* ===============
@@ -1313,6 +1370,9 @@ form {
         .oldie #nav a {
             margin: 0 0.7%;
         }*/
+    #index-check {
+        width: 32%;
+    }
 }
 
 @media only screen and (min-width: 768px) {
@@ -1336,6 +1396,30 @@ form {
         float: left;
     }
 
+    #index-check {
+        width: 28%;
+    }
+
+    #cloud-performer {
+        width: auto;
+        float: right;
+        max-width: 35%;
+    }
+
+    .footer-container div a h3 {
+        display: inline-block;
+    }
+
+    .form-container {
+        float: left;
+        width:50%; 
+        margin-bottom: 0px;
+    }
+
+    div.login-wrap{
+        top: 20%;
+        left: -8px;
+    }
     /*    #nav {
             float: right;
             width: 56%;
@@ -1350,10 +1434,73 @@ form {
         width: 57%;
     }
 
+    .search-container {
+        float: left;
+        width: 52%;
+    }
+
     .main .aside {
         text-align: justify;
         float: right;
         width: 28%;
+    }
+
+    .form-line input[type="text"],
+    .form-line input[type="date"],
+    .form-line input[type="password"] {
+        width: 200px;
+        float: left;
+        margin: 10px 10px 0 100px;
+    }
+
+    .form-line input[type="checkbox"] {
+        margin: 16px 10px 0 10px;
+    }
+
+    .form-line select {
+        /*float: left;*/
+        display: block;
+        width: 204px;
+        margin: 10px 10px 0 102px;
+    }
+
+    .form-line label {
+        display: block;
+        float: none;
+    }
+
+    .form-container input.btn {
+        margin-top: 10px;
+    }
+
+}
+
+@media only screen and (min-width: 980px) {
+    .form-line input[type="text"],
+    .form-line input[type="date"],
+    .form-line input[type="password"] {
+        width: 200px;
+        float: left;
+        margin: 10px 10px 0 10px;
+    }
+
+    .form-line input[type="checkbox"] {
+        margin: 16px 10px 0 10px;
+    }
+
+    .form-line select {
+        float: left;
+        width: 204px;
+        margin: 10px 10px 0 10px;
+    }
+
+    .form-line label {
+        float: left;
+        display: inline-block;
+    }
+
+    .form-container input.btn {
+        margin-top: 0px;
     }
 }
 

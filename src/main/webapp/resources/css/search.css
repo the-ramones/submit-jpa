@@ -33,7 +33,6 @@
 
 #search {
     z-index: 2;
-    clear: both;
 }
 
 #search-wrap {
@@ -53,6 +52,7 @@
     clear: both;
     /*border: 1px dotted;*/
     padding-top: 20px;
+    width: 98%;
 }
 
 input[name="search"] {

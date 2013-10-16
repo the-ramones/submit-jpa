@@ -2,10 +2,12 @@
  * Custom UI callbacks
  */
 function wider() {
-    $('div#article').animate({"width": "90%"});
+    $('div#article').animate({"width": "98%"});
+    $("html").removeClass("stop-scrolling");
 }
 function fadeIn() {
     $(".aside").fadeIn(400);
+    $("html").removeClass("stop-scrolling");
 }
 /*
  * jQuery layout enhancements
@@ -15,14 +17,21 @@ $(document).ready(function() {
      * Sticker animation
      */
     $('#hide_btn').click(function() {
+        $("html").addClass("stop-scrolling");
         $(".aside").hide('slow');
         setTimeout(wider, 600);
         $(".sticky").css("visibility", "visible");
     });
     $(".sticky a").click(function() {
+        $("html").addClass("stop-scrolling");   
         $(".sticky").animate({left: "+=2%"}, 1000, function() {
             $(this).css({visibility: "hidden", left: "94.5%"});
-            $('div#article').animate({"width": "57%"}, 600);
+            if ($("body").width() < 768) {
+                var aWidth = '98%';
+            } else {
+                var aWidth = '57%';
+            }
+            $('div#article').animate({"width": aWidth}, 600);
             setTimeout(fadeIn, 1000);
         });
     });

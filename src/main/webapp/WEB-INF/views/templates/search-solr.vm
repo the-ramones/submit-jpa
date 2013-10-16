@@ -1,5 +1,5 @@
 ## Real-time search template
-<div class="form-container" id="search">
+<div class="search-container" id="search">
     <h2>#springMessage('content.search.title')</h2>
     <form name="search-form" method="POST" action="#springUrl('/report/suggest')" >       
             <input type="button" name="search-button" id="search_button" />
@@ -191,6 +191,7 @@
 
     $(document).ready(function() {
 
+    $('input[name="search"]').focus();
     /*
      * Prevent default on-click form submission
      */

@@ -1,4 +1,4 @@
-<div class="form-container" style="width: 100%">
+<div class="form-container" style="width: 98%">
     ## registry list template
     #if($registry-pager)
     <h2>#springMessage('registry.title')</h2>
