@@ -62,13 +62,14 @@ public class SolrRepositoryImpl implements SolrRepository {
         return search(query, null, null);
     }
 
+    @Override
     public Page<Report> search(String query, int page, int size) {
         String[] terms = normalizeQuery(query);
         SimpleQuery q = new SimpleQuery(
                 new Criteria(ReportSearchableField.PERFORMER).contains(terms)
                 .or(new Criteria(ReportSearchableField.ACTIVITY).contains(terms)));
         q.setDefType(EDISMAX);
-        if (page > 0 && size > 0) {
+        if (page >= 0 && size > 0) {
             q.setPageRequest(new PageRequest(page, size));
         } else {
             return new PageImpl(new ArrayList(0));
@@ -137,7 +138,7 @@ public class SolrRepositoryImpl implements SolrRepository {
         String[] splitted = query.split(" ");
         String[] queries = new String[splitted.length];
         for (int i = 0; i < splitted.length; i++) {
-            queries[i] = splitted[i].trim();
+            queries[i] = splitted[i].trim().toLowerCase();
         }
         return queries;
     }
