@@ -3,6 +3,7 @@ package sp.service;
 import javax.inject.Inject;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.solr.core.query.result.TermsPage;
 import org.springframework.stereotype.Service;
 import sp.model.Report;
@@ -36,7 +37,37 @@ public class SolrServiceImpl implements SolrService {
     }
 
     @Override
+    public Page<Report> suggest(String query) {
+        return solrRepository.suggest(query);
+    }
+
+    @Override
     public TermsPage getSearchCloud() {
         return solrRepository.getSearchCloud();
+    }
+
+    @Override
+    public Page<Report> search(String query, Integer limit) {
+        return solrRepository.search(query, limit);
+    }
+
+    @Override
+    public Page<Report> search(String query, Pageable p) {
+        return solrRepository.search(query, p);
+    }
+
+    @Override
+    public Page<Report> search(String query, Integer limit, Pageable p) {
+        return solrRepository.search(query, limit, p);
+    }
+
+    @Override
+    public Page<Report> suggest(String query, Integer limit) {
+        return solrRepository.suggest(query, limit);
+    }
+    
+    @Override
+    public Page<Report> search(String query, int page, int size) {
+        return solrRepository.search(query, page, size);
     }
 }

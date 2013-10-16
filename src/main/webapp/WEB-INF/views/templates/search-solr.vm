@@ -65,6 +65,7 @@
     var search_lock = false;
     const DEFAULT_PROMPT_COUNT_LIMIT = 8;
     const SUGGEST_VALID_CHARS_REGEXP = new RegExp('^[ 0-9a-zа-я-#@%&\\$]{1,255}(?!-)$', 'i');
+    const SUGGEST_REGEXP_STRING = '[ 0-9a-zа-я-#@%&\\$]{0,255}';
 
     /*
      * Messages
@@ -124,18 +125,18 @@
         });
     });
 
-    function onSearchSuccess(resultsPager) {
+    function onSearchSuccess(results) {
         $('body').addClass('stop-scrolling')
         var $results = $(".results-wrap");
         $results.empty();
-        var bound = resultsPager.content.length;
+        var bound = results.content.length;
         if (bound > 0) {
             if ($("table.table").size() === 0) {
                 $(tableHtml).appendTo($results);
             }        
             var $table = $results.find(".table tbody");
             for (var i = 0; i < bound; i++) {
-                var report = resultsPager[i];
+                var report = results.content[i];
                 var $row = $(rowHtml);
                 $children = $row.children();
                 $children.get(0).innerHTML = report.id;
@@ -153,7 +154,7 @@
             $(".table tbody tr").click(function(event) {
                 $(this).toggleClass("selected");
             });
-            if (resultsPager.totalPages > 1) {
+            if (results.totalPages > 1) {
                 //var $pager = lazy_pager(resultsPager.pager);
                 //$pager.insertBefore($('#addToWatchlist'));
             }
@@ -212,7 +213,7 @@
         if ([33,34,37,38,39,40].indexOf(event.which) === -1) {
             if (!search_lock) {
                 if ($("#suggest-checkbox").is(":checked")) {            
-                    var query = $('input[name="search"]').val();            
+                    var query = $('input[name="search"]').val();
                     var queryTrimmed = query.trim();
                     if (queryTrimmed !== '' && SUGGEST_VALID_CHARS_REGEXP.test(queryTrimmed)) {
                         $.ajax(suggestUrl, { 
@@ -237,12 +238,20 @@
     function makeSuggest(prompts) {
         var $base = $('.subnav');
         $base.empty();
-        var bound = prompts.length;
+        var bound = prompts.content.length;
+        // TODO: clean this tweak
+        bound = bound > 8 ? 8: bound;
+        var suggestRegExp = new RegExp(SUGGEST_REGEXP_STRING + 
+            $('input[name="search"]').val() + SUGGEST_REGEXP_STRING , 'i');        
         for (var i = 0; i < bound; i++) {
-            var prompt = prompts[i];
+            var prompt = prompts.content[i];
             var $suggest = $('<a>');
             $suggest.attr('href', '#');
-            $suggest.html(prompt);
+            if (suggestRegExp.test(prompt.performer)) {                
+                $suggest.html(prompt.performer);
+            } else {
+                $suggest.html(prompt.activity);
+            }
             var $wrapper = $("<li>");
             $wrapper.html($suggest);
             $base.append($wrapper);

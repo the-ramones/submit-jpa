@@ -78,7 +78,6 @@ function addSuggestToSearchInput() {
 
     $("input[name='search']").keyup(function(event) {
         var key = event.which;
-        console.log(key);
         var lis = $(".subnav li");
         var search = $("input[name='search']");
         if (lis.size() > 0) {
