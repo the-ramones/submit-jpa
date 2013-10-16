@@ -7,7 +7,7 @@
     #if ($view)
         #set($hint = "hint." + $view)
         #set($hint_title = "hint." + $view + ".title")
-    <div class="aside">
+    <div class="aside clearfix">
         <h3>#springMessage($hint_title)</h3>
         <p>#springMessage($hint)</p>
         <button id="hide_btn" class="btn-small" type="button">#springMessage("button.hide")</button>

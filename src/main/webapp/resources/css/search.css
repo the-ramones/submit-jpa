@@ -33,6 +33,7 @@
 
 #search {
     z-index: 2;
+    clear: both;
 }
 
 #search-wrap {
