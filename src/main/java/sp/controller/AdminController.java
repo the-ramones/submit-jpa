@@ -19,4 +19,10 @@ public class AdminController {
         
         return "admin";
     }
+    
+    @RequestMapping(value = "/dwr-add", method = RequestMethod.GET)
+    public String dwrAdd(Model model) {
+        
+        return "dwr-add";
+    }
 }

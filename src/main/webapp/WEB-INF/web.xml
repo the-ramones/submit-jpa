@@ -36,6 +36,11 @@
         <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
         <load-on-startup>2</load-on-startup>
     </servlet>
+        <!-- Direct Web Remoting -->
+    <servlet-mapping>
+        <servlet-name>report-dispatcher</servlet-name>
+        <url-pattern>/dwr/*</url-pattern>
+    </servlet-mapping>
     <!--The url-pattern specification:
         A string beginning with a ‘/’ character and ending with a ‘/*’ suffix is 
             used for path mapping.
@@ -151,4 +156,5 @@
         <description>Bootstrap listener to start up and shut down Servlet Context</description>        
         <listener-class>sp.util.SpContextLoaderListener</listener-class>
     </listener>
+    
 </web-app>
