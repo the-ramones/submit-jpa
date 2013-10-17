@@ -27,7 +27,8 @@
                 <button class="action" onclick="modalAction(this);">#springMessage('button.action.get')</button>
                 <button class="action update" onclick="modalUpdate(this);">#springMessage('button.action.update')</button>          
                 <button class="action delete" onclick="modalDelete(this);">#springMessage('button.action.delete')</button>
-            </div>            
+            </div>    
+            <!--<span id="click_me" data-icon="#[[&#8862;]]#"><span>-->
         </tbody>
     </table>
     #{else}

@@ -37,6 +37,9 @@ $(document).ready(function() {
      */
     $(".table tbody tr").mouseenter(function(event) {
         // TODO 
+//        var clickme = $("#click_me");
+//        $(this).find("td:last").append(clickme);
+//          clickme.removeClass("hidden");
     });
 
     $(".table tbody tr").mouseleave(function(avent) {
