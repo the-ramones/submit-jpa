@@ -89,6 +89,7 @@ public class SolrSuggestController {
             @RequestParam("p") String p,
             @ModelAttribute("solrPager") SpPageable pager,
             HttpSession session, Model model) {
+        System.out.println("IN CONTROLLER SEARCH");
         Page<Report> result = null;
         boolean reject = false;
         if (limit == null || limit <= 0) {
@@ -156,11 +157,12 @@ public class SolrSuggestController {
     Page<Report> suggest(@RequestParam("query") String query,
             @RequestParam(value = "limit", required = false) Integer limit,
             HttpSession session, Model model) {
+        logger.error("in controller SUGGEST");
         if (query != null) {
             if (limit == null || limit <= 0) {
                 limit = DEFAULT_SUGGEST_LIMIT;
             }
-            return solrService.search(query, limit);
+            return solrService.suggest(query, limit);
         } else {
             return new PageImpl<Report>(new ArrayList<Report>(0));
         }
