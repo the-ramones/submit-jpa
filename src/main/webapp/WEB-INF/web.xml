@@ -10,7 +10,9 @@
     <context-param>
         <description>Spring application context configuration file location</description>
         <param-name>contextConfigLocation</param-name>
-        <param-value>/WEB-INF/report-context.xml</param-value>
+        <param-value>/WEB-INF/report-context.xml
+                     /WEB-INF/dwr-context.xml
+        </param-value>
     </context-param>
     <listener>
         <description>Bootstrap listener to start up and shut down Spring's root WebApplicationContext</description>        

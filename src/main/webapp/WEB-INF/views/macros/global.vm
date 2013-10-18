@@ -72,8 +72,8 @@
                        #set($ru_url = $url + '?' + $query + '&lang=ru')
                    #end
                 #{else}
-                    #set($en_url = $!url + '?lang=en')
-                    #set($ru_url = $!url + '?lang=ru') 
+                    #set($en_url = $url + '?lang=en')
+                    #set($ru_url = $url + '?lang=ru') 
                 #end
                 <li><a href="$en_url">#springMessage('sticker.left.language.english')</a></li>
                 <li><a href="$ru_url">#springMessage('sticker.left.language.russian')</a></li>

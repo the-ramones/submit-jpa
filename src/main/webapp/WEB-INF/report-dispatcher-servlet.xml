@@ -16,56 +16,6 @@
        http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-3.1.xsd
        http://www.directwebremoting.org/schema/spring-dwr http://www.directwebremoting.org/schema/spring-dwr-3.0.xsd
 ">
-    <!-- DWR -->
-<!--DWR will scan all Spring managed beans containing @RemoteProxy or
-    @RemoteMethod annotations and register Creator proxies for them.
-    This will NOT scan any classes not managed by Spring. -->
-    <dwr:annotation-config id="dwrS" />
- 
-<!--     DWR will scan the classpath and search classes containing @RemoteProxy or
-    @RemoteMethod annotations. This will register the beans and Creator proxies for these classes.-->
-    <dwr:annotation-scan base-package="sp.dwr" scanDataTransferObject="true" scanRemoteProxy="true" />
- 
-<!--     DWR will map util.js and engine.js files to the dwrController.
-    You can then include this files as external Javascript references from your JSP -->
-    <dwr:url-mapping />
- 
-     <!--Defines the dwrController. During production, set the debug property to false--> 
-    <dwr:controller id="dwrController" debug="true" />
- 
-<!--     This is required if you want to configure any beans not managed by
-    Spring. Leaving it enabled doesn't do any negative effects. Here's a
-    sample config:-->
-<!--    <dwr:configuration>
-     <dwr:convert type="bean" class="org.krams.tutorial.CustomClass" />
-    </dwr:configuration> -->
-    <dwr:configuration />
-    
-    <!--<import resource="dwr-context.xml" />-->
-    
-<!--    <dwr:controller id="dwrController" debug="true">
-        <dwr:config-param name="activeReverseAjaxEnabled" value="true"/>
-    </dwr:controller>
-    
-    <bean class="org.springframework.web.servlet.handler.SimpleUrlHandlerMapping">
-        <property value="true" name="alwaysUseFullPath"></property> 
-        <property name="mappings">
-            <props> 
-                <prop key="/dwr/**/*">dwrController</prop>
-            </props>
-        </property> 
-    </bean>
-    
-    <dwr:configuration> 
-        <dwr:convert class="org.uk.ltd.dwr.dev.model.Address" type="bean" />
-    </dwr:configuration>-->
-    
-<!--    <bean class="org.uk.ltd.dwr.dev.service.DWRService" id="dwrService"> 
-        <dwr:remote javascript="dwrService"> 
-            <dwr:include method="getAddress"/> 
-        </dwr:remote> 
-    </bean> -->
-    
     <!-- mvc -->
     
     <!-- direct mapping of resources without a controller,

@@ -1,3 +1,26 @@
+.desc {
+    font-weight: bold;
+    font-size: 0.8em;    
+}
+.line {
+    min-height: 40px;
+}
+
+.line button.action {
+    float:none;
+}
+
+.line label {
+    width: 200px;
+    display: inline-block;
+    text-align: right;
+    margin-right: 20px; 
+}
+#tab_frontc, #tab_frontb, #tab_fronta {
+    font-style: italic;
+    overflow-y: auto; 
+}
+
 /*click me*/
 #click_me {
     position: relative;
@@ -92,7 +115,7 @@ a.cloud-element:hover {
     margin: 0 auto;
     width: 90%;
 }
-.tabs label {
+.tabs > label {
     color: #222;
     text-shadow: 5px 5px 5px rgba(204, 103, 26, 0.25);
     background:  rgb(224, 133, 36);
@@ -118,7 +141,7 @@ a.cloud-element:hover {
     background: -webkit-linear-gradient(top, rgba(204, 103, 26, 0.7) 0%,rgba(234, 133, 36, 1) 10  0%);
 }
 
-.tabs input {
+.tabs > input {
     position: absolute;
     left: -9999px;
 }
@@ -138,7 +161,7 @@ a.cloud-element:hover {
     background: rgba(255,255,255,0.5);
     position: relative;
     z-index: 2;
-    height: 230px;
+    min-height: 230px;
     border-radius: 0 6px 6px 6px;
     box-shadow:  2px 4px 4px rgba(0, 0, 0, 0.2);
     padding: 20px 25px;

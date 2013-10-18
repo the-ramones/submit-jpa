@@ -5,12 +5,71 @@
 
     <label for="tab_front" id="tab_frontl">Front-end</label>
     <label for="tab_back" id="tab_backl">Back-end</label>
-    <label for="tab_const" id="tab_constl">Properties</label>
+    <label for="tab_const" id="tab_constl">Log</label>
     <div style="clear:both"></div>
 
     <div class="tab_contents">
-        <div id="tab_frontc">Front-end properties</div>
-        <div id="tab_backc">Back-end properties</div>
-        <div id="tab_constc">Common properties</div>
+        <div id="tab_frontc" class="clearfix">
+            <div class="line">
+                <label>#springMessage('content.admin.promptlimit'):</label>
+                <input type="text" id="promptLimit" />
+                <button class="action">#springMessage('action.admin.apply')</button>
+                <span class="desc"></span>
+            </div>
+            <div class="line">
+                <label>#springMessage('content.admin.pagesize'):</label>
+                <input type="text" id="pageSize"/>
+                <button class="action">#springMessage('action.admin.apply')</button>
+                <span class="desc"></span>
+            </div>
+            <div class="line">
+                <label>#springMessage('content.admin.maxonpager'):</label>
+                <input type="text" id="maxOnPager"/>
+                <button class="action">#springMessage('action.admin.apply')</button>
+                <span class="desc"></span>
+            </div>
+    </div>
+        <div id="tab_backc" class="clearfix">
+            <div class="line">
+                <label>#springMessage('content.admin.dburl'):</label>
+                <input type="text" id="dbUrl" />
+                <button class="action">#springMessage('action.admin.apply')</button>
+                <span class="desc"></span>
+            </div>
+            <div class="line">
+                <label>#springMessage('content.admin.schema'):</label>
+                <input type="text" id="dbSchema"/>
+                <button class="action">#springMessage('action.admin.apply')</button>
+                <span class="desc"></span>
+            </div>
+
+            <div class="line">
+                <label>#springMessage('content.admin.solrhost'):</label>
+                <input type="text" id="solrHost" />
+                <button class="action">#springMessage('action.admin.apply')</button>
+                <span class="desc"></span>
+            </div>
+            <div class="line">
+                <label>#springMessage('content.admin.solrcore'):</label>
+                <input type="text" id="solrCore"/>
+                <button class="action">#springMessage('action.admin.apply')</button>
+                <span class="desc"></span>
+            </div>
+            <div class="line">
+                <label>#springMessage('content.admin.solrtimeout'):</label>
+                <input type="text" id="solrTimeout" />
+                <button class="action">#springMessage('action.admin.apply')</button>
+                <span class="desc"></span>
+            </div>
+            <div class="line">
+                <label>#springMessage('content.admin.maxconnections'):</label>
+                <input type="text" id="solrMaxConnections"/>
+                <button class="action">#springMessage('action.admin.apply')</button>
+                <span class="desc"></span>
+            </div>
+        </div>
+        <div id="tab_constc" class="clearfix">
+            <h5>Reports! application log</h5>
+         </div>
     </div>
 </div>
