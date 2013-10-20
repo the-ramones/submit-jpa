@@ -1,0 +1,20 @@
+<div class="form-container">
+    <h2>#springMessage('content.login.info.title')</h2>
+    <form name="logout-form" method="POST" action="#springUrl('/logout')">
+        <div class="form-line clearfix">
+            <label>#springMessage('content.login.info.user'):</label>
+            <label id="user" style="font-weight: bold;">#if($user)$user#{else}#springMessage('sticker.left.anonymous')#end</label>
+        </div>
+        <div class="form-line clearfix">
+            <label>#springMessage('content.login.info.roles'):</label>
+            <label id="roles" style="font-weight: bold;">#if($user.roles)#{else}#springMessage('content.common.ellipsis')#end</label>
+        </div>
+        <input name="logout" class="btn" type="submit" value="#springMessage('content.login.button.logout')"/>
+    </form>    
+</div>
+
+<script type="text/javascript">
+</script>     
+
+#hint()
+     

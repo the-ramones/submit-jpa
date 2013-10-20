@@ -10,7 +10,7 @@
     <context-param>
         <description>Spring application context configuration file location</description>
         <param-name>contextConfigLocation</param-name>
-        <param-value>/WEB-INF/report-context.xml
+        <param-value>/WEB-INF/report-context.xml                     
                      <!--/WEB-INF/dwr-context.xml-->
         </param-value>
     </context-param>
@@ -128,7 +128,7 @@
         <url-pattern>/*</url-pattern>
     </filter-mapping>
         
-    <!--    
+  
      <filter>
         <filter-name>springSecurityFilterChain</filter-name>
         <filter-class>org.springframework.web.filter.DelegatingFilterProxy</filter-class>
@@ -137,7 +137,7 @@
         <filter-name>springSecurityFilterChain</filter-name>
         <url-pattern>/*</url-pattern>
      </filter-mapping>    
-     <welcome-file-list>
+<!--     <welcome-file-list>
         <welcome-file>login</welcome-file>
      </welcome-file-list>
     -->

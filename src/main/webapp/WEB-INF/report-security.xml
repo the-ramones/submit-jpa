@@ -2,24 +2,25 @@
 <beans:beans xmlns:beans="http://www.springframework.org/schema/beans"
              xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
              xmlns="http://www.springframework.org/schema/security"
-
              xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.1.xsd
        http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security-3.1.xsd       
 ">
     <!-- security -->
     <http>
-        <form-login />
+        <form-login default-target-url="/home" />
         <http-basic />
         <logout />
         <intercept-url pattern="/admin/**" access="ROLE_ADMIN" />
-        <intercept-url pattern="/add/**" access="ROLE_USER"/>
+        <intercept-url pattern="/registry*" access="ROLE_ADMIN"/>    
+        <intercept-url pattern="/report/**" access="ROLE_USER"/>    
+        <intercept-url pattern="/suggest-solr*" access="ROLE_USER"/>
         <!-- Spring Security will see that it requires
          the https channel and automatically redirect the request to go over HTTPS
         -->
         <intercept-url pattern="/login" requires-channel="https"/>
         <intercept-url pattern="/form" requires-channel="http"/>
         <remember-me
-            key="spitterKey"
+            key="reportRememberMe"
             token-validity-seconds="2419200" />        
     </http>
     
@@ -38,9 +39,9 @@
     -->
     <!-- User Repository -->
     <user-service id="userService">
-        <user name="admin" password="admin" authorities="ROLE_SPITTER,ROLE_ADMIN"/>
-        <user name="director" password="director" authorities="ROLE_SPITTER"/>
-        <user name="employee" password="employee" authorities="ROLE_ADMIN"/>
+        <user name="admin" password="admin" authorities="ROLE_USER,ROLE_ADMIN"/>
+        <user name="user" password="user" authorities="ROLE_USER"/>
+        <user name="anonymous" password="anonymous" authorities="ROLE_ANONYMOUS"/>
     </user-service>
     
     <!-- Authentication ProviderManager -->
@@ -57,7 +58,7 @@
             from users
             where username=?    
     -->
-    <jdbc-user-service id="dbUserService" data-source-ref="dataSource" />
+    <!--<jdbc-user-service id="dbUserService" data-source-ref="dataSource" />-->
     
     <!-- or this way -->
     <!-- 
@@ -69,9 +70,9 @@
     -->
     
     <!-- Hierarchical LDAP User Repository -->
-    <authentication-manager alias="authenticationManager">
+<!--    <authentication-manager alias="authenticationManager">
         <ldap-authentication-provider user-search-filter="(uid={0})"
-                                      group-search-filter="member={0}">
+                                      group-search-filter="member={0}">-->
             <!-- LDAP provider will compare passwords on the server side 
             so the actual password is keep in secret. But when you attempt 
             to transmit a entered password over the network it will be available 
@@ -80,22 +81,22 @@
             entered password on the client side. Choises:
             {sha}{ssha}{md4}{md5}{plaintext}{sha}{sha-256}
             -->
-            <password-compare password-attribute="passcode" hash="md5"/>
+<!--            <password-compare password-attribute="passcode" hash="md5"/>
         </ldap-authentication-provider>        
-    </authentication-manager>
+    </authentication-manager>-->
     
-    <ldap-user-service id="userService"
+<!--    <ldap-user-service id="userService"
                        user-search-base="ou=people"
                        user-search-filter="(uid={0})"
                        group-search-base="ou=groups"
                        group-search-filter="member={0}"
-    />
+    />-->
         
     <!-- By default, Spring Security’s LDAP authentication assumes that the LDAP server is
     listening on port 33389 on localhost. But if your LDAP server is on another machine,
     then you can use the <ldap-server> element to configure the location:
     -->
-    <ldap-server url="ldap://habuma.com:389/dc=habuma,dc=com"/>
+<!--    <ldap-server url="ldap://habuma.com:389/dc=habuma,dc=com"/>-->
     
     <!-- 
     If you don’t happen to have an LDAP server laying around waiting to be authenticated
@@ -155,7 +156,7 @@
            @PostAuthorize('hasRole('ROLE_ADMIN') and returnObject.username == principal.username')
            @PostFilter('filterObject.username == principal.username')  :  filters return List<Spittle>
     -->
-    <global-method-security secured-annotations="enabled" pre-post-annotations="enabled">
+<!--    <global-method-security secured-annotations="enabled" pre-post-annotations="enabled">
         <expression-handler ref="expressionHandler" />
         <protect-pointcut expression="execution(@sp.Sensible * *.*(String)) and args(id,value)" access="ROLE_SPITTER, ROLE_ADMIN" />
     </global-method-security>
@@ -165,6 +166,6 @@
         <beans:property name="permissionEvaluator">
             <beans:bean class="com.habuma.spitter.security.SpittlePermissionEvaluator" />
         </beans:property>
-    </beans:bean>   
+    </beans:bean>   -->
 
 </beans:beans>

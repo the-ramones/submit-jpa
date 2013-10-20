@@ -31,6 +31,8 @@
           http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task-3.1.xsd
           http://www.springframework.org/schema/data/solr http://www.springframework.org/schema/data/solr/spring-solr-1.0.xsd
 ">
+    <!-- security -->
+    <import resource="report-security.xml" />
     
     <!-- context -->
     
