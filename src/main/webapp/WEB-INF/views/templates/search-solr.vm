@@ -80,12 +80,6 @@
 
     
 #[[
-    /*
-     * Solr performer-activity cloude
-     */
-    function fillInHashCloud() {
-        //TODO: clean-up
-    }
 
     /*
      * Search Button action
@@ -175,7 +169,11 @@
         } else {
             $results.text(CONTENT_NOTHING_FOUND);
         }
-        $("p.stats span:first").text(bound);
+        if (!onlyRecent) {
+            $("p.stats span:first").text(results.totalElements);
+        } else {
+            $("p.stats span:first").text(bound);
+        }
         $("p.stats").removeClass("invisible");
         unload();
 
@@ -242,6 +240,12 @@
         }
     });
     // #end keyup()
+
+        $('.cloud-element').click(function(e) {
+            $('input[name="search"]').val($(this).text());
+            $("#search_button").click();
+        });
+
     });
 
     function makeSuggest(prompts) {
@@ -351,7 +355,14 @@ function progress($pbar) {
             visibility: 'hidden'}
         );
     }
-    
+
+    /*
+     * Solr performer-activity cloud
+     */
+    function hookActionToHashCloud() {
+        //TODO: 
+    }
+
 ]]#
 </script>
 
