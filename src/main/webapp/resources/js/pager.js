@@ -8,7 +8,7 @@ var PAGER_HTML = "#ajax_pager()";
 /*
  * Create a pager and returns as a jQuery object (TODO: revert to native DOM object?)
  * 
- * @param {type} pager serialized lightweight pager object
+ * @param {type} pager serialized lightweight pager object (MUST HAVE: maxOnPager, pageCount, page)
  * @param {type} settings settings to be applied to the pager (currently not used)
  * @returns {Object} jQuery object that holds pager 
  */

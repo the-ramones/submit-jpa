@@ -136,9 +136,12 @@
             $(".table tbody tr").click(function(event) {
                 $(this).toggleClass("selected");
             });
-            if (resultsPager.pager.pageCount > 1) {
-                var $pager = lazy_pager(resultsPager.pager);
-                $pager.insertBefore($('#addToWatchlist'));
+            var onlyRecent = document.getElementById("only-recent-checkbox").checked;        
+            if (!onlyRecent) {
+                if (resultsPager.pager.pageCount > 1) {
+                    var $pager = lazy_pager(resultsPager.pager);
+                    $pager.insertBefore($('#addToWatchlist'));
+                }
             }
             /*
              * Add actions to page links, except 'curent' page

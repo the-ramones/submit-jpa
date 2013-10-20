@@ -1,6 +1,7 @@
 package sp.controller;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import javax.inject.Inject;
@@ -86,17 +87,19 @@ public class SolrSuggestController {
     public synchronized @ResponseBody
     Page<Report> search(@RequestParam("query") String query,
             @RequestParam(value = "limit", required = false) Integer limit,
-            @RequestParam("p") String p,
+            @RequestParam(value = "p", required = false) String p,
+            @RequestParam(value = "recent", required = false) boolean recent,
             @ModelAttribute("solrPager") SpPageable pager,
             HttpSession session, Model model) {
         System.out.println("IN CONTROLLER SEARCH");
         Page<Report> result = null;
         boolean reject = false;
-        if (limit == null || limit <= 0) {
+        if (recent || limit == null || limit <= 0) {
             limit = DEFAULT_SEARCH_LIMIT;
         }
         boolean newSearch = pager.getTotalElements() == 0 ? true : (p == null) || p.equals("");
         if (newSearch) {
+            logger.error("NEW SOLR SEARCH");
             /*
              * A new search
              */
@@ -111,7 +114,8 @@ public class SolrSuggestController {
                 reject = true;
             }
         } else {
-            /*
+            logger.error("SOLR SEARCH FOR A PAGE: {}", p); 
+           /*
              * Query for page
              */
             if (p.equals("next")) {
@@ -141,12 +145,11 @@ public class SolrSuggestController {
                     reject = true;
                 }
             }
-
         }
         if (!reject) {
             return result;
         } else {
-            return new PageImpl<Report>(new ArrayList<Report>(0));
+            return new PageImpl<Report>(Collections.EMPTY_LIST);
         }
     }
     private static final int DEFAULT_SUGGEST_LIMIT = 8;

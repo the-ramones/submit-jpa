@@ -154,9 +154,17 @@
             $(".table tbody tr").click(function(event) {
                 $(this).toggleClass("selected");
             });
-            if (results.totalPages > 1) {
-                //var $pager = lazy_pager(resultsPager.pager);
-                //$pager.insertBefore($('#addToWatchlist'));
+            var onlyRecent = document.getElementById("only-recent-checkbox").checked;        
+            if (!onlyRecent) {
+                if (results.totalPages > 1) {
+                    // prepare pager
+                    var pager = {};
+                    pager.maxOnPager = 4;
+                    pager.page = results.number;
+                    pager.pageCount = results.totalPages;
+                    var $pager = lazy_pager(pager);
+                    $pager.insertBefore($('#addToWatchlist'));
+                }
             }
             /*
              * Add actions to page links, except 'curent' page
@@ -310,7 +318,6 @@ function progress($pbar) {
         search_lock = true;
         upload('.results-wrap');
 
-        var useIndex = document.getElementById("use-index-checkbox").checked;
         var query = 'query=' + encodeURI($("input[name='search']").val().trim()
             + '&limit=' + limit + '&p=' + page);
         var startTime = new Date();

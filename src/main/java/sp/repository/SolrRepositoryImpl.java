@@ -73,9 +73,11 @@ public class SolrRepositoryImpl implements SolrRepository {
                 new Criteria(ReportSearchableField.PERFORMER).contains(terms)
                 .or(new Criteria(ReportSearchableField.ACTIVITY).contains(terms)));
         q.setDefType(EDISMAX);
+        q.addSort(new Sort(
+                new Sort.Order(Sort.Direction.DESC, ReportSearchable.START_DATE_FIELD)));
         if (page >= 0 && size > 0) {
-            System.out.println("IN SEARCH SOLR");            
-            q.setPageRequest(new PageRequest(page, size));            
+            System.out.println("IN SEARCH SOLR");
+            q.setPageRequest(new PageRequest(page, size));
         } else {
             System.out.println("EMPTY RESULTS SOLR");
             return new PageImpl(new ArrayList(0));
@@ -119,9 +121,10 @@ public class SolrRepositoryImpl implements SolrRepository {
     @Override
     public Page<Report> suggest(String query, Integer limit) {
         System.out.println("IN SUGGEST");
+        String[] terms = normalizeQuery(query);
         SimpleQuery q = new SimpleQuery(
-                new Criteria(ReportSearchableField.PERFORMER).expression(query)
-                .or(new Criteria(ReportSearchableField.ACTIVITY).expression(query)));
+                new Criteria(ReportSearchableField.PERFORMER).contains(terms)
+                .or(new Criteria(ReportSearchableField.ACTIVITY).contains(terms)));
         if (limit != null && (limit.compareTo(0) > 0)) {
             q.setPageRequest(new PageRequest(0, limit));
         }
