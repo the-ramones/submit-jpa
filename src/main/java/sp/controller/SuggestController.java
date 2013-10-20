@@ -118,9 +118,13 @@ public class SuggestController {
              */
             if (newSearch) {
                 List<Long> ids = (List<Long>) indexSearcher.search(query,
-                        Integer.MAX_VALUE);
-
-                Long count = indexSearcher.count(query);
+                        limit);
+                Long count;
+                if (!recent) {
+                    count = indexSearcher.count(query);
+                } else {
+                    count = Long.valueOf(limit);
+                }
                 logger.error("!! NEW SEARCH IDS: {}", ids);
 
                 if (!ids.isEmpty()) {
