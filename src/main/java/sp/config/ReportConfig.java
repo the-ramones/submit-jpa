@@ -58,5 +58,6 @@ public class ReportConfig {
             }
         });
         return session;
-    }
+    } 
+
 }

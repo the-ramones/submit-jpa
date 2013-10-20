@@ -65,8 +65,13 @@
                        #set($high_index = $low_index + 8)
                        #set($Integer = 1)
                        #set($adj_query = $query.substring(0, $Integer.valueOf($low_index)))
-                       #set($en_url = $url + '?' + $adj_query + '&lang=en')
-                       #set($ru_url = $url + '?' + $adj_query + '&lang=ru')
+                       #if($adj_query)
+                        #set($en_url = $url + '?' + $adj_query + '&lang=en')
+                        #set($ru_url = $url + '?' + $adj_query + '&lang=ru')
+                       #{else}
+                        #set($en_url = $url + '?lang=en')
+                        #set($ru_url = $url + '?lang=ru')
+                       #end
                    #{else}
                        #set($en_url = $url + '?' + $query + '&lang=en')
                        #set($ru_url = $url + '?' + $query + '&lang=ru')

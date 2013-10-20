@@ -44,10 +44,13 @@
         <property name="defaultEncoding" value="UTF-8" />
         <property name="cacheSeconds" value="1" />
     </bean>
-
     
     <context:property-placeholder location="classpath:report.properties" />
-        
+    
+    <!-- dynamic flash properties map-->
+    <bean id="backendProperties" class="java.util.HashMap" />
+    <bean id="frontendProperties" class="java.util.HashMap" />
+    
     <!-- solr -->
     
     <solr:solr-server id="reportsSolrServer" url="${solr.host}"

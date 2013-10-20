@@ -3,6 +3,7 @@ package sp.suggest;
 import java.text.Normalizer;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -28,11 +29,8 @@ public class SuggestIndexSearcher implements IndexSearcher, IndexSuggester {
     @Inject
     SuggestIndex suggestIndex;
     private final static int MAX_RESULT_AMOUNT = 10000;
-
-    private synchronized String normalizeQuery(String query) {
-        String nQuery = query.trim().toLowerCase();
-        return nQuery;
-    }
+    private static final String ALLOWED_CHARS_REGEXP = "[ 0-9a-zа-я-#@%&\\$]*";
+    private static final String PATTERN_ENCODING = "utf-8";
 
     @Override
     public synchronized List<Long> search(String query) {
@@ -43,8 +41,6 @@ public class SuggestIndexSearcher implements IndexSearcher, IndexSuggester {
     public synchronized List<String> suggest(String query) {
         return suggest(query, MAX_RESULT_AMOUNT);
     }
-    private static final String ALLOWED_CHARS_REGEXP = "[ 0-9a-zа-я-#@%&\\$]*";
-    private static final String PATTERN_ENCODING = "utf-8";
 
     @Override
     public synchronized List<Long> search(String query, int limit) {
@@ -52,10 +48,10 @@ public class SuggestIndexSearcher implements IndexSearcher, IndexSuggester {
         Set<String> keys = suggestIndex.getKeys();
         Map index = suggestIndex.getIndex();
         List<Long> result = new ArrayList();
+        Set<Long> result2 = new HashSet<Long>();
         int count = 0;
 
-        logger.debug("IN SEARCH: query={}, keys={}",
-                query, keys);
+        logger.debug("IN SEARCH: query={}, keys={}", query, keys);
 
         StringBuilder patternBuilder;
         List<Pattern> patterns = new ArrayList<Pattern>();
@@ -73,6 +69,7 @@ public class SuggestIndexSearcher implements IndexSearcher, IndexSuggester {
             for (Pattern pattern : patterns) {
                 logger.debug("MATCH {} : {}", key, pattern.matcher(key).matches());
                 if (pattern.matcher(key).matches()) {
+
                     List<Long> partResults = Arrays.asList(
                             ((LinkedHashSet<Long>) index.get(key)).toArray(new Long[0]));
                     if ((count + partResults.size()) > limit) {
@@ -103,8 +100,7 @@ public class SuggestIndexSearcher implements IndexSearcher, IndexSuggester {
         Iterator<String> keysIt = keys.iterator();
         String key;
 
-        logger.debug("IN SUGGEST: query={}, keys={}",
-                query, keys);
+        logger.debug("IN SUGGEST: query={}, keys={}", query, keys);
 
         List<String> result = new ArrayList();
         while (keysIt.hasNext()) {
@@ -121,6 +117,7 @@ public class SuggestIndexSearcher implements IndexSearcher, IndexSuggester {
     }
 
     /*
+     *
      * Collator collator = Collator.getInstance();
      * Normalizer.(Normalizer.Form.NFC)
      * 
@@ -132,8 +129,7 @@ public class SuggestIndexSearcher implements IndexSearcher, IndexSuggester {
         Set<String> keys = suggestIndex.getKeys();
         Map index = suggestIndex.getIndex();
 
-        logger.debug("IN SEARCH: query={}, keys={}",
-                query, keys);
+        logger.debug("IN SEARCH: query={}, keys={}", query, keys);
 
         StringBuilder patternBuilder;
         List<Pattern> patterns = new ArrayList<Pattern>();
@@ -158,5 +154,10 @@ public class SuggestIndexSearcher implements IndexSearcher, IndexSuggester {
             }
         }
         return count;
+    }
+
+    private synchronized String normalizeQuery(String query) {
+        String nQuery = query.trim().toLowerCase();
+        return nQuery;
     }
 }

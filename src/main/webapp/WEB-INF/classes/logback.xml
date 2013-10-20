@@ -13,6 +13,16 @@
             <pattern>%highlight(%d %5p | %t | %-55logger{55} | %m %n)</pattern>
         </encoder>
     </appender>
+    
+    <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>access.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>access.%d{yyyy-MM-dd}.log.zip</fileNamePattern>
+        </rollingPolicy>
+        <encoder>
+            <pattern>%highlight(%d %5p | %t | %-55logger{55} | %m %n)</pattern>
+        </encoder>
+    </appender>  
 
     <logger name="sp">
         <level value="DEBUG" />
@@ -37,6 +47,7 @@
     <root>
         <level value="INFO" />
         <appender-ref ref="CONSOLE" />
+        <appender-ref ref="FILE" />
     </root>
     
     <!-- Examples -->

@@ -120,7 +120,8 @@ public class SuggestIndex implements Index {
             LinkedHashSet ids = new LinkedHashSet<Long>();
             tempSwapIndex.putIfAbsent(key, ids);
             if (tempSwapIndex.containsKey(key)) {
-                LinkedHashSet entry = (LinkedHashSet) tempSwapIndex.get(key);
+                LinkedHashSet entry = (LinkedHashSet) tempSwapIndex.get(key);      
+                //todo: BUG HERE?
                 entry.add(docId);
             } else {
                 //index.put(key, ids);

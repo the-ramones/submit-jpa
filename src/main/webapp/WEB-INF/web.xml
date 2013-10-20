@@ -11,7 +11,7 @@
         <description>Spring application context configuration file location</description>
         <param-name>contextConfigLocation</param-name>
         <param-value>/WEB-INF/report-context.xml
-                     /WEB-INF/dwr-context.xml
+                     <!--/WEB-INF/dwr-context.xml-->
         </param-value>
     </context-param>
     <listener>

@@ -1,5 +1,5 @@
 ## Paged List template. Utilizes 'pager' context variable
-<div class="form-container" style="width: 100%">
+<div class="form-container clearfix" style="width: 100%">
     <h2>#springMessage('content.list.title')</h2>
     #if($pager)
     <table class="table">
