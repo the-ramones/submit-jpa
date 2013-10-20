@@ -3,6 +3,7 @@ package sp.suggest;
 import java.text.Normalizer;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
@@ -47,8 +48,7 @@ public class SuggestIndexSearcher implements IndexSearcher, IndexSuggester {
         String nQuery = normalizeQuery(query);
         Set<String> keys = suggestIndex.getKeys();
         Map index = suggestIndex.getIndex();
-        List<Long> result = new ArrayList();
-        Set<Long> result2 = new HashSet<Long>();
+        LinkedHashSet<Long> result = new LinkedHashSet<Long>();
         int count = 0;
 
         logger.debug("IN SEARCH: query={}, keys={}", query, keys);
@@ -69,11 +69,15 @@ public class SuggestIndexSearcher implements IndexSearcher, IndexSuggester {
             for (Pattern pattern : patterns) {
                 logger.debug("MATCH {} : {}", key, pattern.matcher(key).matches());
                 if (pattern.matcher(key).matches()) {
-
-                    List<Long> partResults = Arrays.asList(
-                            ((LinkedHashSet<Long>) index.get(key)).toArray(new Long[0]));
+                    LinkedHashSet<Long> partResults =
+                            (LinkedHashSet<Long>) index.get(key);
                     if ((count + partResults.size()) > limit) {
-                        result.addAll(partResults.subList(0, limit - count));
+                        Iterator<Long> it = partResults.iterator();
+                        for (int i = 0; i < limit - count; i++) {
+                            if (it.hasNext()) {
+                                result.add(it.next());
+                            }
+                        }
                         break;
                     } else {
                         count = count + partResults.size();
@@ -82,7 +86,12 @@ public class SuggestIndexSearcher implements IndexSearcher, IndexSuggester {
                 }
             }
         }
-        return result;
+        Iterator<Long> itResult = result.iterator();
+        List<Long> list = new ArrayList<Long>(result.size());
+        while (itResult.hasNext()) {
+            list.add(itResult.next());
+        }
+        return list;
     }
 
     @Override
@@ -120,7 +129,7 @@ public class SuggestIndexSearcher implements IndexSearcher, IndexSuggester {
      *
      * Collator collator = Collator.getInstance();
      * Normalizer.(Normalizer.Form.NFC)
-     * 
+     * TOFIX:   only gets aprrox. upper bound (fix docId overlapping)
      */
     @Override
     public synchronized Long count(String query) {
@@ -128,6 +137,7 @@ public class SuggestIndexSearcher implements IndexSearcher, IndexSuggester {
         String nQuery = normalizeQuery(query);
         Set<String> keys = suggestIndex.getKeys();
         Map index = suggestIndex.getIndex();
+        LinkedHashSet<Long> result = new LinkedHashSet<Long>();
 
         logger.debug("IN SEARCH: query={}, keys={}", query, keys);
 
@@ -149,11 +159,12 @@ public class SuggestIndexSearcher implements IndexSearcher, IndexSuggester {
                 logger.debug("MATCH {} : {}", key, pattern.matcher(key).matches());
 
                 if (pattern.matcher(key).matches()) {
+                    result.addAll((LinkedHashSet<Long>) index.get(key));
                     count += ((LinkedHashSet<Long>) index.get(key)).size();
                 }
             }
         }
-        return count;
+        return Long.valueOf(result.size());
     }
 
     private synchronized String normalizeQuery(String query) {
