@@ -3,21 +3,22 @@
     <form name="logout-form" method="POST" action="#springUrl('/j_spring_security_logout')">
         <div class="form-line clearfix">
             <label>#springMessage('content.login.info.user'):</label>
-            <label id="user" style="font-weight: bold;">#if($user)$user.getUsername()#{else}#springMessage('sticker.left.anonymous')#end</label>
+            <label id="user" style="font-weight: bold;">#if($user.getAuthorities())$user.getUsername()#{else}#springMessage('sticker.left.anonymous')#end</label>
         </div>
         <div class="form-line clearfix">
             <label>#springMessage('content.login.info.roles'):</label>
             <label id="roles" style="font-weight: bold;">
-                #if($user)
+                #if($user.getAuthorities())
                     #foreach($a in $user.getAuthorities())
                         $a 
                     #end
                 #{else}#springMessage('content.common.ellipsis')#end
             </label>
         </div>
-        $info
         #if($info ne true)
-            <input name="logout" class="btn" type="submit" value="#springMessage('content.login.button.logout')"/>
+            #if($user.getAuthorities())
+                <input name="logout" class="btn" type="submit" value="#springMessage('content.login.button.logout')"/>
+            #end
         #end
     </form>    
 </div>

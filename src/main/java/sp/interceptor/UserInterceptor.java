@@ -12,7 +12,6 @@ import org.springframework.web.servlet.ModelAndView;
  * @author Paul Kulitski
  * @see HandlerInterceptor
  */
-//@Component
 public class UserInterceptor implements HandlerInterceptor {
 
     @Override
@@ -23,10 +22,10 @@ public class UserInterceptor implements HandlerInterceptor {
     /**
      * Populate model with an active user details object
      *
-     * @param request
-     * @param response
-     * @param handler
-     * @param modelAndView
+     * @param request incoming request
+     * @param response oncoming response
+     * @param handler handler
+     * @param modelAndView model and view instance
      * @throws Exception
      */
     @Override
@@ -34,7 +33,6 @@ public class UserInterceptor implements HandlerInterceptor {
         if (modelAndView != null) {
             Object user = SecurityContextHolder.getContext()
                     .getAuthentication().getPrincipal();
-            System.out.println("USER INTERCEPTOR: " + user);
             if (user != null) {                
                 modelAndView.addObject("user", user);
             }

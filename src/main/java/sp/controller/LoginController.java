@@ -4,6 +4,8 @@ import java.security.Principal;
 import javax.servlet.http.HttpSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.security.authentication.AuthenticationTrustResolver;
+import org.springframework.security.authentication.AuthenticationTrustResolverImpl;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -33,12 +35,18 @@ public class LoginController {
             model.addAttribute("view", "login");
             return "login";
         } else if (isLogout) {
-            if (isInfoRequest) {
-                model.addAttribute("info", true);
-            }
             model.addAttribute("view", "logout");
             return "logout";
         }
+        if (isInfoRequest) {
+            model.addAttribute("info", true);
+        }
+        AuthenticationTrustResolver anonymousResolver =
+                new AuthenticationTrustResolverImpl();
+        if (anonymousResolver.isAnonymous(auth)) {
+            model.addAttribute("anonymous", true);
+        }
+
         /*
          * Default to render 'User Info' page
          */
@@ -48,7 +56,7 @@ public class LoginController {
 
     @RequestMapping(value = "/login", method = RequestMethod.POST)
     public String loginHome(Model model) {
-        // TODO:
+        // TODO: custom login handler
         return "home";
     }
 

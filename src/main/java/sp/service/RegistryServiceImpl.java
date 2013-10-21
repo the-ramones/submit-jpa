@@ -20,7 +20,7 @@ import sp.repository.RegisterRepository;
  * @see Service
  */
 @Service
-@PreAuthorize("isAuthenticated()")
+@PreAuthorize("isAuthenticated() and hasRole('ROLE_USER')")
 public class RegistryServiceImpl implements RegistryService {
 
     @Inject
