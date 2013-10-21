@@ -31,12 +31,14 @@
           http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task-3.1.xsd
           http://www.springframework.org/schema/data/solr http://www.springframework.org/schema/data/solr/spring-solr-1.0.xsd
 ">
-    <!-- context -->
-    
+    <!-- context -->    
     <context:component-scan base-package="sp">
         <context:exclude-filter type="regex" expression="sp.controller.*" />
     </context:component-scan>
     
+    <context:property-placeholder location="classpath:report.properties" />
+    
+    <!-- email session -->
     <bean id="emailMessageSource"
           class="org.springframework.context.support.ReloadableResourceBundleMessageSource">
         <property name="basename" value="/WEB-INF/i18n/messages_email" />
@@ -44,8 +46,6 @@
         <property name="cacheSeconds" value="1" />
     </bean>
     
-    <context:property-placeholder location="classpath:report.properties" />
-
     <!-- security -->
     <import resource="report-security.xml" />
         
@@ -53,8 +53,7 @@
     <bean id="backendProperties" class="java.util.HashMap" />
     <bean id="frontendProperties" class="java.util.HashMap" />
     
-    <!-- solr -->
-    
+    <!-- solr -->    
     <solr:solr-server id="reportsSolrServer" url="${solr.host}"
                       timeout="15000" 
                       maxConnections="16" />
@@ -67,6 +66,13 @@
     <bean  id="reportsDS" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
         <property name="driverClassName" value="${database.driverClassName}" />
         <property name="url" value="${database.url}" />
+        <property name="username" value="${database.username}" />
+        <property name="password" value="${database.password}" />
+    </bean>
+    
+    <bean  id="registryDS" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+        <property name="driverClassName" value="${database.driverClassName}" />
+        <property name="url" value="${database.registry.url}" />
         <property name="username" value="${database.username}" />
         <property name="password" value="${database.password}" />
     </bean>

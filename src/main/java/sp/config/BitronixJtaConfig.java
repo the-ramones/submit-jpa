@@ -1,4 +1,4 @@
-package enterprise.config;
+package sp.config;
 
 /**
  * Spring Java configuration of Bitronix transaction manager
@@ -14,7 +14,6 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.Environment;
 import org.springframework.context.annotation.DependsOn;
 import org.springframework.transaction.jta.JtaTransactionManager;
-import org.springframework.orm.hibernate3.annotation.AnnotationSessionFactoryBean;
 
 import javax.transaction.TransactionManager;
 import javax.transaction.UserTransaction;
@@ -24,7 +23,6 @@ import javax.inject.Inject;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.core.io.ClassPathResource;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 @Configuration
