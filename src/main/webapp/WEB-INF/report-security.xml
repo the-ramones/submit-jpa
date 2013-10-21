@@ -52,15 +52,27 @@
         <beans:property name="dataSource" ref="dataSource"/>
     </beans:bean>        
 
-    <global-method-security pre-post-annotations="enabled" proxy-target-class="true">
+<!--    <global-method-security pre-post-annotations="enabled" proxy-target-class="true">
         <expression-handler ref="expressionHandler" />                
-    </global-method-security>
+    </global-method-security>-->
     
     <beans:bean id="expressionHandler" 
                 class="org.springframework.security.access.expression.method.DefaultMethodSecurityExpressionHandler">
         <beans:property name="permissionEvaluator">
             <beans:bean class="sp.security.ReportsPermissionEvaluator" />
         </beans:property>
+    </beans:bean>
+    
+    <!--Anonymous authentication -->
+    <beans:bean id="anonymousAuthFilter"
+                class="org.springframework.security.web.authentication.AnonymousAuthenticationFilter">
+        <beans:property name="key" value="foobar"/>
+        <beans:property name="userAttribute" value="anonymousUser,ROLE_ANONYMOUS"/>
+    </beans:bean>
+
+    <beans:bean id="anonymousAuthenticationProvider"
+                class="org.springframework.security.authentication.AnonymousAuthenticationProvider">
+        <beans:property name="key" value="foobar"/>
     </beans:bean>
     
     <!-- Method invocation Security -->

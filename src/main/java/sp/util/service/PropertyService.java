@@ -16,7 +16,7 @@ import org.springframework.stereotype.Service;
  * @author Paul Kulitski
  */
 @Service
-@PreAuthorize("isAuthenticated() and hasRole('ROLE_ADMIN')")
+@PreAuthorize("isAuthenticated()")
 public class PropertyService {
 
     @Inject

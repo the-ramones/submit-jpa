@@ -19,7 +19,7 @@ import sp.service.ReportService;
  * @author Paul Kulitski
  */
 @Component
-@PreAuthorize("isAuthenticated() and hasRole('ROLE_ADMIN')")
+@PreAuthorize("isAuthenticated()")
 public class SuggestIndexCreator implements IndexCreator {
 
     @Inject
