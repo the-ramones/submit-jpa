@@ -8,6 +8,7 @@ import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Component;
 import sp.model.Report;
 import sp.service.ReportService;
@@ -18,6 +19,7 @@ import sp.service.ReportService;
  * @author Paul Kulitski
  */
 @Component
+@PreAuthorize("isAuthenticated() and hasRole('ROLE_ADMIN')")
 public class SuggestIndexCreator implements IndexCreator {
 
     @Inject

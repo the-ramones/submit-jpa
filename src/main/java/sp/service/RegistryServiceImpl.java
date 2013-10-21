@@ -3,6 +3,7 @@ package sp.service;
 import java.util.Date;
 import java.util.List;
 import javax.inject.Inject;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import sp.model.Op;
@@ -19,6 +20,7 @@ import sp.repository.RegisterRepository;
  * @see Service
  */
 @Service
+@PreAuthorize("isAuthenticated() and hasAnyRole('ROLE_USER','ROLE_ADMIN')")
 public class RegistryServiceImpl implements RegistryService {
 
     @Inject
@@ -38,6 +40,8 @@ public class RegistryServiceImpl implements RegistryService {
 
     @Override
     @Transactional(readOnly = true)
+    //@PreFilter 
+    //TODO: filter only user registers, but for admins all
     public List<Register> getRegistersByUser(User user) {
         return registerRepository.getRegistersByUser(user);
     }

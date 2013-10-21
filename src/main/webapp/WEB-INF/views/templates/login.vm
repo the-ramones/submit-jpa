@@ -1,6 +1,6 @@
 <div class="form-container">
     <h2>#springMessage('content.login.title')</h2>
-    <form name="login-form" method="POST" action="#springUrl('/login')">
+    <form name="login-form" method="POST" action="#springUrl('/j_spring_security_check')">
         <div class="form-line clearfix">
             <label for="j_username">#springMessage('content.login.caption.username')</label>
             <input type="text" id="j_username" name="j_username" placeholder="#springMessage('content.login.placeholder.username')" autocomplete="off">

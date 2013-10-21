@@ -45,9 +45,14 @@
         <div class="popup" id="popup-login">
             <div class="arrow"></div>
             <ul>
-                #if($user)
-                    <li><a href="#springUrl('/login')">${user.name}</a></li>
-                    <li><a href="#springUrl('/login?logout=true')">#springMessage('sticker.left.login.logout')</a></li>
+                #if($user )
+                    #if($user eq 'anonymousUser')
+                        <li><a href="#springUrl('/login?info=true')">#springMessage('sticker.left.anonymous')</a></li>
+                        <li><a href="#springUrl('/login?login=true')">#springMessage('sticker.left.login.login')</a></li>
+                    #else
+                        <li><a href="#springUrl('/login?info=true')">${user.getUsername()}</a></li>
+                        <li><a href="#springUrl('/login?logout=true')">#springMessage('sticker.left.login.logout')</a></li>
+                    #end
                 #{else}
                     <li><a href="#springUrl('/login?login=true')">#springMessage('sticker.left.anonymous')</a></li>
                     <li><a href="#springUrl('/login?login=true')">#springMessage('sticker.left.login.login')</a></li>

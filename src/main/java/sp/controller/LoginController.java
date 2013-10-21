@@ -1,9 +1,10 @@
 package sp.controller;
 
+import java.security.Principal;
 import javax.servlet.http.HttpSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.http.HttpStatus;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -26,11 +27,15 @@ public class LoginController {
     @RequestMapping(value = "/login", method = RequestMethod.GET)
     public String loginForm(@RequestParam(value = "login", required = false) boolean isLogin,
             @RequestParam(value = "logout", required = false) boolean isLogout,
-            Model model) {
+            @RequestParam(value = "info", required = false) boolean isInfoRequest,
+            Authentication auth, Principal principal, Model model) {
         if (isLogin) {
             model.addAttribute("view", "login");
             return "login";
         } else if (isLogout) {
+            if (isInfoRequest) {
+                model.addAttribute("info", true);
+            }
             model.addAttribute("view", "logout");
             return "logout";
         }

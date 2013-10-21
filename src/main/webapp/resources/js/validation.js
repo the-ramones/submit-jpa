@@ -90,11 +90,11 @@ $.validator.addMethod("reportdate", function(value, element) {
 });
 
 $.validator.addMethod("reportpassword", function(value, element) {
-    return /^[a-zA-Z0-9_!@#-\\$\\^\\*]{6,18}$/.test(value);
+    return /^[a-zA-Z0-9_!@#-\\$\\^\\*]{4,18}$/.test(value);
 });
 
 $.validator.addMethod("reportusername", function(value, element) {
-    return /^[a-zA-Z0-9_-]{6,16}|([a-z0-9_\\.-]+)@([\da-z\\.-]+)\\.([a-z\\.]{2,6})$/.test(value);
+    return /^[a-zA-Z0-9_-]{4,16}|([a-z0-9_\\.-]+)@([\da-z\\.-]+)\\.([a-z\\.]{2,6})$/.test(value);
 });
 
 $.validator.addMethod("regexp", function(value, element, regexp) {
@@ -173,12 +173,12 @@ $("form[name='login-form']").validate({
     rules: {
         j_username: {
             required: true,
-            minlength: 6,
+            minlength: 4,
             reportusername: true
         },
         j_password: {
             required: true,
-            minlength: 6,
+            minlength: 4,
             reportpassword: true
         }
     }

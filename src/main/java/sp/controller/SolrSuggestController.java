@@ -50,18 +50,23 @@ public class SolrSuggestController {
         /*
          * Add Search Cloud to the page
          */
-        long maxOccurrence = 0;
-        for (TermsFieldEntry entry : solrService.getSearchCloud().getContent()) {
-            System.out.println(entry.getKey() + " : " + entry.getValue() + " : " + entry.getValueCount());
+        try {
+            long maxOccurrence = 0;
+            for (TermsFieldEntry entry : solrService.getSearchCloud().getContent()) {
+                System.out.println(entry.getKey() + " : " + entry.getValue() + " : " + entry.getValueCount());
 
-            if (entry.getValueCount() > maxOccurrence) {
-                maxOccurrence = entry.getValueCount();
+                if (entry.getValueCount() > maxOccurrence) {
+                    maxOccurrence = entry.getValueCount();
+                }
             }
-        }
-        Iterator cloud = solrService.getSearchCloud().getContent().iterator();
+            Iterator cloud = solrService.getSearchCloud().getContent().iterator();
 
-        model.addAttribute("maxOccurrence", maxOccurrence);
-        model.addAttribute("cloud", cloud);
+            model.addAttribute("maxOccurrence", maxOccurrence);
+            model.addAttribute("cloud", cloud);
+        } catch (Exception ex) {
+            logger.error("Weren't able to connect to Solr Search Server", ex);
+            return "nothing";
+        }
         return "search-solr";
     }
 
@@ -112,8 +117,8 @@ public class SolrSuggestController {
                 reject = true;
             }
         } else {
-            logger.debug("SOLR SEARCH FOR A PAGE: {}", p); 
-           /*
+            logger.debug("SOLR SEARCH FOR A PAGE: {}", p);
+            /*
              * Query for page
              */
             if (p.equals("next")) {

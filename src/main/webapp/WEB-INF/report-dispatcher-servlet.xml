@@ -116,6 +116,9 @@
             <!-- request parameter which specifies a locale -->
             <property name="paramName" value="lang" />
         </bean>
+        <bean id="userDetailsInterceptor" 
+              class="sp.interceptor.UserInterceptor">            
+        </bean>
     </mvc:interceptors>
     
     <!-- @RequestMapping annotation processor -->
