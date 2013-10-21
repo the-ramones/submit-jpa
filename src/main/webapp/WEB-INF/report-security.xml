@@ -7,7 +7,7 @@
 ">
     <!-- security -->
     <http>
-        <form-login default-target-url="/home" />
+        <form-login login-page="/login" default-target-url="/home" />
         <http-basic />
         <logout />
         <intercept-url pattern="/admin/**" access="ROLE_ADMIN" />
@@ -17,8 +17,8 @@
         <!-- Spring Security will see that it requires
          the https channel and automatically redirect the request to go over HTTPS
         -->
-        <intercept-url pattern="/login" requires-channel="https"/>
-        <intercept-url pattern="/form" requires-channel="http"/>
+        <intercept-url pattern="/login*" requires-channel="https"/>
+        <intercept-url pattern="/registry*" requires-channel="http"/>
         <remember-me
             key="reportRememberMe"
             token-validity-seconds="2419200" />        
