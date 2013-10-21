@@ -2,6 +2,8 @@ package sp.interceptor;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
@@ -18,6 +20,7 @@ public class UserInterceptor implements HandlerInterceptor {
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         return true;
     }
+    protected static final Logger logger = LoggerFactory.getLogger(UserInterceptor.class);
 
     /**
      * Populate model with an active user details object
@@ -29,12 +32,16 @@ public class UserInterceptor implements HandlerInterceptor {
      * @throws Exception
      */
     @Override
-    public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler, ModelAndView modelAndView) throws Exception {
+    public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler, ModelAndView modelAndView) {
         if (modelAndView != null) {
-            Object user = SecurityContextHolder.getContext()
-                    .getAuthentication().getPrincipal();
-            if (user != null) {                
-                modelAndView.addObject("user", user);
+            try {
+                Object user = SecurityContextHolder.getContext()
+                        .getAuthentication().getPrincipal();
+                if (user != null) {
+                    modelAndView.addObject("user", user);
+                }
+            } catch (NullPointerException ex) {
+                logger.debug("Cannot get user principal");
             }
         }
     }

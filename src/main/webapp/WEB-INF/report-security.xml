@@ -23,7 +23,7 @@
         <intercept-url pattern="/suggest-solr*" access="ROLE_USER"/>        
         <intercept-url pattern="/login*" requires-channel="http"/>
         <intercept-url pattern="/registry*" requires-channel="http"/>
-        <intercept-url pattern="/**" access="ROLE_USER,ROLE_ANONYMOUS"/>
+        <!--<intercept-url pattern="/**" access="ROLE_USER,ROLE_ANONYMOUS"/>-->
         <remember-me
             key="_spring_security_remember_me"
             token-validity-seconds="2419200" 
