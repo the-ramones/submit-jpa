@@ -50,7 +50,6 @@ public class SolrSuggestController {
         /*
          * Add Search Cloud to the page
          */
-        System.out.println("SOLR SERVICE: " + solrService);
         long maxOccurrence = 0;
         for (TermsFieldEntry entry : solrService.getSearchCloud().getContent()) {
             System.out.println(entry.getKey() + " : " + entry.getValue() + " : " + entry.getValueCount());
@@ -91,7 +90,6 @@ public class SolrSuggestController {
             @RequestParam(value = "recent", required = false) boolean recent,
             @ModelAttribute("solrPager") SpPageable pager,
             HttpSession session, Model model) {
-        System.out.println("IN CONTROLLER SEARCH");
         Page<Report> result = null;
         boolean reject = false;
         if (recent || limit == null || limit <= 0) {
@@ -99,7 +97,7 @@ public class SolrSuggestController {
         }
         boolean newSearch = pager.getTotalElements() == 0 ? true : (p == null) || p.equals("");
         if (newSearch) {
-            logger.error("NEW SOLR SEARCH");
+            logger.debug("NEW SOLR SEARCH");
             /*
              * A new search
              */
@@ -114,7 +112,7 @@ public class SolrSuggestController {
                 reject = true;
             }
         } else {
-            logger.error("SOLR SEARCH FOR A PAGE: {}", p); 
+            logger.debug("SOLR SEARCH FOR A PAGE: {}", p); 
            /*
              * Query for page
              */
@@ -160,7 +158,7 @@ public class SolrSuggestController {
     Page<Report> suggest(@RequestParam("query") String query,
             @RequestParam(value = "limit", required = false) Integer limit,
             HttpSession session, Model model) {
-        logger.error("in controller SUGGEST");
+        logger.debug("in controller SUGGEST");
         if (query != null) {
             if (limit == null || limit <= 0) {
                 limit = DEFAULT_SUGGEST_LIMIT;

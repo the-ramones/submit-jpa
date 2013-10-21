@@ -1,6 +1,5 @@
 package sp.controller;
 
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -47,15 +46,6 @@ public class EmailController {
         logger.debug("IN SEND EMAIL WITH STATISTICS");
 
         model.addAttribute("statistics", stats);
-
-        //TODO: clean-up
-        for (Cookie c : req.getCookies()) {
-            logger.error("Request COOKIES : " + c.getName() + ' ' + c.getValue() + ' ' + c.getDomain() + ' ' + c.getPath());
-        }
-        logger.debug("REQUEST requested session: ", req.getRequestedSessionId());
-        logger.debug("REQUEST URL: ", req.getRequestURI());
-        logger.debug("SESSION ID: {}", session.getId());
-        logger.debug("stats: {}", session.getAttribute("statistics"));
 
         return "stats-email";
     }

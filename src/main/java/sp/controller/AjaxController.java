@@ -45,10 +45,9 @@ import sp.service.ReportService;
 @RequestMapping(value = "/report/ajax")
 public class AjaxController {
 
-    private static final Logger logger = LoggerFactory.getLogger(AjaxController.class);
+    protected static final Logger logger = LoggerFactory.getLogger(AjaxController.class);
     @Inject
     ReportService reportService;
-    //@Resource
     @Inject
     @Named("messageSource")
     MessageSource messageSource;
@@ -71,7 +70,6 @@ public class AjaxController {
     public @ResponseBody
     Report getReport(@RequestParam Long id, Model model) {
         logger.debug("IN GET REPORT AJAX");
-        logger.debug("Requested ID:", id);
 
         if (id > 0) {
             Report report = reportService.getReportById(id);
@@ -95,7 +93,6 @@ public class AjaxController {
     String removeReport(@RequestParam("id") Long id,
             Model model) {
         logger.debug("IN GET REPORT AJAX");
-        logger.debug("Requested ID:", id);
 
         if (reportService.hasReport(id)) {
             reportService.removeReport(id);
@@ -122,28 +119,18 @@ public class AjaxController {
     public @ResponseBody
     AjaxResponse update(@Valid Report report, BindingResult result,
             Locale locale, Model model) {
-        logger.error("IN AJAX UPDATE:");
-        logger.error("Report: {}", report);
+        logger.debug("IN AJAX UPDATE:");
 
         AjaxResponse<Report> res;
         if (reportService.hasReport(report.getId())) {
             if (!result.hasErrors()) {
                 reportService.updateReport(report);
-                logger.debug("Report ({}) has been successfully updated", report);
                 return new AjaxResponse<Report>(AjaxResponse.SUCCESS);
             } else {
                 res = new AjaxResponse(AjaxResponse.ERROR);
-                logger.debug("Report ({}) cannot be updated in the database", report);
-
-                logger.error("BindingResult: {}", result);
 
                 for (FieldError error : result.getFieldErrors()) {
                     String message = messageSource.getMessage(error, locale);
-
-                    logger.error("Error: {}", error);
-                    logger.error("Message: {}", message);
-                    logger.error("Field: {}", error.getField());
-                    logger.error("RejectedValue: {}", error.getRejectedValue());
 
                     ErrorDetails details = new ErrorDetails(ErrorDetails.FIELD_ERROR,
                             error.getField(),
@@ -154,10 +141,6 @@ public class AjaxController {
 
                 for (ObjectError error : result.getGlobalErrors()) {
                     String message = messageSource.getMessage(error, locale);
-
-                    logger.error("Error: {}", error);
-                    logger.error("Message: {}", message);
-                    logger.error("Field: {}", error.getObjectName());
 
                     ErrorDetails details = new ErrorDetails(ErrorDetails.OBJECT_ERROR,
                             error.getObjectName(),
@@ -189,8 +172,7 @@ public class AjaxController {
     public @ResponseBody
     AjaxResponse add(@Valid Report report, BindingResult result,
             Locale locale, Model model) {
-        logger.error("IN AJAX ADD:");
-        logger.error("Report: {}", report);
+        logger.debug("IN AJAX ADD:");
 
         AjaxResponse<Report> res;
         if (!result.hasErrors()) {
@@ -198,14 +180,8 @@ public class AjaxController {
             res = new AjaxResponse<Report>(AjaxResponse.SUCCESS);
         } else {
             res = new AjaxResponse<Report>(AjaxResponse.ERROR);
-            logger.error("BindingResult: {}", result);
             for (FieldError error : result.getFieldErrors()) {
                 String message = messageSource.getMessage(error, locale);
-
-                logger.error("Error: {}", error);
-                logger.error("Message: {}", message);
-                logger.error("Field: {}", error.getField());
-                logger.error("RejectedValue: {}", error.getRejectedValue());
 
                 ErrorDetails details = new ErrorDetails(ErrorDetails.FIELD_ERROR,
                         error.getField(),
@@ -216,10 +192,6 @@ public class AjaxController {
 
             for (ObjectError error : result.getGlobalErrors()) {
                 String message = messageSource.getMessage(error, locale);
-
-                logger.error("Error: {}", error);
-                logger.error("Message: {}", message);
-                logger.error("Field: {}", error.getObjectName());
 
                 ErrorDetails details = new ErrorDetails(ErrorDetails.OBJECT_ERROR,
                         error.getObjectName(),

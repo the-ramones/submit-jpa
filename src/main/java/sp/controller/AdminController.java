@@ -23,6 +23,12 @@ import sp.validation.SystemPropertyValidator;
 @RequestMapping(value = "/admin")
 public class AdminController {
 
+    @Inject
+    PropertyService propertyService;
+    @Inject
+    @Named("messageSource")
+    MessageSource messageSource;
+
     @RequestMapping(value = {"/", "/manager", "/admin"}, method = RequestMethod.GET)
     public String manager(Model model) {
         /*
@@ -48,18 +54,6 @@ public class AdminController {
                 propertyService.getBackend(SystemConstants.SOLR_MAXCONNECTIONS));
         return "admin";
     }
-
-    @RequestMapping(value = "/dwr-add", method = RequestMethod.GET)
-    public String dwrAdd(Model model) {
-        // TODO: adw ReverseAjax features
-        return "dwr-add";
-    }
-    @Inject
-    PropertyService propertyService;
-    
-    @Inject
-    @Named("messageSource")
-    MessageSource messageSource;
 
     @RequestMapping(value = "update", method = {RequestMethod.GET, RequestMethod.POST}, produces = "text/plain;charset=utf-8")
     public @ResponseBody

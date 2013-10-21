@@ -1,14 +1,16 @@
-/*
+/* Reports!
  * Custom UI callbacks
  */
 function wider() {
     $('div#article').animate({"width": "98%"});
     $("html").removeClass("stop-scrolling");
 }
+
 function fadeIn() {
     $(".aside").fadeIn(400);
     $("html").removeClass("stop-scrolling");
 }
+
 /*
  * jQuery layout enhancements
  */

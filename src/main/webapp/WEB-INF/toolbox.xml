@@ -19,7 +19,6 @@
     <tool>
         <key>datetool</key>
         <scope>request</scope>
-        <!--<class>org.apache.velocity.tools.generic.DateTool</class>-->
         <class>sp.util.SpDateTool</class>
     </tool>
     

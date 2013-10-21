@@ -48,7 +48,7 @@ import sp.util.SpSortDefinition;
 @SessionAttributes(value = {"pagers", "checklist"})
 public class ReportController {
 
-    private static final Logger logger = LoggerFactory.getLogger(ReportController.class);
+    protected static final Logger logger = LoggerFactory.getLogger(ReportController.class);
     private static final int PAGERS_INITIAL_CAPACITY = 4;
     /*
      * Spring 3+ way. Previously, used @Value(#{systemProperties.pagination.threshold})
@@ -113,16 +113,12 @@ public class ReportController {
      */
     @RequestMapping(value = {"", "search"}, method = RequestMethod.GET, params = "new_search")
     public String setupForm(Model model) {
-        logger.info("In GET SetupForm");
+        logger.debug("In GET SetupForm");
         model.addAttribute("view", "search");
         model.addAttribute("performers", reportService.getPerformers());
         model.addAttribute("startDate", new Date());
         model.addAttribute("endDate", new Date());
         model.addAttribute("performer", new String());
-
-        logger.error("CHECKLIST: {}", model.asMap().get("checklist"));
-        logger.error("PAGERS: {}", model.asMap().get("pagers"));
-
         return "form";
     }
 
@@ -147,10 +143,7 @@ public class ReportController {
             @RequestParam(value = "performer", defaultValue = "") String performer,
             @ModelAttribute("pagers") Map<String, PagedListHolder<Report>> pagers,
             Model model) {
-        logger.error("In POST");
-        logger.info("startDate: {} of type {}", startDate, startDate.getClass().getConstructors());
-        logger.info("endDate: {} of type {}", endDate, endDate.getClass().getConstructors());
-        logger.info("performer: {} of type {}", performer, performer.getClass().getConstructors());
+        logger.debug("In POST");
 
         List<Report> reports;
         if (performer.isEmpty()) {
@@ -166,12 +159,6 @@ public class ReportController {
         pager = new PagedListHolder(reports, new SpSortDefinition());
         pager.setPageSize(PAGINATION_THRESHOLD);
         pager.setPage(0);
-
-        logger.error("Pager AFTER characteristics: pager={}, pageCount={}, pageSize={}",
-                pager.toString(), pager.getPageCount(), pager.getPageSize());
-
-        logger.error("CHECKLIST IN POST: {}", model.asMap().get("checklist"));
-        //TODO: add checlkist to the model and to the session;
 
         String searchId = SpHasher.getHash(new Object[]{startDate, endDate});
 
@@ -336,8 +323,6 @@ public class ReportController {
             BindingResult result, Model model, HttpServletRequest req, HttpServletResponse res) {
         ModelAndView mav = new ModelAndView();
         if (result.hasErrors()) {
-            System.out.println("report: " + report);
-            System.out.println("model: " + model);
             model.addAttribute("view", "add");
             mav.addAllObjects(model.asMap());
             mav.setViewName("add");
@@ -351,18 +336,11 @@ public class ReportController {
         model.addAttribute("uri", protocol + req.getServerName() + ":" + req.getServerPort() + req.getContextPath() + "/report/detail/" + report.getId());
         model.addAttribute("back", req.getRequestURL());
         model.addAttribute("report", report);
-        System.out.println(model);
         mav.addAllObjects(model.asMap());
         mav.setViewName("detail");
-        System.out.println("Context:" + req.getContextPath());
-        System.out.println("URI:" + req.getRequestURI());
-        System.out.println("URL:" + req.getRequestURL());
-        System.out.println("User:" + req.getRemoteUser());
-        System.out.println("Session id :" + req.getRequestedSessionId());
         return mav;
     }
 
-    //TODO: implement it
     @RequestMapping(value = "/suggest", method = RequestMethod.GET)
     public String realTimeSearch(Model model) {
         model.addAttribute("view", "ajax");

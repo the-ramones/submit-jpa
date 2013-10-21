@@ -376,16 +376,6 @@
              },
              'json'
            );         
-  //      var cleanChecklistUrl = deleteFromChecklistUrl + idVal;
-  //      $.post(cleanChecklistUrl, 
-  //         {},
-  //         function(data) {
-  //            if (data !== "success") {
-  //               console.log("Cannot remove report from checklist.");
-  //             }
-  //         },
-  //         'text'
-  //      );
     };
 
     /*

@@ -1,35 +1,6 @@
-#tab_constc iframe {
-    width: 100%;
-    height: 100%;
-    min-height: 360px;
-    border: 0;
-}
+/* Reports! main style sheet */
 
-.desc {
-    font-weight: bold;
-    font-size: 0.8em;    
-}
-.line {
-    min-height: 40px;
-}
-
-.line button.action {
-    float:none;
-}
-
-.line label {
-    width: 200px;
-    display: inline-block;
-    text-align: right;
-    margin-right: 20px; 
-}
-
-#tab_frontc, #tab_frontb, #tab_fronta {
-    font-style: italic;
-    overflow-y: auto; 
-}
-
-/*click me*/
+/* Click me */
 #click_me {
     position: relative;
     right: -30px;
@@ -38,37 +9,6 @@
     margin: 0;
     padding: 0;
 }
-
-/*
-.form-container {
-    box-shadow: 0 5px 10px #aaa;
-    padding: 20px; 
-    padding-top: 10px;
-    border-radius: 8px;
-    float: left;
-    width:50%; 
-
-    display:block-inline;
-
-    border-top: 30px solid rgba(224, 133, 36, 1);        
-    position: relative;
-}
-
-.form-container h2 {
-    margin: 0 auto;
-    padding: 20px;
-    padding-top: 10px;
-    padding-bottom: 10px;
-    text-align: center;
-    color: rgb(204, 103, 26);
-}
-
-.form-container input.btn {
-    display:block;
-    padding: 5px 16px;
-    margin: 0 auto;
-}
-*/
 
 .search-container {
     position: relative;
@@ -91,16 +31,11 @@
     color: rgb(204, 103, 26);
 }
 
-/*cloud*/
+/* Cloud */
 #cloud-performer {
     border-top-width:15px;
-    /*float:right;*/ 
     float: none;
-    /*display:inline-block;*/ 
-    /*margin-left: 10px;*/ 
     width: auto;
-    /*    max-width: 35%; */
-    /*width: 100%;*/
     color: rgb(204, 103, 26); 
     text-decoration: none;
     text-align: justify;
@@ -109,7 +44,6 @@
 a.cloud-element {
     text-decoration: none;
     color: rgb(204, 103, 26);
-    /*font-weight: bold;*/
     margin-right: 6px;
 }
 
@@ -117,7 +51,7 @@ a.cloud-element:hover {
     color: #b94a48;   
 }
 
-/*admin console*/
+/* Admin console */
 .tabs {
     position: relative;
     margin: 0 auto;
@@ -152,6 +86,37 @@ a.cloud-element:hover {
 .tabs > input {
     position: absolute;
     left: -9999px;
+}
+
+#tab_constc iframe {
+    width: 100%;
+    height: 100%;
+    min-height: 360px;
+    border: 0;
+}
+
+.desc {
+    font-weight: bold;
+    font-size: 0.8em;    
+}
+.line {
+    min-height: 40px;
+}
+
+.line button.action {
+    float:none;
+}
+
+.line label {
+    width: 200px;
+    display: inline-block;
+    text-align: right;
+    margin-right: 20px; 
+}
+
+#tab_frontc, #tab_frontb, #tab_fronta {
+    font-style: italic;
+    overflow-y: auto; 
 }
 
 #tab_front:checked  ~ #tab_frontl,
@@ -193,7 +158,7 @@ a.cloud-element:hover {
     opacity: 1;
 }
 
-/*progress bar*/
+/* Progress bar */
 #progress-container {
     float: right;
     display: inline-block;
@@ -206,7 +171,7 @@ a.cloud-element:hover {
     display: block;
     color: rgb(204, 103, 26);
 }
-/*progress bar*/
+
 progress {
     appearance: none;
     -weblit-appearance: none;
@@ -222,7 +187,7 @@ progress {
     width: 100px;
     margin-top: 6px;
 }
-/*progress meter in Chrome and Safari*/
+/* Progress meter in Chrome and Safari */
 progress::-webkit-progress-bar {  
     border-radius: 9px;
 }  
@@ -230,13 +195,14 @@ progress::-webkit-progress-value {
     border-radius: 9px;
     background-color: rgb(224, 133, 36);    
 }  
-/*pseudo progress bar element, Firefox*/
+
+/* Pseudo progress bar element, Firefox */
 progress::-moz-progress-bar {  
     border-radius: 9px;
     background-color: rgb(224, 133, 36);
 }  
 
-/*index use check*/
+/* Use index? check */
 input[type=checkbox].css-checkbox {
     position: absolute; 
     overflow: hidden; 
@@ -288,7 +254,8 @@ input[type=checkbox].css-checkbox:checked + label.css-label {
     position: relative;
     bottom: 2px;
 }
-/*statistics modal*/
+
+/* Statistics modal */
 .statistics span {
     width: 100%;
     font-weight: bold;
@@ -300,7 +267,7 @@ input[type=checkbox].css-checkbox:checked + label.css-label {
     resize: none;
 }
 
-/*Stop scrolling*/
+/* Stop scrolling class */
 .stop-scrolling {
     height: 100%;
     overflow: hidden;
@@ -371,14 +338,11 @@ input[type=checkbox].css-checkbox:checked + label.css-label {
 
 .tile-button-menu {
     position: relative;
-    /*width: 50%;*/
     display: inline-block; 
     text-align: center;
-    /*margin: 0 auto;*/
 }
-/*
- * Main template css rules
- */
+
+/* Main template css rules */
 .button-block-modal {
     width: fit-content;
     float: right;
@@ -390,10 +354,7 @@ input[type=checkbox].css-checkbox:checked + label.css-label {
     top: 8px;
 }
 
-/* Entypo-based side sticky menu*/
-
-/***** Font and Icon load ******/
-
+/* Entypo-based side sticky menu */
 @font-face {
     font-family: 'Entypo';
     src: url('../font/entypo.eot'); /*IE9 */
@@ -514,7 +475,6 @@ div.popup ul li a{
     -webkit-border-radius: .2em;
     -moz-border-radius: .2em;
     border-radius: .2em;    
-    /*margin: 0.4em auto;*/
 }
 
 div.popup ul li a:hover{
@@ -538,12 +498,11 @@ div.popup ul li a:hover{
     height: 5.5%;    
     position: fixed;
     top: 35%;
-    left: -6.7%; /*92%;    */
+    left: -6.7%;
     background: rgb(224, 133, 36);
-    /*border: 1px solid #222;*/
     border-radius: 8px 8px 0 0;
     box-shadow: 0 0 3px #222;
-    /*   box-direction: reverse;            As specified 
+    /*   box-direction: reverse;           As specified 
         -moz-box-direction: reverse;       Mozilla 
         -webkit-box-direction: reverse;    WebKit */
     text-orientation:rotate-left;
@@ -560,9 +519,6 @@ div.popup ul li a:hover{
 }
 
 .login a {
-    /*  box-direction: reverse;            As specified 
-        -moz-box-direction: reverse;       Mozilla 
-        -webkit-box-direction: reverse;    WebKit */
     text-align: center;
     width: 100%;
     height: 100%;
@@ -589,9 +545,7 @@ i {
     margin-right: 10px;  
 }
 
-/*
- * Button groups
- */
+/* Button groups */
 button.action {
     background: rgb(224, 133, 36);
     position: relative;
@@ -646,7 +600,6 @@ button.action:active {
 }
 
 .button-block {
-    /*border: 1px solid black;*/   
     border-bottom-left-radius: 8px;
     border-bottom-right-radius: 8px;
     background: rgba(184, 83, 36, 0.95);
@@ -661,7 +614,7 @@ button.action:active {
 }
 
 .selected {
-    background: rgba(204, 103, 26, 0.95);    /*crimson;*/
+    background: rgba(204, 103, 26, 0.95);  
 }
 
 .selected-added {
@@ -672,9 +625,7 @@ button.action:active {
     background: rgba(184, 83, 36, 0.95);
 }
 
-/*
- * Form Validation
- */
+/* Form Validation */
 .error {
     color: #b94a48;    
 }
@@ -730,7 +681,6 @@ input[type="checkbox"] {
     border-top: 30px solid rgba(224, 133, 36, 1);        
     position: relative;
     margin-bottom: 10px;
-    /*margin-left: 30px;*/
 }
 
 .form-container h2 {
@@ -749,7 +699,6 @@ input[type="checkbox"] {
 }
 
 .form-line {
-    /* border: 1px dotted #222; */
     display: block;
     clear: both;
 }
@@ -802,7 +751,7 @@ input[type="checkbox"] {
     margin: auto auto;
 }
 
-/* for form */
+/* basic forms style */
 input, select {
     border-radius: 3px; 
     font-size: 100%;
@@ -822,12 +771,11 @@ input::-moz-focus-inner {
     outline: 0;
 }
 
-/* for /detail/{id} */
 dd {
     padding-left: 30px;
 }
 
-/*sticky footer*/
+/* Sticky footer */
 html, body {
     height: 100%; 
 }
@@ -843,15 +791,14 @@ body {
 .page-wrap:after {
     content: " ";
     display: block;
-    /*width: 100%;*/
-
 }
+
 .page-wrap:after, .footer-container {
     /* .push must be the same height as footer */
     height: 94px; 
 }
 
-/*image replacement*/
+/* Image replacement */
 .image-replacement {
     margin: 0 0 0 1%; padding:0;
     position:relative;
@@ -917,7 +864,7 @@ body {
 }
 
 /* ==============
-    MOBILE: Menu
+     Menu
    ============== */
 #nav {
     z-index: 10;
@@ -1050,14 +997,14 @@ img {
     vertical-align: middle;
 }
 
-/* group of related elements */
+/* Group of related elements */
 fieldset {
     border: 0;
     margin: 0;
     padding: 0;
 }
 
-/* resizable by a user */
+/* Resizable by a user */
 textarea {
     resize: vertical;
 }
@@ -1071,7 +1018,7 @@ textarea {
 }
 
 /* ===== Initializr Styles ==================================================
- 
+     Main styles
    ========================================================================== */
 
 body {
@@ -1111,9 +1058,8 @@ body {
 }   
 
 /* ==============
-    MOBILE: Main
+     Main
    ============== */
-
 .main {
     padding: 30px 0;
 }
@@ -1147,7 +1093,7 @@ body {
 }
 
 /* ==========================================================================
-   Author's custom styles
+     Author's custom styles
    ========================================================================== */
 .a-nav {
     text-decoration: none;
@@ -1326,14 +1272,9 @@ form {
     height: 5.5%;    
     position: fixed;
     top: 26%;
-    left: 94.5%; /*92%;    */
+    left: 94.5%;
     background: rgb(224, 133, 36);
-    /*border: 1px solid #222;*/
     border-radius: 6px 6px 0 0;
-    /*box-shadow: 0 0 3px #222;*/
-    /*    box-direction: reverse;            As specified 
-        -moz-box-direction: reverse;       Mozilla 
-        -webkit-box-direction: reverse;    WebKit */
     text-orientation:rotate-left;
     /* Safari */
     -webkit-transform: rotate(-90deg);
@@ -1348,9 +1289,6 @@ form {
 }
 
 .sticky a {
-    /*  box-direction: reverse;            As specified 
-        -moz-box-direction: reverse;       Mozilla 
-        -webkit-box-direction: reverse;    WebKit */
     text-align: center;
     vertical-align: bottom;
     width: 100%;
@@ -1374,43 +1312,10 @@ form {
 }
 
 /* ==========================================================================
-   Media Queries
+     Media Queries
    ========================================================================== */
-
 @media only screen and (min-width: 480px) {
 
-    /* ====================
-        INTERMEDIATE: Menu
-       ==================== */
-
-    /*    #nav a {
-            float: left;
-            width: 27%;
-            margin: 0 1.7%;
-            padding: 25px 2%;
-            margin-bottom: 10px;
-            margin-top: 10px;
-        }
-    
-        #nav li:first-child a {
-            margin-left: 0;
-        }
-    
-        #nav li:last-child a {
-            margin-right: 0;
-        }*/
-
-    /* ========================
-        INTERMEDIATE: IE Fixes
-       ======================== */
-
-    /*    #nav ul li {
-            display: inline;
-        }
-    
-        .oldie #nav a {
-            margin: 0 0.7%;
-        }*/
     #index-check {
         width: 32%;
     }
@@ -1418,20 +1323,12 @@ form {
 
 @media only screen and (min-width: 768px) {
 
-    /* ====================
-        WIDE: CSS3 Effects
-       ==================== */
-
     .header-container,
     .main .aside {
         -webkit-box-shadow: 0 5px 10px #aaa;
         -moz-box-shadow: 0 5px 10px #aaa;
         box-shadow: 0 5px 10px #aaa;
     }
-
-    /* ============
-        WIDE: Menu
-       ============ */
 
     .title {
         float: left;
@@ -1461,14 +1358,6 @@ form {
         top: 20%;
         left: -8px;
     }
-    /*    #nav {
-            float: right;
-            width: 56%;
-        }*/
-
-    /* ============
-        WIDE: Main
-       ============ */
 
     .main #article {
         float: left;
@@ -1499,7 +1388,6 @@ form {
     }
 
     .form-line select {
-        /*float: left;*/
         display: block;
         width: 204px;
         margin: 10px 10px 0 102px;
@@ -1517,6 +1405,7 @@ form {
 }
 
 @media only screen and (min-width: 980px) {
+    
     .form-line input[type="text"],
     .form-line input[type="date"],
     .form-line input[type="password"] {
@@ -1547,13 +1436,6 @@ form {
 
 @media only screen and (min-width: 1140px) {
 
-    /* ===============
-        Maximal Width
-       =============== */
-
-    /*    #nav {
-            width: 38%;
-        }*/
     .wrapper {
         width: 1026px; /* 1140px - 10% for margins */
         margin: 0 auto;
@@ -1561,7 +1443,7 @@ form {
 }
 
 /* ==========================================================================
-   Helper classes
+     Helper classes
    ========================================================================== */
 
 /* image replacement (replace a text with an image) */
@@ -1629,7 +1511,7 @@ form {
 }
 
 /* ==========================================================================
-   Print styles
+     Print styles
    ========================================================================== */
 
 @media print {
@@ -1656,7 +1538,6 @@ form {
     /*
      * Don't show links for images, or javascript/internal links
      */
-
     .ir a:after,
     a[href^="javascript:"]:after,
     a[href^="#"]:after {
@@ -1717,7 +1598,7 @@ form {
     background-repeat: no-repeat;
 }
 
-/*    ======================================================================    */
+/* Glyph icons */
 .icon-glass {
     background-position: 0 0;
 }

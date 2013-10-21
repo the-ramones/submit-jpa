@@ -1,4 +1,4 @@
-/*
+/* Reports!
  * Locale-holder cookie name
  * @type String
  */

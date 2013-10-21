@@ -1,4 +1,4 @@
-#*
+#* Reports!
  * Defines a pager. Utilizes 'pager' and 'settings' context variable
  * from the Velocity template being called from.
  *#

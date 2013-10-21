@@ -1,4 +1,4 @@
-/* 
+/* Reports!
  * Library for formating dates. Usefull when Datepicker functionality cannot be
  * applied (for example, with <label>, <span> HTML elements)
  */

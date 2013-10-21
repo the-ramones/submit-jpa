@@ -1,4 +1,4 @@
-/* 
+/* Reports!
  * Custom modal window implementaion using jQuery
  */
 var modal = (function() {
@@ -8,8 +8,6 @@ var modal = (function() {
             $modal,
             $content,
             $close;
-
-    // Append the HTML
 
     // Center the modal in the viewport
     method.center = function() {

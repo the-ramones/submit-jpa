@@ -2,7 +2,6 @@ package sp.util;
 
 import java.util.Properties;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component; 
 
@@ -12,7 +11,7 @@ import org.springframework.stereotype.Component;
  * @author Paul Kulitski
  */
 @Component
-//PropertySource@PropertySource("classpath:email.config.properties, report-servlet.properties, report.properties ")
+//@PropertySource("classpath:email.config.properties, report-servlet.properties, report.properties ")
 public class ManagerUtil {
 
     @Autowired

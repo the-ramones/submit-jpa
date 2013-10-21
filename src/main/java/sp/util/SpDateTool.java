@@ -9,14 +9,14 @@ import org.apache.velocity.tools.generic.DateTool;
 import org.springframework.context.i18n.LocaleContextHolder;
 
 /**
- * Redefine {@link org.apache.velocity.tools.generic.DateTool} through
+ * Redefinition {@link org.apache.velocity.tools.generic.DateTool} through
  * inheritance to format Russian dates in right manner
  *
  * @author Paul Kulitski
  */
 public class SpDateTool extends DateTool {
 
-    private static final Logger LOG = Logger.getLogger(SpDateTool.class.getName());
+    protected static final Logger logger = Logger.getLogger(SpDateTool.class.getName());
 
     /**
      * Returns a {@link DateFormat} instance for the specified format,

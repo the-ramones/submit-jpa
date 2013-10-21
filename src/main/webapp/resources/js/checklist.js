@@ -1,10 +1,8 @@
-/* 
- * Checklist functionality
+/* Reports!
+ * Checklist JS library 
  */
 
-/*
- * Pop-up hint 
- */
+/* Pop-up hint */
 $(document).ready(function() {
     $(document.createElement("div"))
             .attr("id", "confirm")
@@ -12,9 +10,7 @@ $(document).ready(function() {
             .hide();
 });
 
-/*
- * Add to checklist handler 
- */
+/* Add to checklist handler */
 function addToChecklist() {
     var indexes = [];
     $('tr.selected').each(function(index, value) {
@@ -39,12 +35,9 @@ function addToChecklist() {
                 .delay(3000)
                 .fadeOut(1200);
     }
-}
-;
+};
 
-/*
- * Callback for addToChecklist Ajax request
- */
+/* Callback for addToChecklist Ajax request */
 function onWatchComplete(xhr, status) {
     if (status === "success") {
         $("#confirm").finish().html(ADDED_TO_CHECKLIST_MSG);
@@ -56,8 +49,7 @@ function onWatchComplete(xhr, status) {
     $("#confirm").fadeIn(600)
             .delay(3000)
             .fadeOut(1200);
-}
-;
+};
 
 
 

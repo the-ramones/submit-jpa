@@ -1,4 +1,4 @@
-/* 
+/* Reports!
  * JS variant of pager. Useful with AJAX and without-reloading seach
  */
 

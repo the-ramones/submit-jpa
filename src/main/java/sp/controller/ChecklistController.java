@@ -42,7 +42,7 @@ import sp.util.SpStatisticsGenerator;
 @RequestMapping("/checklist")
 public class ChecklistController {
 
-    private static final Logger logger = LoggerFactory.getLogger(ChecklistController.class);
+    protected static final Logger logger = LoggerFactory.getLogger(ChecklistController.class);
     @Inject
     private ReportService reportService;
     @Inject
@@ -139,7 +139,6 @@ public class ChecklistController {
             /*
              * TODO: Put back to the model or not?
              */
-            logger.debug("CHECKLIST: {}", checklist);
         } else {
             return "missing";
         }
@@ -173,12 +172,6 @@ public class ChecklistController {
                 Statistics stats = SpStatisticsGenerator.generateStatistics(checklist);
                 session.setAttribute("statistics", stats);
 
-                /*
-                 * Session Ids
-                 */
-                logger.debug("JSESSION ID FROM SESSION: {}", session.getId());
-                logger.debug("JSESSION ID FROM @CookieValue: {}", sessionId);
-
                 String emailHtml = null;
                 /*
                  * Make a request to '/email/statistics'
@@ -190,7 +183,7 @@ public class ChecklistController {
                     String baseUrl = rawUrl.substring(0, index);
                     try {
                         // application-speecific Session ID sending
-
+                        
                         URL url = new URL(baseUrl + "/email/statistics");
                         HttpURLConnection connection =
                                 (HttpURLConnection) url.openConnection();

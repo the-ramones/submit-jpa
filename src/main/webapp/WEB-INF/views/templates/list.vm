@@ -32,19 +32,4 @@
         </tbody>        
     </table>
     <button class="action add" onclick="modal_add()">#springMessage('content.list.button.addnew')</button>    
-</div>
-
-<script type="text/javascript">
-
-    function modal_add() {
-    }; 
-
-    function modal_update() {
-    };
-
-    function modal_delete() {
-    };
-
-    function modal_action() {
-    }; 
-</script>    
+</div> 

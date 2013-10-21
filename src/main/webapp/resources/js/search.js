@@ -1,4 +1,4 @@
-/*
+/* Reports!
  * Actions on search box interactions
  */
 $(document).ready(function() {
@@ -13,7 +13,6 @@ $(document).ready(function() {
             var buttons = $(".button-block");
             $(this).toggleClass("selected");
         }
-        // TODO: add modal dialog
     });
 
     $(".table tbody tr").dblclick(function(event) {
@@ -36,10 +35,7 @@ $(document).ready(function() {
      * Button-group addition
      */
     $(".table tbody tr").mouseenter(function(event) {
-        // TODO 
-//        var clickme = $("#click_me");
-//        $(this).find("td:last").append(clickme);
-//          clickme.removeClass("hidden");
+        // TODO: 
     });
 
     $(".table tbody tr").mouseleave(function(avent) {

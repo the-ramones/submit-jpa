@@ -41,7 +41,7 @@ public class RegistryController {
     private int PAGINATION_THRESHOLD;
     @Inject
     RegistryService registryService;
-    private static final Logger logger = LoggerFactory.getLogger(RegistryController.class);
+    protected static final Logger logger = LoggerFactory.getLogger(RegistryController.class);
 
     @ModelAttribute("settings")
     public Map<String, String> populateReferenceData() {
@@ -67,11 +67,7 @@ public class RegistryController {
             @RequestParam(value = "new", required = false) String newSearch,
             @ModelAttribute("registry-pager") SpLazyPager pager,
             Model model) {
-        logger.error("IN SHOW REGISTRY");
-
-        logger.debug("new: {}", newSearch);
-        logger.debug("registry-pager: {}", pager);
-        logger.debug("page: {}", page);
+        logger.debug("IN SHOW REGISTRY");
 
         List<Register> registers = null;
         if (pager.getSourceCount() == 0 || newSearch != null) {
@@ -81,8 +77,6 @@ public class RegistryController {
                 pager.setSourceCount(registryService.count().intValue());
                 pager.setPage(0);
                 model.addAttribute("registers", registers);
-
-                logger.debug("registers: {}", registers);
 
                 return "registry";
             } else {
@@ -101,9 +95,6 @@ public class RegistryController {
                     .getRegisters(pager.getPageOffset(), pager.getPageSize());
             model.addAttribute("registers", registers);
         }
-
-        logger.debug("registry-pager: {}", pager);
-        logger.debug("registers: {}", registers);
 
         return "registry";
     }

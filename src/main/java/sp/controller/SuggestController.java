@@ -2,11 +2,9 @@ package sp.controller;
 
 import java.text.DateFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -49,7 +47,7 @@ import sp.util.SpLightPager;
 @SessionAttributes("suggest-pager")
 public class SuggestController {
 
-    private static final Logger logger = LoggerFactory.getLogger(SuggestController.class);
+    protected static final Logger logger = LoggerFactory.getLogger(SuggestController.class);
     @Inject
     SuggestService suggestService;
     @Inject
@@ -125,11 +123,9 @@ public class SuggestController {
                 } else {
                     count = Long.valueOf(limit);
                 }
-                logger.error("!! NEW SEARCH IDS: {}", ids);
 
                 if (!ids.isEmpty()) {
                     pager.setSourceCount(count.intValue());
-                    logger.error("SIZE OF IDS: {}", count);
                     pager.setPageSize(limit);
                     pager.setPage(0);
                     pager.setIds(ids);
@@ -139,23 +135,15 @@ public class SuggestController {
                     idsSet.addAll(ids.subList(0, (limit) > ids.size() ? ids.size() : limit));
                     body.setResults(reportService.getReports(idsSet));
 
-                    logger.error("NEW SEARCH PAGER: {}", pager);
                 } else {
                     body.setResults(new ArrayList<Report>(0));
                 }
             } else {
                 boolean correct = pager.setPage(page);
                 if (correct) {
-                    //List<Long> ids = indexSearcher.search(query, limit);
                     List<Long> ids = pager.getIds();
 
-                    logger.error("!!OLD SEARCH IDS BEFORE: {}", ids);
-                    logger.error("Pager: offset={}, size={}", pager.getPageOffset(), pager.getPageSize());
-                    logger.error("!! IDS: {}", ids);
-
                     if (!ids.isEmpty()) {
-
-                        logger.error("IN GET PAGER");
 
                         Set<Long> idsSet = new HashSet();
                         if (pager.getPage() + 1 < pager.getPageCount()) {
@@ -199,13 +187,6 @@ public class SuggestController {
             }
         }
 
-        logger.error("QUERY: {}", query);
-        logger.error("pager: {}", pager);
-        logger.error("page: {}", page);
-        logger.error("useIndex: {}", useIndex);
-        logger.error("limit: {}", limit);
-        logger.error("BODY: {}", body);
-
         ResponseEntity<ResultPager> re = new ResponseEntity<ResultPager>(body, headers, HttpStatus.OK);
         return re;
     }
@@ -220,8 +201,6 @@ public class SuggestController {
         HttpHeaders headers = new HttpHeaders();
         headers.add("Content-Type", "application/json;charset=utf-8");
         List<Long> body;
-
-        logger.error("QUERY:" + query);
 
         if (limit != null) {
             body = suggestService.getIdsByQuery(query, limit);
