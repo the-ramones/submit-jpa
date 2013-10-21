@@ -116,12 +116,9 @@ public class SuggestController {
              */
             if (newSearch) {
                 List<Long> ids = (List<Long>) indexSearcher.search(query, Integer.MAX_VALUE);
-                System.out.println("IDS" + ids);
-                System.out.println("LIMIT: " + limit);
                 Long count;
                 if (!recent) {
                     count = indexSearcher.count(query);
-                    System.out.println("REALLY COUNT" + count);
                 } else {
                     count = Long.valueOf(limit);
                 }
@@ -144,8 +141,6 @@ public class SuggestController {
                 boolean correct = pager.setPage(page);
                 if (correct) {
                     List<Long> ids = pager.getIds();
-                    System.out.println("IDS size: " + ids.size());
-                    System.out.println("PAGER" + pager.getPageOffset() + pager.getPageSize());
                     if (!ids.isEmpty()) {
 
                         Set<Long> idsSet = new HashSet();

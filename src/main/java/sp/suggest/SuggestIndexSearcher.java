@@ -2,9 +2,6 @@ package sp.suggest;
 
 import java.text.Normalizer;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -67,7 +64,6 @@ public class SuggestIndexSearcher implements IndexSearcher, IndexSuggester {
 
         for (String key : keys) {
             for (Pattern pattern : patterns) {
-                logger.debug("MATCH {} : {}", key, pattern.matcher(key).matches());
                 if (pattern.matcher(key).matches()) {
                     LinkedHashSet<Long> partResults =
                             (LinkedHashSet<Long>) index.get(key);
@@ -155,8 +151,6 @@ public class SuggestIndexSearcher implements IndexSearcher, IndexSuggester {
 
         for (String key : keys) {
             for (Pattern pattern : patterns) {
-
-                logger.debug("MATCH {} : {}", key, pattern.matcher(key).matches());
 
                 if (pattern.matcher(key).matches()) {
                     result.addAll((LinkedHashSet<Long>) index.get(key));

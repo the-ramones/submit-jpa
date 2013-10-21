@@ -64,7 +64,6 @@
     </bean>
     
     <!-- persistence -->    
-
     <bean  id="reportsDS" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
         <property name="driverClassName" value="${database.driverClassName}" />
         <property name="url" value="${database.url}" />
@@ -92,9 +91,9 @@
     <!--<context:load-time-weaver />-->
         
     <!-- EntityMangerFactory, will be used with @PersistenceContext(unitName = "in-settings") -->
-    <bean id="entityManagerFactory" class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
+    <bean id="entityManagerFactoryReports" class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean" depends-on="enterpriseDataSource">
         <property name="persistenceUnitName" value="reportPU" />
-        <property name="dataSource" ref="reportsDS" />
+        <property name="dataSource" ref="enterpriseDataSource" />
         <!-- public class InstrumentationLoadTimeWeaver extends Object implements LoadTimeWeaver
         
         LoadTimeWeaver relying on VM Instrumentation.
@@ -127,9 +126,9 @@
     </bean>
     
       <!-- EntityMangerFactory, will be used with @PersistenceContext(unitName = "in-settings") -->
-    <bean id="entityManagerFactory2" class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
+    <bean id="entityManagerFactoryRegistry" class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean" depends-on="registryDataSource">
         <property name="persistenceUnitName" value="registryPU" />
-        <property name="dataSource" ref="reportsDS" />
+        <property name="dataSource" ref="registryDataSource" />
         <property name="jpaPropertyMap">
             <props>
                 <prop key="eclipselink.weaving">false</prop>
@@ -148,12 +147,8 @@
     
     <!-- transactions -->
     
-    <tx:annotation-driven transaction-manager="transactionManager" />
-    
-    <!-- Spring's PlatformTrransactionManager, non-JTA -->
-    <bean id="transactionManager" class="org.springframework.orm.jpa.JpaTransactionManager">
-        <property name="entityManagerFactory" ref="entityManagerFactory" />
-    </bean>
+    <!-- Check sp.config.BitronixJtaConfig.class -->
+    <!--<tx:annotation-driven transaction-manager="jtaTransactionManager" />-->
     
     <!-- caches -->
     
@@ -176,21 +171,6 @@
     an attribute. If hasn't been set throws an exception -->
     <bean class="org.springframework.beans.factory.annotation.RequiredAnnotationBeanPostProcessor" /> 
     
-    <!-- todo -->
-    
-    <!-- C3P0 pool? 
-    <bean id="c3p0reportDS" class="com.mchange.v2.c3p0.ComboPooledDataSource" destroy-method="close">
-        <property name="driverClass" value="com.mysql.jdbc.Driver" />
-        <property name="jdbcUrl" value="jdbc:mysql://localhost:3306/driftslogg" />
-        <property name="user" value="root" />
-        <property name="password" value="root" />
-        <property name="acquireIncrement" value="5" />
-        <property name="idleConnectionTestPeriod" value="60" />
-        <property name="maxPoolSize" value="100" />
-        <property name="maxStatements" value="50" />
-        <property name="minPoolSize" value="10" />
-    </bean>-->    
-
     <!-- Enables Sprig Validation.
         1. If want use JSR-303 validation, <mvc:annotation-driven /> will be sufficient.
         2. Turn on if want to use Spring Validation or both.

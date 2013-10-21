@@ -33,7 +33,6 @@ public class SuggestIndexCreator implements IndexCreator {
         logger.debug("Initializing a Reports! Suggest index. "
                 + "Update fixed rate has been set to {}", UPDATE_RATE_HOURLY);
         reloadIndex();
-        logger.error("INDEX: {}", suggestIndex.getIndex());
     }
     private static int MILISECONDS_IN_HOUR = 1 * 60 * 60 * 1000;
 

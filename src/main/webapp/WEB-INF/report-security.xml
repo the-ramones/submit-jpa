@@ -78,12 +78,10 @@
         3. @PreAuthorise('hasRole('ROLE_ADMIN') and #spitter.spittle.length() < 140 or hasRole('ROLE_PREMIUM')")
            @PostAuthorize('hasRole('ROLE_ADMIN') and returnObject.username == principal.username')
            @PostFilter('filterObject.username == principal.username')  :  filters return List<Spittle>
-    -->
-    <!--
-    <global-method-security secured-annotations="enabled" pre-post-annotations="enabled">
-        <expression-handler ref="expressionHandler" />
-        <protect-pointcut expression="execution(@sp.Sensible * *.*(String)) and args(id,value)" access="ROLE_SPITTER, ROLE_ADMIN" />
-    </global-method-security>
+        4. <global-method-security secured-annotations="enabled" pre-post-annotations="enabled">            
+                <protect-pointcut expression="execution(@sp.Sensible * *.*(String)) and args(id,value)"
+                    access="ROLE_SPITTER, ROLE_ADMIN" />
+           </global-method-security>
     -->
 
 </beans:beans>
