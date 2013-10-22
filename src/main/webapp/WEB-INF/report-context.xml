@@ -99,7 +99,7 @@
     <!-- EntityMangerFactory, will be used with @PersistenceContext(unitName = "in-settings") -->
     <bean id="entityManagerFactoryReports" class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean" depends-on="enterpriseDataSource">
         <property name="persistenceUnitName" value="reportPU" />
-        <property name="dataSource" ref="reportDS" />
+        <property name="jtaDataSource" ref="enterpriseDataSource" />
         <!-- public class InstrumentationLoadTimeWeaver extends Object implements LoadTimeWeaver
         
         LoadTimeWeaver relying on VM Instrumentation.
@@ -134,7 +134,7 @@
       <!-- EntityMangerFactory, will be used with @PersistenceContext(unitName = "in-settings") -->
     <bean id="entityManagerFactoryRegistry" class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean" depends-on="registryDataSource">
         <property name="persistenceUnitName" value="registryPU" />
-        <property name="dataSource" ref="registryDS" />
+        <property name="jtaDataSource" ref="registryDataSource" />
         <property name="jpaPropertyMap">
             <props>
                 <prop key="eclipselink.weaving">false</prop>
@@ -154,7 +154,7 @@
     <!-- transactions -->
     
     <!-- Check sp.config.BitronixJtaConfig.class -->
-    <!--<tx:annotation-driven proxy-target-class="true" transaction-manager="jtaTransactionManager" />-->
+    <tx:annotation-driven transaction-manager="jtaTransactionManager" />
     <tx:annotation-driven />
     <!-- caches -->
     

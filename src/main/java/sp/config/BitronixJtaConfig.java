@@ -23,6 +23,7 @@ import javax.inject.Inject;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 @Configuration
@@ -47,6 +48,7 @@ public class BitronixJtaConfig {
     private static final String TX_LOG_2 = "../tx-logs/tx-part2.btm";
 
     public BitronixJtaConfig() {
+        LocalContainerEntityManagerFactoryBean g;
     }
 
     @Bean(initMethod = "init", destroyMethod = "close")
