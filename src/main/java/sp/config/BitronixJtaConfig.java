@@ -43,8 +43,8 @@ public class BitronixJtaConfig {
     private static final String TEST_QUERY_ENTERPRISE_DS = "SELECT 1 FROM reports";
     private static final String TEST_QUERY_REGISTRY_DS = "SELECT 1 FROM registers";
     private static final String JTA_JVM_UNIQUE_ID = "reports-spring-btm-node0";
-    private static final String TX_LOG_1 = "tx-logs/tx-part1.btm";
-    private static final String TX_LOG_2 = "tx-logs/tx-part2.btm";
+    private static final String TX_LOG_1 = "../tx-logs/tx-part1.btm";
+    private static final String TX_LOG_2 = "../tx-logs/tx-part2.btm";
 
     public BitronixJtaConfig() {
     }
