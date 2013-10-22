@@ -69,21 +69,25 @@ public class SuggestServiceImpl implements SuggestService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<Long> getIdsByQuery(String query, Long limit, Long offset) {
         return suggestRepository.getIdsByQuery(query, limit, offset);
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<Report> getReportsByQuery(String query, Long limit, Long offset) {
         return suggestRepository.getReportsByQuery(query, limit, offset);
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<Prompt> getPrompts(String query) {
         return suggestRepository.getPrompts(query);
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<String> getPromptStrings(String query, Long limit) {
         return suggestRepository.getPromptStrings(query, limit);
     }

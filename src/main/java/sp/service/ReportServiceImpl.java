@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Set;
 import javax.inject.Inject;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import sp.model.Report;
 import sp.repository.ReportRepository;
@@ -21,7 +22,7 @@ public class ReportServiceImpl implements ReportService {
 
     @Override
     //@Transactional(propagation = Propagation.REQUIRED, isolation = Isolation.DEFAULT)//Isolation.SERIALIZABLE)
-    @Transactional
+    @Transactional(readOnly = false, propagation = Propagation.SUPPORTS)
     public Report addReport(Report report) {
         return reportRepository.saveReport(report);
     }
@@ -34,8 +35,7 @@ public class ReportServiceImpl implements ReportService {
      * @return
      */
     @Override
-    //@Cacheable(value = "sp.model.Report", key = "#performer")
-    //@Transactional(propagation = Propagation.REQUIRED, readOnly = true)
+    //@Cacheable(value = "sp.model.Report", key = "#performer")    
     @Transactional(readOnly = true)
     public List<Report> getReports(String performer) {
         return reportRepository.getReportsByPerformer(performer);
@@ -43,7 +43,6 @@ public class ReportServiceImpl implements ReportService {
     }
 
     @Override
-    //@Transactional(propagation = Propagation.REQUIRED, readOnly = true)
     @Transactional(readOnly = true)
     public Report getReportById(Long id) {
         return reportRepository.getReportById(id);
@@ -75,6 +74,7 @@ public class ReportServiceImpl implements ReportService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public Boolean hasReport(Long id) {
         return reportRepository.hasReport(id);
     }

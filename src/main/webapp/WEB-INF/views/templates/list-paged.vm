@@ -13,7 +13,7 @@
                 <th>#springMessage('content.detail.activity')</th>
             </tr>
         </thead>
-        <tbody> current page (-1): ${pager.getPage()} isEmpty()?: ${pager.getPageList().isEmpty()} search ID: $search_id, pageCount: $pager.getPageCount()
+        <tbody>
             #foreach( $report in ${pager.getPageList()} )
             <tr>
                 <td>${report.id}</td>
