@@ -16,10 +16,8 @@
        http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-3.1.xsd
        http://www.directwebremoting.org/schema/spring-dwr http://www.directwebremoting.org/schema/spring-dwr-3.0.xsd
 ">
-    <!-- mvc -->
+    <!-- MVC -->
     
-    <!-- direct mapping of resources without a controller,
-    don't forget about the last '/' sign -->
     <mvc:resources location="/resources/img/" mapping="/resources/img/**" />
     <mvc:resources location="/resources/js/" mapping="/resources/js/**" />
     <mvc:resources location="/resources/css/" mapping="/resources/css/**" />
@@ -49,10 +47,9 @@
         </mvc:message-converters>
     </mvc:annotation-driven>
     
-    <!--<bean id="jacksonMessageConverter" class="org.springframework.http.converter.json.MappingJacksonHttpMessageConverter"/>--> 
-
-    <!-- issue: include or not? -->
-    <!--<tx:annotation-driven />-->
+    <!-- Jackson Mapper
+    <bean id="jacksonMessageConverter" class="org.springframework.http.converter.json.MappingJacksonHttpMessageConverter" />
+    --> 
     
     <context:component-scan base-package="sp.controller" />
     
@@ -84,7 +81,6 @@
     <!-- Internationalization -->    
     <bean id="messageSource"
           class="org.springframework.context.support.ReloadableResourceBundleMessageSource">
-        <!--<property name="basename" value="/WEB-INF/i18n/messages" />-->
         <property name="basenames">
             <util:list>
                 <value>/WEB-INF/i18n/messages</value>
@@ -108,17 +104,14 @@
     </bean>
     
     <!-- Interceptor that allows for changing the current locale on every request,
-    via a configurable request parameter. 
-    -->
+         via a configurable request parameter. -->
     <mvc:interceptors>        
         <bean id="localeChangeInterceptor"
               class="org.springframework.web.servlet.i18n.LocaleChangeInterceptor">
             <!-- request parameter which specifies a locale -->
             <property name="paramName" value="lang" />
         </bean>
-        <bean id="userDetailsInterceptor" 
-              class="sp.interceptor.UserInterceptor">            
-        </bean>
+        <bean id="userDetailsInterceptor" class="sp.interceptor.UserInterceptor" />
     </mvc:interceptors>
     
     <!-- @RequestMapping annotation processor -->
@@ -127,11 +120,11 @@
     </bean>
 
     <!-- multipart resolver -->                
-    <bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver"
+    <bean id="multipartResolver" 
+          class="org.springframework.web.multipart.commons.CommonsMultipartResolver"
           p:maxUploadSize="500000"/>
    
-    <!-- RESTful services -->
-    <!--
+    <!-- RESTful services 
     <bean class="org.springframework.web.servlet.view.ContentNegotiatingViewResolver">
         <property name="mediaTypes">
             <map>
@@ -154,23 +147,10 @@
         </property>
         <property name="formatterRegistrars">
             <set>
-                <bean class="org.springframework.format.datetime.
+                <bean class="org.springframework.format.datetime.DateTimeRegistrar"/>
             </set>
         </property>
     </bean>
     -->
     
-    <!-- Converters character encoding issue -->
-    <!-- 
-    <bean class = "org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerAdapter">
-        <property name="messageConverters">
-            <array>
-                <bean class = "org.springframework.http.converter.StringHttpMessageConverter">
-                    <property name="supportedMediaTypes" value = "text/html;charset=UTF-8" />
-                </bean>
-            </array>
-        </property>
-    </bean>
-    -->
-
 </beans>

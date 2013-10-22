@@ -6,10 +6,10 @@
         http://www.directwebremoting.org/schema/spring-dwr http://www.directwebremoting.org/schema/spring-dwr-3.0.xsd
 ">
     
-    <!--     DWR will scan all Spring managed beans containing @RemoteProxy or
+    <!-- DWR will scan all Spring managed beans containing @RemoteProxy or
     @RemoteMethod annotations and register Creator proxies for them.
     This will NOT scan any classes not managed by Spring. -->
-    <dwr:annotation-config id="dwrS" />
+    <dwr:annotation-config id="reportsDwr" />
  
     <!--     DWR will scan the classpath and search classes containing @RemoteProxy or
     @RemoteMethod annotations. This will register the beans and Creator proxies for these classes.-->
@@ -26,7 +26,7 @@
     Spring. Leaving it enabled doesn't do any negative effects. Here's a
     sample config:-->
     <dwr:configuration>
-        <dwr:convert type="bean" class="org.krams.tutorial.CustomClass" />
+        <dwr:convert type="bean" class="sp.CustomRemotePojo" />
     </dwr:configuration> 
 
 </beans>

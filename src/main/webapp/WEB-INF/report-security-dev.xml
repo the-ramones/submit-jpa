@@ -5,7 +5,7 @@
              xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.1.xsd
                                  http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security-3.0.xsd       
 ">
-    <!-- security -->
+    <!-- Security -->
     <http>
         <form-login login-page="/login?login=true" 
                     default-target-url="/home" 
@@ -13,17 +13,12 @@
         <http-basic  />
         <logout invalidate-session="true" 
                 logout-success-url="/home"  
-                logout-url="/j_spring_security_logout"                
-                />
+                logout-url="/j_spring_security_logout" />
         <intercept-url pattern="/resources/**" filters="none"/>
         <intercept-url pattern="/admin/**" access="ROLE_ADMIN" />
         <intercept-url pattern="/registry*" access="ROLE_ADMIN"/>    
         <intercept-url pattern="/report/**" access="ROLE_USER"/>    
         <intercept-url pattern="/suggest-solr*" access="ROLE_USER"/>
-        <!-- Spring Security will see that it requires
-         the https channel and automatically redirect the request to go over HTTPS
-        -->
-        <!--<intercept-url pattern="/login*" requires-channel="https"/>-->
         <intercept-url pattern="/registry*" requires-channel="https"/>
         <remember-me
             key="_spring_security_remember_me"
@@ -36,13 +31,14 @@
     
     <global-method-security pre-post-annotations="enabled" />
 
-    <!-- User Repository -->
-<!--    <user-service id="userService">
-        <user name="admin" password="admin" authorities="ROLE_USER,ROLE_ADMIN"/>
-        <user name="user" password="user" authorities="ROLE_USER"/>
-        <user name="anonymous" password="anonymous" authorities="ROLE_ANONYMOUS"/>
-    </user-service>
+    <!-- User Repository 
+        <user-service id="userService">
+            <user name="admin" password="admin" authorities="ROLE_USER,ROLE_ADMIN"/>
+            <user name="user" password="user" authorities="ROLE_USER"/>
+            <user name="anonymous" password="anonymous" authorities="ROLE_ANONYMOUS"/>
+        </user-service>
     -->
+    
     <!-- Authentication ProviderManager -->
     <authentication-manager>
         <password-encoder ref="encoder" />
@@ -85,33 +81,34 @@
     -->
     
     <!-- Hierarchical LDAP User Repository -->
-<!--    <authentication-manager alias="authenticationManager">
+    <!--<authentication-manager alias="authenticationManager">
         <ldap-authentication-provider user-search-filter="(uid={0})"
-                                      group-search-filter="member={0}">-->
-            <!-- LDAP provider will compare passwords on the server side 
+                                      group-search-filter="member={0}">
+                LDAP provider will compare passwords on the server side 
             so the actual password is keep in secret. But when you attempt 
             to transmit a entered password over the network it will be available 
             for the hacker/cdn whatsoever. To prevent this you nedd to pin
             encryption strategy / hash method to be evaluated against the 
             entered password on the client side. Choises:
             {sha}{ssha}{md4}{md5}{plaintext}{sha}{sha-256}
-            -->
-<!--            <password-compare password-attribute="passcode" hash="md5"/>
+
+        <password-compare password-attribute="passcode" hash="md5"/>
         </ldap-authentication-provider>        
-    </authentication-manager>-->
+    </authentication-manager>
+    -->
     
-<!--    <ldap-user-service id="userService"
+    <!--<ldap-user-service id="userService"
                        user-search-base="ou=people"
                        user-search-filter="(uid={0})"
                        group-search-base="ou=groups"
-                       group-search-filter="member={0}"
-    />-->
+                       group-search-filter="member={0}" />
+    -->
         
     <!-- By default, Spring Security’s LDAP authentication assumes that the LDAP server is
     listening on port 33389 on localhost. But if your LDAP server is on another machine,
     then you can use the <ldap-server> element to configure the location:
     -->
-<!--    <ldap-server url="ldap://habuma.com:389/dc=habuma,dc=com"/>-->
+    <!-- <ldap-server url="ldap://habuma.com:389/dc=habuma,dc=com"/> -->
     
     <!-- 
     If you don’t happen to have an LDAP server laying around waiting to be authenticated
@@ -154,33 +151,4 @@
         member: uid=habuma,ou=people,dc=habuma,dc=com
     -->
     
-    <!-- Method invocation Security -->
-    <!-- 
-        @Secured - Spring
-        @RolesAllowed - JSR-250
-        @PreFilter @PostFilter @PreAuthorize @PostAuthorize
-        explicit pointcuts
-        
-        examples:
-        1. @Secured({'ROLE_USER', 'ROLE_ADMIN'})
-           public String securedMethod(UserModel model) throws AuthenticationException, AccessDeniedException
-        2. @RolesAllowed('ROLE_ADMIN')   
-           public String securedMethod(UserMOdel model) throw AuthenticationException, AcessDeniedException
-              + @DenyAll @PermitAll 
-        3. @PreAuthorise('hasRole('ROLE_ADMIN') and #spitter.spittle.length() < 140 or hasRole('ROLE_PREMIUM')")
-           @PostAuthorize('hasRole('ROLE_ADMIN') and returnObject.username == principal.username')
-           @PostFilter('filterObject.username == principal.username')  :  filters return List<Spittle>
-    -->
-<!--    <global-method-security secured-annotations="enabled" pre-post-annotations="enabled">
-        <expression-handler ref="expressionHandler" />
-        <protect-pointcut expression="execution(@sp.Sensible * *.*(String)) and args(id,value)" access="ROLE_SPITTER, ROLE_ADMIN" />
-    </global-method-security>
-    
-    <beans:bean id="expressionHandler" 
-                class="org.springframework.security.access.expression.method.DefaultMethodSecurityExpressionHandler">
-        <beans:property name="permissionEvaluator">
-            <beans:bean class="com.habuma.spitter.security.SpittlePermissionEvaluator" />
-        </beans:property>
-    </beans:bean>   -->
-
 </beans:beans>
