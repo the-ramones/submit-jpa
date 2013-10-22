@@ -37,4 +37,6 @@ public interface RegisterRepository {
     public Long count(User user);
     
     public Long count(User user, Op op);
+    
+    public Long getLastId();
 }

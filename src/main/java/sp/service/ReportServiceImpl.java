@@ -7,8 +7,15 @@ import javax.inject.Inject;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
+import sp.model.Op;
+import sp.model.Register;
+import sp.model.RegisterId;
 import sp.model.Report;
+import sp.model.User;
+import sp.repository.OpRepository;
+import sp.repository.RegisterRepository;
 import sp.repository.ReportRepository;
+import sp.repository.UserRepository;
 
 /**
  *
@@ -19,10 +26,29 @@ public class ReportServiceImpl implements ReportService {
 
     @Inject
     private ReportRepository reportRepository;
+    
+    @Inject
+    private RegisterRepository registerRepository;
+    @Inject
+    private UserRepository userRepository;
+    @Inject
+    private OpRepository opRepository;
 
     @Override
     @Transactional(rollbackFor = Exception.class)
     public Report addReport(Report report) {
+        Op op = opRepository.getOpByTitle("INSERT").get(0);
+        User user = userRepository.getUserById(1);        
+        
+        RegisterId registerId = new RegisterId(registerRepository.getLastId() + 1,
+                user.getId(), op.getId());
+        Register register = new Register(); 
+        register.setId(registerId);
+        register.setOp(op);
+        register.setUser(user);
+        registerRepository.saveRegister(register);
+        
+        registerRepository.saveRegister(register);
         return reportRepository.saveReport(report);
     }
 

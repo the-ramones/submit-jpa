@@ -30,7 +30,8 @@ import javax.persistence.TemporalType;
     @NamedQuery(name = "Register.countAll", query = "select count(r.op) from Register r"),
     @NamedQuery(name = "Register.countByOp", query = "select count(r.op) from Register r where r.op = :op"),
     @NamedQuery(name = "Register.countByUser", query = "select count(r.op) from Register r where r.user = :user"),
-    @NamedQuery(name = "Register.countByUserAndOp", query = "select count(r.op) from Register r where r.user = :user and r.op = :op")
+    @NamedQuery(name = "Register.countByUserAndOp", query = "select count(r.op) from Register r where r.user = :user and r.op = :op"),
+    @NamedQuery(name = "Register.getLastIdByUserAndOp", query = "select r.id.id from Register r order by r.id.id desc")
 })
 public class Register implements java.io.Serializable {
 
@@ -71,7 +72,7 @@ public class Register implements java.io.Serializable {
         this.id = id;
     }
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "user_id", nullable = false, insertable = false, updatable = false)
     public User getUser() {
         return this.user;
@@ -81,7 +82,7 @@ public class Register implements java.io.Serializable {
         this.user = users;
     }
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "op_id", nullable = false, insertable = false, updatable = false)
     public Op getOp() {
         return this.op;

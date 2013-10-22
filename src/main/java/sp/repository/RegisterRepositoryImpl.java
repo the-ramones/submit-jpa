@@ -157,4 +157,13 @@ public class RegisterRepositoryImpl implements RegisterRepository {
         return query.getSingleResult();
 
     }
+
+    @Override
+    public Long getLastId() {
+        TypedQuery<Long> query = 
+               em.createNamedQuery("Register.getLastIdByUserAndOp", Long.class);
+
+        query.setMaxResults(1);
+        return query.getResultList().get(0);
+    }
 }
