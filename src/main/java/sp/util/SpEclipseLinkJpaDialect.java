@@ -5,7 +5,7 @@ import java.sql.SQLException;
 import java.util.logging.Logger;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceException;
-import org.eclipse.persistence.sessions.Session;
+//import org.eclipse.persistence.sessions.Session;
 //import org.eclipse.persistence.sessions.Session;
 import org.springframework.jdbc.datasource.DataSourceUtils;
 import org.springframework.orm.jpa.vendor.EclipseLinkJpaDialect;
@@ -40,7 +40,7 @@ public class SpEclipseLinkJpaDialect extends EclipseLinkJpaDialect {
     public Object beginTransaction(final EntityManager entityManager, final TransactionDefinition definition) throws PersistenceException, SQLException, TransactionException {
         boolean infoEnabled = false;
         boolean debugEnabled = false;
-        Session session = (Session) entityManager.getDelegate();
+        //Session session = (Session) entityManager.getDelegate();
         if (definition.getTimeout() != TransactionDefinition.TIMEOUT_DEFAULT) {
             // getSession(entityManager).acquireUnitOfWork().setTimeout(definition.getTimeout());
         }

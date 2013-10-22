@@ -78,14 +78,14 @@
     </bean>
     
     <!-- EclipseLink JPA vendor adapter -->
-    <bean id="jpaVendorAdapter" class="org.springframework.orm.jpa.vendor.EclipseLinkJpaVendorAdapter">
+    <bean id="jpaVendorAdapter" class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter">
         <property name="showSql" value="${database.showSql}" />
         <property name="generateDdl" value="${database.generateDdl}" />
-        <property name="databasePlatform" value="${database.platform}" />
+        <!--<property name="databasePlatform" value="${database.platform}" />-->
     </bean>
     
     <!-- EclipseLink JPA Dialect bean -->
-    <bean id="jpaDialect" class="org.springframework.orm.jpa.vendor.EclipseLinkJpaDialect" />
+    <bean id="jpaDialect" class="org.springframework.orm.jpa.vendor.HibernateJpaDialect" />
 
     <!-- Auto detect instrumentation jar from GlassFish, OC4J, Spring VM agent
     and (but through ReflectiveLoadTimeWeaver) TomcatInstrumentableClassLoader
@@ -123,7 +123,8 @@
         -->
         <property name="jpaPropertyMap">
             <props>
-                <prop key="eclipselink.weaving">false</prop>
+                <prop key="hibernate.dialect">org.hibernate.dialect.MySQL5Dialect</prop>
+                <!--<prop key="eclipselink.weaving">false</prop>-->
             </props>
         </property>
         <!-- an inner beans? -->
@@ -137,7 +138,8 @@
         <property name="jtaDataSource" ref="registryDataSource" />
         <property name="jpaPropertyMap">
             <props>
-                <prop key="eclipselink.weaving">false</prop>
+                <prop key="hibernate.dialect">org.hibernate.dialect.MySQL5Dialect</prop>
+                <!--<prop key="eclipselink.weaving">false</prop>-->
             </props>
         </property>
         <property name="jpaDialect" ref="jpaDialect" />
@@ -153,8 +155,10 @@
     
     <!-- transactions -->
     
+    <aop:aspectj-autoproxy />
+    
     <!-- Check sp.config.BitronixJtaConfig.class -->
-    <tx:annotation-driven transaction-manager="jtaTransactionManager" />
+    <tx:annotation-driven transaction-manager="jtaTransactionManager" proxy-target-class="true" />
     
     <!-- caches -->
         
