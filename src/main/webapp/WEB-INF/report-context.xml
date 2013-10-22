@@ -155,9 +155,9 @@
     
     <!-- Check sp.config.BitronixJtaConfig.class -->
     <tx:annotation-driven transaction-manager="jtaTransactionManager" />
-    <tx:annotation-driven />
-    <!-- caches -->
     
+    <!-- caches -->
+        
     <!-- @Cacheable will be scanned at start-up of context 
     <cache:annotation-driven cache-manager="cacheManager" mode="proxy" order="" />
     

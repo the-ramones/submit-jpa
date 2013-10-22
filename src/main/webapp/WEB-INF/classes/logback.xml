@@ -44,8 +44,16 @@
         <level value="DEBUG" />
     </logger>    
 
-    <root>
+    <logger name="bitronix">
+        <level value="DEBUG" />
+    </logger>  
+
+    <logger name="org.apache.commons.digester.Digester">
         <level value="INFO" />
+    </logger>    
+    
+    <root>
+        <level value="DEBUG" />
         <appender-ref ref="CONSOLE" />
         <appender-ref ref="FILE" />
     </root>

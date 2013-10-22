@@ -78,7 +78,7 @@ public class SuggestIndex implements Index {
             if (swapIndex != null) {
                 return swapIndex;
             } else {
-                logger.warn("CREATING A NEW SWAP INDEX");
+                logger.info("Creatd a new swap index");
                 swapIndex = new ConcurrentHashMap<String, LinkedHashSet>(
                         INITIAL_CATACITY, LOAD_FACTOR, CONCURRENCY_LEVEL);
                 return swapIndex;

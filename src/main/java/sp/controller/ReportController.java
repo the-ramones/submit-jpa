@@ -93,7 +93,7 @@ public class ReportController {
 
     @ModelAttribute("checklist")
     public Set<Long> createChecklist() {
-        logger.error("CREATE CHECKLIST INIT");
+        logger.debug("Create initial checklist");
         Set<Long> checklist = new HashSet<Long>(CHECKLIST_INITIAL_CAPACITY);
         return checklist;
     }

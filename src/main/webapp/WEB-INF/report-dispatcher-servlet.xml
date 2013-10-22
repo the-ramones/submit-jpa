@@ -52,9 +52,9 @@
     <!--<bean id="jacksonMessageConverter" class="org.springframework.http.converter.json.MappingJacksonHttpMessageConverter"/>--> 
 
     <!-- issue: include or not? -->
-    <tx:annotation-driven />
+    <!--<tx:annotation-driven />-->
     
-    <context:component-scan base-package="sp.controller, sp.model.dwr" />
+    <context:component-scan base-package="sp.controller" />
     
     <!-- Velocity integration -->
     <bean id="velocityConfig"

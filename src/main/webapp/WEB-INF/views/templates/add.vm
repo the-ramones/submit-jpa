@@ -33,5 +33,9 @@
      
 </div>
 
+<script type="text/javascript">
+    document.getElementById("performer").focus();
+</script>
+
 #hint()
   
