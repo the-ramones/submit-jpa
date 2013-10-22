@@ -97,7 +97,7 @@
     <!--<context:load-time-weaver />-->
         
     <!-- EntityMangerFactory, will be used with @PersistenceContext(unitName = "in-settings") -->
-    <bean id="entityManagerFactoryReports" class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean" depends-on="enterpriseDataSource">
+    <bean id="entityManagerFactoryReports" class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean" depends-on="enterpriseDataSource,transactionManager">
         <property name="persistenceUnitName" value="reportPU" />
         <property name="jtaDataSource" ref="enterpriseDataSource" />
         <!-- public class InstrumentationLoadTimeWeaver extends Object implements LoadTimeWeaver
@@ -124,6 +124,8 @@
         <property name="jpaPropertyMap">
             <props>
                 <prop key="hibernate.dialect">org.hibernate.dialect.MySQL5Dialect</prop>
+                <!--<property name="hibernate.transaction.manager_lookup_class" value="org.hibernate.transaction.BTMTransactionManagerLookup" />-->
+                <prop key="hibernate.transaction.manager_lookup_class">org.hibernate.transaction.BTMTransactionManagerLookup</prop>
                 <!--<prop key="eclipselink.weaving">false</prop>-->
             </props>
         </property>
@@ -133,12 +135,13 @@
     </bean>
     
       <!-- EntityMangerFactory, will be used with @PersistenceContext(unitName = "in-settings") -->
-    <bean id="entityManagerFactoryRegistry" class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean" depends-on="registryDataSource">
+    <bean id="entityManagerFactoryRegistry" class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean" depends-on="registryDataSource,transactionManager">
         <property name="persistenceUnitName" value="registryPU" />
         <property name="jtaDataSource" ref="registryDataSource" />
         <property name="jpaPropertyMap">
             <props>
                 <prop key="hibernate.dialect">org.hibernate.dialect.MySQL5Dialect</prop>
+                <prop key="hibernate.transaction.manager_lookup_class">org.hibernate.transaction.BTMTransactionManagerLookup</prop>
                 <!--<prop key="eclipselink.weaving">false</prop>-->
             </props>
         </property>
@@ -158,7 +161,7 @@
     <aop:aspectj-autoproxy />
     
     <!-- Check sp.config.BitronixJtaConfig.class -->
-    <tx:annotation-driven transaction-manager="jtaTransactionManager" proxy-target-class="true" />
+    <tx:annotation-driven transaction-manager="transactionManager" proxy-target-class="true" />
     
     <!-- caches -->
         

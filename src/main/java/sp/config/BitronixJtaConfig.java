@@ -27,7 +27,7 @@ import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 @Configuration
-@EnableTransactionManagement
+@EnableTransactionManagement(proxyTargetClass = true)
 public class BitronixJtaConfig {
 
     @Inject
@@ -45,10 +45,11 @@ public class BitronixJtaConfig {
     private static final String TEST_QUERY_REGISTRY_DS = "SELECT 1 FROM registers";
     private static final String JTA_JVM_UNIQUE_ID = "reports-spring-btm-node0";
     private static final String TX_LOG_1 = "../tx-logs/tx-part1.btm";
-    private static final String TX_LOG_2 = "../tx-logs/tx-part2.btm";
+    private static final String TX_LOG_2 = "../tx-logs/tx-part2.btm";     
+    
 
-    public BitronixJtaConfig() {
-        LocalContainerEntityManagerFactoryBean g;
+    public BitronixJtaConfig() {        
+        
     }
 
     @Bean(initMethod = "init", destroyMethod = "close")
@@ -114,7 +115,7 @@ public class BitronixJtaConfig {
 
     @Bean
     @DependsOn("btmConfig")
-    public TransactionManager transactionManager() {
+    public TransactionManager transactionManagerNative() {
         return TransactionManagerServices.getTransactionManager();
     }
 
@@ -126,7 +127,7 @@ public class BitronixJtaConfig {
 
     @Bean
     @DependsOn("bitronixTransactionManager")
-    public JtaTransactionManager jtaTransactionManager() {
+    public JtaTransactionManager transactionManager() {
         JtaTransactionManager tm = new JtaTransactionManager();
         tm.setTransactionManager(bitronixTransactionManager());
         tm.setUserTransaction(bitronixTransactionManager());
