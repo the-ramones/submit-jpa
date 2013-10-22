@@ -189,10 +189,12 @@ public class ReportRepositoryImpl implements ReportRepository {
     public void updateReport(Report report) {
         if (report != null) {
             Report persistedReport = getReportById(report.getId());
-            persistedReport.setStartDate(report.getStartDate());
-            persistedReport.setEndDate(report.getEndDate());
-            persistedReport.setPerformer(report.getPerformer());
-            persistedReport.setActivity(report.getActivity());
+            if (persistedReport != null) {
+                persistedReport.setStartDate(report.getStartDate());
+                persistedReport.setEndDate(report.getEndDate());
+                persistedReport.setPerformer(report.getPerformer());
+                persistedReport.setActivity(report.getActivity());
+            }
         }
     }
 

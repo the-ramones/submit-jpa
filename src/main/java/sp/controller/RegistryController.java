@@ -67,7 +67,7 @@ public class RegistryController {
             @RequestParam(value = "new", required = false) String newSearch,
             @ModelAttribute("registry-pager") SpLazyPager pager,
             Model model) {
-        logger.debug("IN SHOW REGISTRY");
+        logger.debug("Showing application registry");
 
         List<Register> registers = null;
         if (pager.getSourceCount() == 0 || newSearch != null) {

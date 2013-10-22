@@ -25,7 +25,7 @@ import sp.model.ajax.Statistics;
 @SessionAttributes("statistics")
 public class EmailController {
 
-    private static final Logger logger = LoggerFactory.getLogger(EmailController.class);
+    protected static final Logger logger = LoggerFactory.getLogger(EmailController.class);
 
     @ModelAttribute("statistics")
     public Statistics populateStatistics() {
@@ -43,7 +43,6 @@ public class EmailController {
     @RequestMapping(value = "statistics", method = RequestMethod.GET)
     public String getHtmlWithStatistics(@ModelAttribute("statistics") Statistics stats,
             Model model, HttpServletRequest req, HttpServletResponse res, HttpSession session) {
-        logger.debug("IN SEND EMAIL WITH STATISTICS");
 
         model.addAttribute("statistics", stats);
 

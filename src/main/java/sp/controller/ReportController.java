@@ -113,7 +113,6 @@ public class ReportController {
      */
     @RequestMapping(value = {"", "search"}, method = RequestMethod.GET, params = "new_search")
     public String setupForm(Model model) {
-        logger.debug("In GET SetupForm");
         model.addAttribute("view", "search");
         model.addAttribute("performers", reportService.getPerformers());
         model.addAttribute("startDate", new Date());
@@ -132,7 +131,6 @@ public class ReportController {
      * @param model model object
      * @return view name
      */
-    // TODO: fix pagination, fix validation
     @RequestMapping(value = "search", method = RequestMethod.POST)
     public String doSearch(
             @Valid @ModelAttribute("startDate") @DateTimeFormat(pattern = "dd MMM yyyy")
@@ -143,8 +141,6 @@ public class ReportController {
             @RequestParam(value = "performer", defaultValue = "") String performer,
             @ModelAttribute("pagers") Map<String, PagedListHolder<Report>> pagers,
             Model model) {
-        logger.debug("In POST");
-
         List<Report> reports;
         if (performer.isEmpty()) {
             reports = reportService.getReports(startDate, endDate);
@@ -179,15 +175,12 @@ public class ReportController {
      * @param model model object
      * @return view name
      */
-    // TODO: 'page' param validation
     @RequestMapping(value = "search", method = RequestMethod.GET, params = {"search_id"})
     public String exposeList(
             @ModelAttribute("pagers") Map<String, PagedListHolder<Report>> pagers,
             @RequestParam(value = "p", required = false) String page,
             @RequestParam(value = "search_id", required = true) String searchId,
             Model model) {
-        logger.debug("In Redirect GET");
-
         boolean reject = false;
         PagedListHolder<Report> pager = pagers.get(searchId);
         if (pager == null) {
@@ -197,7 +190,6 @@ public class ReportController {
             /*
              * Page must be: 'next', 'prev', 'page-number'
              */
-            logger.debug("Looking up for the requested page: {}", page);
             if (page.equalsIgnoreCase("next")) {
                 pager.nextPage();
             } else if (page.equalsIgnoreCase("prev")) {
@@ -209,7 +201,6 @@ public class ReportController {
             } else {
                 try {
                     Integer intPage = Integer.valueOf(page);
-                    //TODO: fix validation                                        
                     if ((intPage > 0) && (intPage <= pager.getPageCount())) {
                         pager.setPage(intPage - 1);
                     }
@@ -218,10 +209,8 @@ public class ReportController {
                     reject = true;
                 }
             }
-            logger.debug("Setting pager page {}", page);
         } else {
             if (pager.getPageCount() > 0) {
-                logger.debug("Setting the first pager page");
                 pager.setPage(0);
             } else {
                 reject = true;

@@ -16,7 +16,6 @@ import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Service;
 import sp.model.ajax.Statistics;
 import sp.util.SpDateFormatFactory;
-import sp.util.SpPdfBoxPdfBuilder;
 import sp.util.SpStatsITextPdfBuilder;
 
 /**
@@ -72,8 +71,7 @@ public class EmailServiceImpl implements EmailService {
     }
 
     /*
-     * TODO: Interceptors place?
-     * TODO: @Async or just count on AJAX async nature?
+     * TODO: Interceptors place? @Async?
      */
     @Override
     public void sendEmailWithStatistics(String htmlContent, Statistics stats, Locale locale, String... recipients) {
@@ -104,8 +102,7 @@ public class EmailServiceImpl implements EmailService {
 
     @Override
     public void sendEmailWithStatisticsAndPdfAttachment(String htmlContent, Statistics stats, String username, Locale locale, String... recipients) {
-        logger.debug("IN EMAILSERVICE SEND EMAIL WITH STATISTICS");
-
+        logger.debug("Sending email to the client {}", username);
         HtmlEmail email = new HtmlEmail();
         email.setMailSession(emailSession);
         email.setCharset(DEFAULT_CHARSET);

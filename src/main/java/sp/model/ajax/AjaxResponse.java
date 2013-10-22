@@ -1,5 +1,6 @@
 package sp.model.ajax;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import javax.xml.bind.annotation.XmlRootElement;
@@ -12,27 +13,24 @@ import javax.xml.bind.annotation.XmlRootElement;
  * @author Paul Kulitski
  */
 @XmlRootElement
-public class AjaxResponse<T> {
+public class AjaxResponse<T> implements Serializable {
 
     public static final String SUCCESS = "success";
     public static final String ERROR = "error";
-    
     /**
-     * Status of the response. Mainly 'success' or 'error'. The presence 
-     * of {@link AjaxResponse#status} and {@link AjaxResponse#errors} depends
-     * on that field
+     * Status of the response. Mainly 'success' or 'error'. The presence of
+     * {@link AjaxResponse#status} and {@link AjaxResponse#errors} depends on
+     * that field
      */
     private String status;
-    
     /**
-     * The list of returned result object from the server. Generic. Mainly
-     * fills up only when {@link AjaxResponse#SUCCESS}.
+     * The list of returned result object from the server. Generic. Mainly fills
+     * up only when {@link AjaxResponse#SUCCESS}.
      */
     private List results;
-    
     /**
-     * The list of returned error from the server. Mainly fills up only
-     * if {@link AjaxResponse#ERROR}.
+     * The list of returned error from the server. Mainly fills up only if
+     * {@link AjaxResponse#ERROR}.
      */
     private List<ErrorDetails> errors;
 

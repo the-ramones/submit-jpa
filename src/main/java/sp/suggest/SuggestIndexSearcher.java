@@ -15,7 +15,7 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 /**
- * Suggest searcher. Not thread-safe.
+ * Suggest searcher. Thread-safe.
  *
  * @author Paul Kulitski
  */

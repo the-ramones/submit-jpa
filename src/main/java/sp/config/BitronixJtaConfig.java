@@ -8,6 +8,7 @@ package sp.config;
 import bitronix.tm.BitronixTransactionManager;
 import bitronix.tm.TransactionManagerServices;
 import bitronix.tm.resource.jdbc.PoolingDataSource;
+import com.mysql.jdbc.jdbc2.optional.MysqlXADataSource;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -23,16 +24,17 @@ import javax.inject.Inject;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
-import org.springframework.transaction.annotation.EnableTransactionManagement;
+import org.springframework.transaction.PlatformTransactionManager;
 
 @Configuration
-@EnableTransactionManagement(proxyTargetClass = true)
 public class BitronixJtaConfig {
 
     @Inject
     private Environment environment;
     protected static final Logger logger = LoggerFactory.getLogger(BitronixJtaConfig.class);
+    /*
+     * TODO: push to config file
+     */
     private static final String ENTERPRISE_DS_UNIQUE_NAME = "jdbc/enterpriseDS";
     private static final String ENTERPRISEDS_DRIVER_PROPERTIES_FILE = "/enterpriseds-driver.properties";
     private static final String REGISTRY_DS_UNIQUE_NAME = "jdbc/registryDS";
@@ -44,14 +46,21 @@ public class BitronixJtaConfig {
     private static final String TEST_QUERY_ENTERPRISE_DS = "SELECT 1 FROM reports";
     private static final String TEST_QUERY_REGISTRY_DS = "SELECT 1 FROM registers";
     private static final String JTA_JVM_UNIQUE_ID = "reports-spring-btm-node0";
-    private static final String TX_LOG_1 = "../tx-logs/tx-part1.btm";
-    private static final String TX_LOG_2 = "../tx-logs/tx-part2.btm";     
-    
+    private static final String TX_LOG_1 = "tx-logs/tx-part1.btm";
+    private static final String TX_LOG_2 = "tx-logs/tx-part2.btm";
 
-    public BitronixJtaConfig() {        
-        
+    /**
+     * Sole constructor
+     */
+    public BitronixJtaConfig() {
     }
 
+    /**
+     * Main Reports! datasource. Uses {@link MysqlXADataSource} capabilities
+     *
+     * @return XA datasource
+     * @see PoolingDataSource
+     */
     @Bean(initMethod = "init", destroyMethod = "close")
     public PoolingDataSource enterpriseDataSource() {
         PoolingDataSource enterpriseDS = new PoolingDataSource();
@@ -74,6 +83,12 @@ public class BitronixJtaConfig {
         return enterpriseDS;
     }
 
+    /**
+     * Registry datasource.
+     *
+     * @return xa datasource
+     * @see PoolingDataSource
+     */
     @Bean(initMethod = "init", destroyMethod = "close")
     public PoolingDataSource registryDataSource() {
         PoolingDataSource registryDS = new PoolingDataSource();
@@ -95,6 +110,12 @@ public class BitronixJtaConfig {
         return registryDS;
     }
 
+    /**
+     * Bitronix configuration bean
+     *
+     * @return
+     * @see bitronix.tm.Configuration
+     */
     @Bean
     public bitronix.tm.Configuration btmConfig() {
         bitronix.tm.Configuration tmConfiguration =
@@ -105,6 +126,12 @@ public class BitronixJtaConfig {
         return tmConfiguration;
     }
 
+    /**
+     * Native Bitronix transaction manager bean
+     *
+     * @return
+     * @see BitronixTransactionManager
+     */
     @Bean(destroyMethod = "shutdown")
     @DependsOn("btmConfig")
     public BitronixTransactionManager bitronixTransactionManager() {
@@ -113,18 +140,37 @@ public class BitronixJtaConfig {
         return btmTransactionManager;
     }
 
+    /**
+     * JTA transaction manager
+     *
+     * @return transaction manager
+     * @see TransactionManager
+     */
     @Bean
     @DependsOn("btmConfig")
     public TransactionManager transactionManagerNative() {
         return TransactionManagerServices.getTransactionManager();
     }
 
+    /**
+     * {@link UserTransaction} bean
+     * 
+     * @return 
+     * @see UserTransaction
+     */
     @Bean
     @DependsOn("btmConfig")
     public UserTransaction userTransaction() {
         return TransactionManagerServices.getTransactionManager();
     }
 
+    /**
+     * {@link PlatformTransactionManager} bean to be used in distributed
+     * transaction management in Reports! Spring application
+     * 
+     * @return 
+     * @see JtaTransactionManager
+     */
     @Bean
     @DependsOn("bitronixTransactionManager")
     public JtaTransactionManager transactionManager() {
@@ -133,24 +179,27 @@ public class BitronixJtaConfig {
         tm.setUserTransaction(bitronixTransactionManager());
         return tm;
     }
-
-//    @Bean
-//    @DependsOn("enterpriseDataSource2")
-//    public AnnotationSessionFactoryBean enterpriseSessionFactory() {
-//        AnnotationSessionFactoryBean esf = new AnnotationSessionFactoryBean();
-//        esf.setDataSource(enterpriseDataSource());
-//        esf.setJtaTransactionManager(transactionManager());
-//        esf.setConfigLocation(new ClassPathResource(ENTERPRISE_HIBERNATE_CONFIG_FILE));
-//        return esf;
-//    }
-
-//    @Bean
-//    @DependsOn("registryDataSource2")
-//    public AnnotationSessionFactoryBean registrySessionFactory() {
-//        AnnotationSessionFactoryBean rsf = new AnnotationSessionFactoryBean();
-//        rsf.setDataSource(registryDataSource());
-//        rsf.setJtaTransactionManager(transactionManager());
-//        rsf.setConfigLocation(new ClassPathResource(REGISTRY_HIBERNATE_CONFIG_FILE));
-//        return rsf;
-//    }
+    
+    /* Native Hibernate session factories
+     * 
+    @Bean
+    @DependsOn("enterpriseDataSource")
+    public AnnotationSessionFactoryBean enterpriseSessionFactory() {
+        AnnotationSessionFactoryBean esf = new AnnotationSessionFactoryBean();
+        esf.setDataSource(enterpriseDataSource());
+        esf.setJtaTransactionManager(transactionManager());
+        esf.setConfigLocation(new ClassPathResource(ENTERPRISE_HIBERNATE_CONFIG_FILE));
+        return esf;
+    }
+    * 
+    @Bean
+    @DependsOn("registryDataSource")
+    public AnnotationSessionFactoryBean registrySessionFactory() {
+        AnnotationSessionFactoryBean rsf = new AnnotationSessionFactoryBean();
+        rsf.setDataSource(registryDataSource());
+        rsf.setJtaTransactionManager(transactionManager());
+        rsf.setConfigLocation(new ClassPathResource(REGISTRY_HIBERNATE_CONFIG_FILE));
+        return rsf;
+    }
+    */
 }

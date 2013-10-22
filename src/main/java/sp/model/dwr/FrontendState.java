@@ -6,7 +6,6 @@ import org.springframework.context.annotation.PropertySource;
 import org.springframework.context.annotation.Scope;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
-import sp.system.SystemConstants;
 
 /**
  * Front-end system's state holder
@@ -30,12 +29,7 @@ public class FrontendState extends GenericState {
     }
 
     public int getMaxOnPager() {
-        //return maxOnPager;
-        try {
-            return Integer.valueOf(SystemConstants.MAX_ON_PAGER_DAFAULT_VALUE);
-        } catch (NumberFormatException ex) {
-        }
-        return -1;
+        return maxOnPager;
     }
 
     public void setMaxOnPager(int maxOnPager) {
@@ -43,12 +37,7 @@ public class FrontendState extends GenericState {
     }
 
     public int getPageSize() {
-        //return pageSize;
-        try {
-            return Integer.valueOf(SystemConstants.PAGE_SIZE_DEFAULT_VALUE);
-        } catch (NumberFormatException ex) {
-        }
-        return -1;
+        return pageSize;
     }
 
     public void setPageSize(int pageSize) {
@@ -56,12 +45,7 @@ public class FrontendState extends GenericState {
     }
 
     public int getPromptLimit() {
-        //return promptLimit;
-        try {
-            return Integer.valueOf(SystemConstants.PROMPT_LIMIT_DEFAULT_VALUE);
-        } catch (NumberFormatException ex) {
-        }
-        return -1;
+        return promptLimit;
     }
 
     public void setPromptLimit(int promptLimit) {

@@ -1,7 +1,6 @@
 package sp.security;
 
 import java.io.Serializable;
-import java.util.Set;
 import org.springframework.security.access.PermissionEvaluator;
 import org.springframework.security.core.Authentication;
 import sp.model.Register;

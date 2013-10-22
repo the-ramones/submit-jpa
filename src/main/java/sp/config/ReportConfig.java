@@ -13,7 +13,7 @@ import org.springframework.core.env.Environment;
 import sp.service.EmailService;
 
 /**
- * Generic Java-based configuration. Spring 3+ way. Additional configuration.
+ * Generic Java-based configuration. Additional configuration.
  *
  * @author Paul Kulitski
  */
@@ -28,9 +28,8 @@ public class ReportConfig {
      * Creates JavaMail {@link Session} instance for reusing
      * {@link EmailService} Uses basic authentication. Avoids multiple
      * authentication process while sending e-mails.
-     * 
-     * Use case:
-     * {@link Email#setMailSession(javax.mail.Session)}
+     *
+     * Use case: {@link Email#setMailSession(javax.mail.Session)}
      *
      * @return JavaMail session
      */
@@ -58,6 +57,5 @@ public class ReportConfig {
             }
         });
         return session;
-    } 
-
+    }
 }

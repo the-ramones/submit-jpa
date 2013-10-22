@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
  * @author Paul Kulitski
  */
 @Controller
-public class ForwardingController {
+public class ForwardController {
 
     @RequestMapping("/forward")
     public String forward(Model model) {

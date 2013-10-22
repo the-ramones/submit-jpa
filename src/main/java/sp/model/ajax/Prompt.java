@@ -1,5 +1,6 @@
 package sp.model.ajax;
 
+import java.io.Serializable;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
@@ -8,7 +9,7 @@ import javax.xml.bind.annotation.XmlRootElement;
  * @author Paul Kulitski
  */
 @XmlRootElement
-public class Prompt {
+public class Prompt implements Serializable {
 
     String performer;
     String activity;

@@ -88,12 +88,9 @@ public class SpDateFormatFactory {
      * @return
      */
     private static DateFormat getCustomDateFormat(String format, Locale locale) {
-        //logger.debug("getCustomDateFormat locale: {}", locale);
         DateFormat df;
-        //logger.debug("getCustomDateFormat, format={}, locale={}", format, locale);
         Set<Locale> russian = new HashSet<Locale>(Arrays.asList(russianLocales));
         if (russian.contains(locale)) {
-            //logger.debug("getCustomDateFormat Russian locale , format={}, , locale={}", format, locale);
             df = new SimpleDateFormat(format, new DateFormatSymbolsRu());
         } else {
             df = new SimpleDateFormat(format, locale);

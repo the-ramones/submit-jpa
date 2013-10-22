@@ -19,7 +19,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.SessionAttributes;
-import org.springframework.web.bind.support.SessionStatus;
 import sp.model.Report;
 import sp.model.ajax.Tuple;
 import sp.service.SolrService;
@@ -46,7 +45,7 @@ public class SolrSuggestController {
     }
 
     @RequestMapping(value = "", method = RequestMethod.GET)
-    public synchronized String setupForm(SessionStatus status, Model model) {
+    public String setupForm(Model model) {
         /*
          * Add Search Cloud to the page
          */
@@ -71,8 +70,8 @@ public class SolrSuggestController {
     }
 
     @RequestMapping(value = "cloud", method = {RequestMethod.GET, RequestMethod.POST})
-    public synchronized @ResponseBody
-    List getSearchCloud(HttpSession session, Model model) {
+    public @ResponseBody
+    List getSearchCloud(Model model) {
         List result = new ArrayList(0);
         int count = 0;
         for (TermsFieldEntry entry : solrService.getSearchCloud().getContent()) {
@@ -88,7 +87,7 @@ public class SolrSuggestController {
     }
 
     @RequestMapping(value = "search", method = {RequestMethod.GET, RequestMethod.POST})
-    public synchronized @ResponseBody
+    public @ResponseBody
     Page<Report> search(@RequestParam("query") String query,
             @RequestParam(value = "limit", required = false) Integer limit,
             @RequestParam(value = "p", required = false) String p,
@@ -102,7 +101,7 @@ public class SolrSuggestController {
         }
         boolean newSearch = pager.getTotalElements() == 0 ? true : (p == null) || p.equals("");
         if (newSearch) {
-            logger.debug("NEW SOLR SEARCH");
+            logger.debug("Starting a new Solr search");
             /*
              * A new search
              */
@@ -117,7 +116,6 @@ public class SolrSuggestController {
                 reject = true;
             }
         } else {
-            logger.debug("SOLR SEARCH FOR A PAGE: {}", p);
             /*
              * Query for page
              */
@@ -138,7 +136,6 @@ public class SolrSuggestController {
             } else {
                 try {
                     Integer intPage = Integer.valueOf(p);
-                    //TODO: fix validation                                        
                     if ((intPage > 0) && (intPage <= pager.getTotalPages())) {
                         pager.setPage(intPage);
                         result = solrService.search(query, pager.getPageNumber(), pager.getPageSize());
@@ -159,11 +156,10 @@ public class SolrSuggestController {
     private static final int DEFAULT_SEARCH_LIMIT = 10;
 
     @RequestMapping(value = "suggest", method = {RequestMethod.GET, RequestMethod.POST})
-    public synchronized @ResponseBody
+    public @ResponseBody
     Page<Report> suggest(@RequestParam("query") String query,
             @RequestParam(value = "limit", required = false) Integer limit,
             HttpSession session, Model model) {
-        logger.debug("in controller SUGGEST");
         if (query != null) {
             if (limit == null || limit <= 0) {
                 limit = DEFAULT_SUGGEST_LIMIT;

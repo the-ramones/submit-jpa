@@ -91,7 +91,6 @@ public class SuggestController {
             @RequestParam(value = "useIndex", required = false) boolean useIndex,
             @RequestParam(value = "recent", required = false) boolean recent,
             Model model, HttpServletRequest request, HttpSession session) {
-        logger.debug("IN GET REPORS BY QUERY");
 
         HttpHeaders headers = new HttpHeaders();
         headers.add("Content-Type", "application/json;charset=utf-8");
@@ -194,7 +193,6 @@ public class SuggestController {
             @RequestParam("query") String query,
             @RequestParam(value = "limit", required = false) Long limit,
             Model model) {
-        logger.debug("IN GET IDS BY QUERY");
 
         HttpHeaders headers = new HttpHeaders();
         headers.add("Content-Type", "application/json;charset=utf-8");
@@ -225,8 +223,6 @@ public class SuggestController {
     public ResponseEntity<List<Prompt>> getPrompts(@RequestParam("query") String query,
             @RequestParam(value = "limit", required = false) Integer limit,
             Model model) {
-        logger.debug("IN GET PROMPTS");
-
         HttpHeaders headers = new HttpHeaders();
         headers.add("Content-Type", "application/json;charset=utf-8");
         ResponseEntity<List<Prompt>> re;
@@ -247,8 +243,6 @@ public class SuggestController {
             @RequestParam(value = "limit", required = false) Integer limit,
             @RequestParam(value = "useIndex", required = false) boolean useIndex,
             Model model) {
-        logger.debug("IN GET PROMPTS AS STRINGS");
-
         HttpHeaders headers = new HttpHeaders();
         headers.add("Content-Type", "application/json;charset=utf-8");
         ResponseEntity<List<String>> re;

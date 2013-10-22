@@ -1,11 +1,15 @@
 package sp.model.ajax;
 
+import java.io.Serializable;
+import javax.xml.bind.annotation.XmlRootElement;
+
 /**
  * Holder for User Checklist statistics
  *
  * @author Paul Kulitski
  */
-public class Statistics {
+@XmlRootElement
+public class Statistics implements Serializable {
 
     /**
      * Average range of days
@@ -22,7 +26,7 @@ public class Statistics {
     public Statistics(String dateRange, String activities, String performers) {
         this.averageRange = dateRange;
         this.activities = activities;
-        this.performers = performers;        
+        this.performers = performers;
     }
 
     public String getActivities() {

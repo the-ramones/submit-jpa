@@ -2,9 +2,7 @@ package sp.model;
 // Generated Jul 29, 2013 9:22:08 PM by Hibernate Tools 3.2.1.GA
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;

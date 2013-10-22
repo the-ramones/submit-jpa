@@ -10,7 +10,6 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Set;
 import javax.inject.Inject;
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import org.apache.commons.lang.StringUtils;
@@ -74,7 +73,6 @@ public class ChecklistController {
             for (Long id : checklist) {
                 sb.append(id).append(' ');
             }
-            logger.debug("IDs added to checklist: {}", sb.toString());
         }
         return "checklist";
     }
@@ -89,7 +87,6 @@ public class ChecklistController {
     @RequestMapping(value = "empty", method = RequestMethod.POST)
     public String emptyChecklist(HttpSession session, Model model) {
         session.removeAttribute("checklist");
-        // TODO: should or not?
         session.removeAttribute("pagers");
         model.addAttribute("new_search", "");
         return "redirect:/report/search";
@@ -126,19 +123,13 @@ public class ChecklistController {
      * @return string 'success' if was removed, 'missing' - if report with
      * specified ID wasn't found in user's checklist
      */
-    //TODO: validation, Validator @NotNull or right in controller
     @RequestMapping(value = "remove", method = RequestMethod.POST)
     public @ResponseBody
     String removeFromChecklistById(@RequestParam("id") Long id,
             HttpSession session, Model model) {
-        logger.debug("IN CHECKLIST REMOVE: {}", id);
-
         Set<Long> checklist = (Set<Long>) session.getAttribute("checklist");
         if ((checklist != null) && !checklist.isEmpty()) {
             checklist.remove(id);
-            /*
-             * TODO: Put back to the model or not?
-             */
         } else {
             return "missing";
         }
@@ -149,8 +140,6 @@ public class ChecklistController {
     public @ResponseBody
     Statistics getStatistics(HttpSession session,
             Model model) {
-        logger.debug("IN GET STATISTICS");
-
         Set<Long> checklist = (Set<Long>) session.getAttribute("checklist");
         if ((checklist != null) && !checklist.isEmpty()) {
             Statistics stats = SpStatisticsGenerator.generateStatistics(checklist);
@@ -158,14 +147,13 @@ public class ChecklistController {
         }
         return null;
     }
-    private static final String JSESSION_KEY = "JSESSIONID";
+    
+    private static final String JSESSIONID_KEY = "JSESSIONID";
 
     @RequestMapping(value = "email", method = RequestMethod.GET)
     public @ResponseBody
     String sendStatisticsOnEmail(HttpSession session, HttpServletRequest request,
-            @CookieValue("JSESSIONID") String sessionId, Locale locale, Model model) {
-        logger.debug("IN SEND ON EMAIL");
-
+            @CookieValue(JSESSIONID_KEY) String sessionId, Locale locale, Model model) {
         Set<Long> checklist = (Set<Long>) session.getAttribute("checklist");
         if (checklist != null) {
             if (!checklist.isEmpty()) {
@@ -182,8 +170,6 @@ public class ChecklistController {
                 if (index != -1) {
                     String baseUrl = rawUrl.substring(0, index);
                     try {
-                        // application-speecific Session ID sending
-                        
                         URL url = new URL(baseUrl + "/email/statistics");
                         HttpURLConnection connection =
                                 (HttpURLConnection) url.openConnection();

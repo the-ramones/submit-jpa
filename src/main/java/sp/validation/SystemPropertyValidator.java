@@ -1,6 +1,5 @@
 package sp.validation;
 
-import java.io.UnsupportedEncodingException;
 import java.util.regex.Pattern;
 import org.apache.commons.validator.UrlValidator;
 

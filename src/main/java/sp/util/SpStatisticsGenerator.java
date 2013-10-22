@@ -21,8 +21,9 @@ public class SpStatisticsGenerator {
 
     static final long ONE_DAY_IN_MILLISECONDS = 24 * 60 * 60 * 1000;
     private static final Logger logger = LoggerFactory.getLogger(SpStatisticsGenerator.class);
+    
     /*
-     * Subject for setter injection via @PostConstruct handler
+     * Subject for static setter injection via @PostConstruct handler
      */
     private static ReportRepository reportRepository;
 

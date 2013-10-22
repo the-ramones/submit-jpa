@@ -1,5 +1,7 @@
 package sp.model.ajax;
 
+import java.io.Serializable;
+import javax.xml.bind.annotation.XmlRootElement;
 import org.springframework.context.MessageSource;
 import org.springframework.validation.FieldError;
 import org.springframework.validation.ObjectError;
@@ -10,34 +12,32 @@ import org.springframework.validation.ObjectError;
  * serialized form. Convenient storage for error type, target field, raw field
  * value and localized constraint violation message (checked and injected) on
  * the server side.
- * 
+ *
  * @author Kulitski Paul
  */
-public class ErrorDetails {
+@XmlRootElement
+public class ErrorDetails implements Serializable {
 
     public static final String OBJECT_ERROR = "object";
     public static final String FIELD_ERROR = "field";
-    
     /**
      * Type of error: object or field
+     *
      * @see FieldError
      * @see ObjectError
      */
     private String type;
-    
     /**
      * Target field name, where validation constraint fails
      */
     private String field;
-    
     /**
      * Field value that failed under validation constraint
      */
     private Object value;
-    
     /**
-     * Localized constraint violation message. Inject {@link MessageSource}
-     * in controller class and retrieve localized message from that source
+     * Localized constraint violation message. Inject {@link MessageSource} in
+     * controller class and retrieve localized message from that source
      */
     private String message;
 

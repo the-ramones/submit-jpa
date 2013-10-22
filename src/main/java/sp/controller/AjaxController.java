@@ -69,8 +69,6 @@ public class AjaxController {
     @RequestMapping(value = "", method = RequestMethod.GET)
     public @ResponseBody
     Report getReport(@RequestParam Long id, Model model) {
-        logger.debug("IN GET REPORT AJAX");
-
         if (id > 0) {
             Report report = reportService.getReportById(id);
             if (report != null) {
@@ -92,8 +90,6 @@ public class AjaxController {
     public @ResponseBody
     String removeReport(@RequestParam("id") Long id,
             Model model) {
-        logger.debug("IN GET REPORT AJAX");
-
         if (reportService.hasReport(id)) {
             reportService.removeReport(id);
             return "success";
@@ -119,9 +115,8 @@ public class AjaxController {
     public @ResponseBody
     AjaxResponse update(@Valid Report report, BindingResult result,
             Locale locale, Model model) {
-        logger.debug("IN AJAX UPDATE:");
-
         AjaxResponse<Report> res;
+        //TODO: atomic or silent?
         if (reportService.hasReport(report.getId())) {
             if (!result.hasErrors()) {
                 reportService.updateReport(report);
@@ -172,8 +167,6 @@ public class AjaxController {
     public @ResponseBody
     AjaxResponse add(@Valid Report report, BindingResult result,
             Locale locale, Model model) {
-        logger.debug("IN AJAX ADD:");
-
         AjaxResponse<Report> res;
         if (!result.hasErrors()) {
             reportService.addReport(report);
@@ -215,9 +208,8 @@ public class AjaxController {
     @RequestMapping(value = "watch/{id}")
     public @ResponseBody
     String watchReportById(@PathVariable("id") Long id, HttpSession session, Model model) {
-        logger.debug("In watchReportById");
-
         if (reportService.hasReport(id)) {
+            //TODO: synchronized(session.getId().intern()) {..}?
             Set<Long> checklist = (Set<Long>) session.getAttribute("checklist");
             if (checklist != null) {
                 checklist.add(id);
@@ -240,8 +232,6 @@ public class AjaxController {
     public @ResponseBody
     String watchAll(@RequestParam("indexes[]") Long[] indexes,
             HttpSession session, Model model) {
-        logger.debug("In watch");
-
         Set<Long> checklist = (Set<Long>) session.getAttribute("checklist");
         if (checklist != null) {
             Long[] check = reportService.hasReports(indexes);
@@ -273,8 +263,6 @@ public class AjaxController {
     public @ResponseBody
     String getUri(@RequestParam("id") Long id,
             HttpServletRequest request, Model model) {
-        logger.debug("IN URL AJAX: {}", id);
-
         if (reportService.hasReport(id)) {
             StringBuffer url = request.getRequestURL();
             StringBuilder server = new StringBuilder(url.length());
@@ -303,6 +291,7 @@ public class AjaxController {
             @RequestParam("search_id") String searchId,
             HttpSession session, Model model) {
         PagedListHolder<Report> pager = ((Map<String, PagedListHolder<Report>>) session.getAttribute("pagers")).get(searchId);
+        //TODO: synchronized(pager) {..}?
         if (pager != null) {
             List<Report> list = pager.getSource();
             Report idReport = new Report();

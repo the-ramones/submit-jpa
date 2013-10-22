@@ -8,6 +8,7 @@ import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Component;
 import sp.model.Report;
@@ -18,6 +19,7 @@ import sp.service.ReportService;
  *
  * @author Paul Kulitski
  */
+@Lazy
 @Component
 @PreAuthorize("isAuthenticated() and hasAnyRole('ROLE_USER', 'ROLE_ADMIN')")
 public class SuggestIndexCreator implements IndexCreator {
@@ -36,6 +38,7 @@ public class SuggestIndexCreator implements IndexCreator {
     }
     private static int MILISECONDS_IN_HOUR = 1 * 60 * 60 * 1000;
 
+    //TODO: add processing lock
     @Override
     public void updateIndex() {
         suggestIndex.setProcessing(true);
