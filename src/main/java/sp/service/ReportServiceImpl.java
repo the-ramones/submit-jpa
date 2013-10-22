@@ -21,59 +21,56 @@ public class ReportServiceImpl implements ReportService {
     private ReportRepository reportRepository;
 
     @Override
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public Report addReport(Report report) {
         return reportRepository.saveReport(report);
     }
 
     /**
-     * Cache with condition of report's date (as report cannot be added post
-     * factum)
+     * Cache with condition 
      *
      * @param performer
      * @return
      */
     @Override
     //@Cacheable(value = "sp.model.Report", key = "#performer")    
-    @Transactional(readOnly = true)
+    @Transactional(readOnly = true, propagation = Propagation.SUPPORTS)
     public List<Report> getReports(String performer) {
         return reportRepository.getReportsByPerformer(performer);
 
     }
 
     @Override
-    @Transactional(readOnly = true)
+    @Transactional(readOnly = true, propagation = Propagation.SUPPORTS)
     public Report getReportById(Long id) {
         return reportRepository.getReportById(id);
     }
 
     @Override
-    //@Transactional(propagation = Propagation.SUPPORTED, readOnly = true)
-    @Transactional(readOnly = true)
+    @Transactional(readOnly = true, propagation = Propagation.SUPPORTS)
     public List<String> getPerformers() {
         return reportRepository.getPerformers();
     }
 
     @Override
-    @Transactional(readOnly = true)
+    @Transactional(readOnly = true, propagation = Propagation.SUPPORTS)
     public List<Report> getReports(String performer, Date startDate, Date endDate) {
         return reportRepository.getReports(performer, startDate, endDate);
     }
 
     @Override
-    @Transactional(readOnly = true)
+    @Transactional(readOnly = true, propagation = Propagation.SUPPORTS)
     public List<Report> getReports(Date startDate, Date endDate) {
         return reportRepository.getReports(startDate, endDate);
     }
 
     @Override
-    @Transactional(readOnly = true)
+    @Transactional(readOnly = true, propagation = Propagation.SUPPORTS)
     public List<Report> getReports(Set<Long> ids) {
         return reportRepository.getReports(ids);
     }
 
     @Override
-    @Transactional(readOnly = true)
     public Boolean hasReport(Long id) {
         return reportRepository.hasReport(id);
     }
@@ -84,13 +81,13 @@ public class ReportServiceImpl implements ReportService {
     }
 
     @Override
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public void removeReport(Long id) {
         reportRepository.removeReport(id);
     }
 
     @Override
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public void updateReport(Report report) {
         reportRepository.updateReport(report);
     }

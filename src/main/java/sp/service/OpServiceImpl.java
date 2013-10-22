@@ -3,6 +3,7 @@ package sp.service;
 import java.util.List;
 import javax.inject.Inject;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import sp.model.Op;
 import sp.repository.OpRepository;
@@ -21,13 +22,13 @@ public class OpServiceImpl implements OpService {
     OpRepository opRepository;
 
     @Override
-    @Transactional(readOnly = true)
+    @Transactional(readOnly = true, propagation = Propagation.SUPPORTS)
     public Op getOpById(Integer id) {
         return opRepository.getOpById(id);
     }
 
     @Override
-    @Transactional(readOnly = true)
+    @Transactional(readOnly = true, propagation = Propagation.SUPPORTS)
     public List<Op> getOpByTitle(String title) {
         return opRepository.getOpByTitle(title);
     }

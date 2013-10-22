@@ -21,13 +21,11 @@ public class UserServiceImpl implements UserService {
     UserRepository userRepository;
 
     @Override
-    @Transactional(readOnly = true)
     public User getUserById(Integer id) {
         return userRepository.getUserById(id);
     }
 
     @Override
-    @Transactional(readOnly = true)
     public List<User> getUserByName(String fullname) {
         return userRepository.getUserByName(fullname);
     }

@@ -33,7 +33,7 @@ public class UserInterceptor implements HandlerInterceptor {
      */
     @Override
     public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler, ModelAndView modelAndView) {
-        //TODO: move to preHandle
+        //TODO: On error page User won't pushed
         if (modelAndView != null) {
             try {
                 Object user = SecurityContextHolder.getContext()

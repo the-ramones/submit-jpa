@@ -1,7 +1,6 @@
 package sp.service;
 
 import javax.inject.Inject;
-import org.springframework.context.annotation.Lazy;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.solr.core.query.result.TermsPage;
@@ -10,11 +9,11 @@ import sp.model.Report;
 import sp.repository.SolrRepository;
 
 /**
- * Basic implementation of {@link SolrService}
+ * Basic implementation of {@link SolrService}. Spring data Solr supports
+ * spring managed transactions.
  *
  * @author Paul Kulitski
  */
-//@Lazy
 @Service
 public class SolrServiceImpl implements SolrService {
 

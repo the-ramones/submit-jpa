@@ -28,6 +28,7 @@ Any value defined here will override the pom.xml file value but is only applicab
         <word>datasource</word>
         <word>javascript</word>
         <word>servlet</word>
+        <word>Solr</word>
         <word>Validator</word>
     </spellchecker-wordlist>
 </project-shared-configuration>

@@ -5,6 +5,7 @@ import java.util.List;
 import javax.inject.Inject;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import sp.model.Op;
 import sp.model.Register;
@@ -27,19 +28,19 @@ public class RegistryServiceImpl implements RegistryService {
     RegisterRepository registerRepository;
 
     @Override
-    @Transactional(readOnly = true)
+    @Transactional(readOnly = true, propagation = Propagation.SUPPORTS)
     public Register getRegisterById(RegisterId id) {
         return registerRepository.getRegisterById(id);
     }
 
     @Override
-    @Transactional(readOnly = true)
+    @Transactional(readOnly = true, propagation = Propagation.SUPPORTS)
     public List<Register> getRegistersByOp(Op op) {
         return registerRepository.getRegistersByOp(op);
     }
 
     @Override
-    @Transactional(readOnly = true)
+    @Transactional(readOnly = true, propagation = Propagation.SUPPORTS)
     //@PreFilter 
     //TODO: filter only user registers, but for admins all
     public List<Register> getRegistersByUser(User user) {
@@ -47,13 +48,13 @@ public class RegistryServiceImpl implements RegistryService {
     }
 
     @Override
-    @Transactional(readOnly = true)
+    @Transactional(readOnly = true, propagation = Propagation.SUPPORTS)
     public List<Register> getRegisterByPeriod(Date startDate, Date endDate) {
         return registerRepository.getRegisterByPeriod(startDate, endDate);
     }
 
     @Override
-    @Transactional(readOnly = true)
+    @Transactional(readOnly = true, propagation = Propagation.SUPPORTS)
     public List<Register> getRegister(User user, Op op, Date startDate, Date endDate) {
         return registerRepository.getRegister(user, op, startDate, endDate);
     }
@@ -65,12 +66,13 @@ public class RegistryServiceImpl implements RegistryService {
     }
 
     @Override
+    @Transactional(readOnly = true, propagation = Propagation.SUPPORTS)
     public List<Register> getAll() {
         return registerRepository.getAll();
     }
 
     @Override
-    @Transactional(readOnly = true)
+    @Transactional(readOnly = true, propagation = Propagation.SUPPORTS)
     public List<Register> getRegisters(int from, int limit) {
         return registerRepository.getAll(from, limit);
     }

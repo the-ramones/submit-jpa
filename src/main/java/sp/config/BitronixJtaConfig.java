@@ -24,7 +24,6 @@ import javax.inject.Inject;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.transaction.PlatformTransactionManager;
 
 @Configuration
 public class BitronixJtaConfig {
@@ -70,6 +69,8 @@ public class BitronixJtaConfig {
         enterpriseDS.setMinPoolSize(MIN_POOL_SIZE);
         enterpriseDS.setMaxPoolSize(MAX_POOL_SIZE);
         enterpriseDS.setTestQuery(TEST_QUERY_ENTERPRISE_DS);
+        //security?
+        enterpriseDS.setAllowLocalTransactions(true);
         try {
             Properties props = new Properties();
             props.load(
@@ -98,6 +99,8 @@ public class BitronixJtaConfig {
         registryDS.setMinPoolSize(MIN_POOL_SIZE);
         registryDS.setMaxPoolSize(MAX_POOL_SIZE);
         registryDS.setTestQuery(TEST_QUERY_REGISTRY_DS);
+        // security?
+        registryDS.setAllowLocalTransactions(true);
         try {
             Properties props = new Properties();
             props.load(

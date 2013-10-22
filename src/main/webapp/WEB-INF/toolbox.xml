@@ -36,7 +36,7 @@
     <!-- Escape Tool -->
     <tool>
         <key>esc</key>
-        <scope>session</scope>
+        <scope>request</scope>
         <class>org.apache.velocity.tools.generic.EscapeTool</class>
     </tool>    
    
