@@ -26,7 +26,6 @@ public class ReportServiceImpl implements ReportService {
 
     @Inject
     private ReportRepository reportRepository;
-    
     @Inject
     private RegisterRepository registerRepository;
     @Inject
@@ -38,22 +37,22 @@ public class ReportServiceImpl implements ReportService {
     @Transactional(rollbackFor = Exception.class)
     public Report addReport(Report report) {
         Op op = opRepository.getOpByTitle("INSERT").get(0);
-        User user = userRepository.getUserById(1);        
-        
+        User user = userRepository.getUserById(1);
+
         RegisterId registerId = new RegisterId(registerRepository.getLastId() + 1,
                 user.getId(), op.getId());
-        Register register = new Register(); 
+        Register register = new Register();
         register.setId(registerId);
         register.setOp(op);
         register.setUser(user);
         registerRepository.saveRegister(register);
-        
+
         registerRepository.saveRegister(register);
         return reportRepository.saveReport(report);
     }
 
     /**
-     * Cache with condition 
+     * Cache with condition
      *
      * @param performer
      * @return
@@ -109,12 +108,34 @@ public class ReportServiceImpl implements ReportService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void removeReport(Long id) {
+        Op op = opRepository.getOpByTitle("DELETE").get(0);
+        User user = userRepository.getUserById(1);
+
+        RegisterId registerId = new RegisterId(registerRepository.getLastId() + 1,
+                user.getId(), op.getId());
+        Register register = new Register();
+        register.setId(registerId);
+        register.setOp(op);
+        register.setUser(user);
+        registerRepository.saveRegister(register);
+
         reportRepository.removeReport(id);
     }
 
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void updateReport(Report report) {
+        Op op = opRepository.getOpByTitle("UPDATE").get(0);
+        User user = userRepository.getUserById(1);
+
+        RegisterId registerId = new RegisterId(registerRepository.getLastId() + 1,
+                user.getId(), op.getId());
+        Register register = new Register();
+        register.setId(registerId);
+        register.setOp(op);
+        register.setUser(user);
+        registerRepository.saveRegister(register);
+
         reportRepository.updateReport(report);
     }
 

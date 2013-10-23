@@ -137,7 +137,7 @@ public class SolrSuggestController {
                 try {
                     Integer intPage = Integer.valueOf(p);
                     if ((intPage > 0) && (intPage <= pager.getTotalPages())) {
-                        pager.setPage(intPage);
+                        pager.setPage(intPage - 1);
                         result = solrService.search(query, pager.getPageNumber(), pager.getPageSize());
                     }
                 } catch (NumberFormatException ex) {

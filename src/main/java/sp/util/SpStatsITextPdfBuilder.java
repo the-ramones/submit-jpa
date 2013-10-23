@@ -317,7 +317,7 @@ public class SpStatsITextPdfBuilder implements SpPdfBuilder {
         }
     }
 
-    private void createUnicodeFonts() {
+    private static void createUnicodeFonts() {
         /*
          * Base font for Unicode. Cyrilic fonts are rendered just right
          */
@@ -325,17 +325,19 @@ public class SpStatsITextPdfBuilder implements SpPdfBuilder {
             /*
              * TODO: think of that way
              * FontFactory.register(fontPath, "Bitstream Cyberbit");
-             */ 
-            bf = BaseFont.createFont(fontPath, BaseFont.IDENTITY_H, BaseFont.EMBEDDED);
-            titleFont = new Font(bf, 22, Font.BOLD);
-            titleOrangeFont = new Font(bf, 22, Font.BOLD, new BaseColor(204, 103, 26));
-            subFont = new Font(bf, 18, Font.BOLD);
-            subOrangeFont = new Font(bf, 18, Font.BOLD, new BaseColor(204, 103, 26));
-            midFont = new Font(bf, 14, Font.NORMAL);
-            midBoldFont = new Font(bf, 14, Font.BOLD);
-            orangeFont = new Font(bf, 12, Font.NORMAL, new BaseColor(204, 103, 26));
-            smallBoldFont = new Font(bf, 12, Font.BOLD);
-            smallFont = new Font(bf, 12, Font.NORMAL);
+             */
+            if (bf == null) {
+                bf = BaseFont.createFont(fontPath, BaseFont.IDENTITY_H, BaseFont.EMBEDDED);
+                titleFont = new Font(bf, 22, Font.BOLD);
+                titleOrangeFont = new Font(bf, 22, Font.BOLD, new BaseColor(204, 103, 26));
+                subFont = new Font(bf, 18, Font.BOLD);
+                subOrangeFont = new Font(bf, 18, Font.BOLD, new BaseColor(204, 103, 26));
+                midFont = new Font(bf, 14, Font.NORMAL);
+                midBoldFont = new Font(bf, 14, Font.BOLD);
+                orangeFont = new Font(bf, 12, Font.NORMAL, new BaseColor(204, 103, 26));
+                smallBoldFont = new Font(bf, 12, Font.BOLD);
+                smallFont = new Font(bf, 12, Font.NORMAL);
+            }
         } catch (DocumentException dex) {
             logger.error("Problem with font loading", dex);
         } catch (IOException e) {

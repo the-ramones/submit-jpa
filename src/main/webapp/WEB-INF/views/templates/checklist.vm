@@ -7,6 +7,7 @@
         <button class="action" onclick="startNew();">#springMessage('content.checklist.button.newsearch')</button>
     </div>
 </div>
+
 #if($reports)
 #foreach ($report in $reports)
 <div class="tile-container">
@@ -139,7 +140,7 @@
             if (result === "success") {
                 $("#confirm").finish().html(EMAIL_DONE)
                     .fadeIn(600)
-                    .delay(3000)
+                    .delay(10000)
                     .fadeOut(1200);
             }
         },
