@@ -79,7 +79,7 @@ public class EmailServiceImpl implements EmailService {
         email.setMailSession(emailSession);
         email.setCharset(DEFAULT_CHARSET);
         String currentDate = SpDateFormatFactory.getDateFormat().format(new Date());
-        String subject = messageSource.getMessage(STATISTICS_SUBJECT_I18N_KEY, null, locale);
+        String subject = messageSource.getMessage(STATISTICS_ASOF_I18N_KEY, null, locale);
         String asof = messageSource.getMessage(STATISTICS_SUBJECT_I18N_KEY, null, locale);
         StringBuilder sb = new StringBuilder(subject.length() * 2);
         sb.append(subject).append(' ').append(asof).append(' ').append(currentDate);
@@ -129,6 +129,7 @@ public class EmailServiceImpl implements EmailService {
             iAttachment.setDisposition(EmailAttachment.ATTACHMENT);
             iAttachment.setDescription(messageSource.getMessage(PDF_ATTACHMENT_DESCRIPTION_KEY, null, locale));            
             iAttachment.setPath(iPath);
+            // TODO: bad appearance in Cyrillic
             iAttachment.setName(messageSource.getMessage(PDF_ATTACHMENT_NAME_KEY, null, locale));
         }        
         try {

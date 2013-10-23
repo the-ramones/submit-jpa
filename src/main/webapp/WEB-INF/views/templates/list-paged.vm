@@ -283,6 +283,17 @@
                                success: function(result) {
                                  if (result.status === 'success') {
                                     $("#confirm").finish().html(UPDATED_MSG);
+                                    //update row content
+                                    $form = $("form[name='report-update']");
+                                    $tr = $(".table tr").filter(function() {
+                                        if ($(this).find("td:first").text().trim() === idVal) {
+                                            return true;                                                
+                                        }
+                                    });
+                                    $tr.find("td:eq(1)").text($form.find("#startDate").val());
+                                    $tr.find("td:eq(2)").text($form.find("#endDate").val());
+                                    $tr.find("td:eq(3)").text($form.find("#performer").val());
+                                    $tr.find("td:eq(4)").text($form.find("#activity").val());
                                     $("#close-btn").click();
                                  } else if (result.status === 'error') {
                                     fillUpViolations($("form[name='report-update']"), $('.error-block'), result);
