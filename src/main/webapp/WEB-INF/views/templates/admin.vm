@@ -1,0 +1,149 @@
+<div class="tabs">
+    <input id="tab_front" type="radio" name="tab" checked="checked" />
+    <input id="tab_back" type="radio" name="tab" />
+    <input id="tab_const" type="radio" name="tab" />
+
+    <label for="tab_front" id="tab_frontl">Front-end</label>
+    <label for="tab_back" id="tab_backl">Back-end</label>
+    <label for="tab_const" id="tab_constl">Log</label>
+    <div style="clear:both"></div>
+
+    <div class="tab_contents">
+        <div id="tab_frontc" class="clearfix">
+            <div class="line">
+                <label>#springMessage('content.admin.promptlimit'):</label>
+                <input type="text" id="promptLimit" value="$!promptLimit"/>
+                <button class="action">#springMessage('action.admin.apply')</button>
+                <span class="desc"></span>
+            </div>
+            <div class="line">
+                <label>#springMessage('content.admin.pagesize'):</label>
+                <input type="text" id="pageSize" value="$!pageSize"/>
+                <button class="action">#springMessage('action.admin.apply')</button>
+                <span class="desc"></span>
+            </div>
+            <div class="line">
+                <label>#springMessage('content.admin.maxonpager'):</label>
+                <input type="text" id="maxOnPager" value="$!maxOnPager"/>
+                <button class="action">#springMessage('action.admin.apply')</button>
+                <span class="desc"></span>
+            </div>
+    </div>
+        <div id="tab_backc" class="clearfix">
+            <div class="line">
+                <label>#springMessage('content.admin.dburl'):</label>
+                <input type="text" id="dburl" value="$!dburl" />
+                <button class="action">#springMessage('action.admin.apply')</button>
+                <span class="desc"></span>
+            </div>
+            <div class="line">
+                <label>#springMessage('content.admin.schema'):</label>
+                <input type="text" id="schema" value="$!schema" />
+                <button class="action">#springMessage('action.admin.apply')</button>
+                <span class="desc"></span>
+            </div>
+
+            <div class="line">
+                <label>#springMessage('content.admin.solrhost'):</label>
+                <input type="text" id="solrHost" value="$!solrHost" />
+                <button class="action">#springMessage('action.admin.apply')</button>
+                <span class="desc"></span>
+            </div>
+            <div class="line">
+                <label>#springMessage('content.admin.solrcore'):</label>
+                <input type="text" id="solrCore" value="$!solrCore" />
+                <button class="action">#springMessage('action.admin.apply')</button>
+                <span class="desc"></span>
+            </div>
+            <div class="line">
+                <label>#springMessage('content.admin.solrtimeout'):</label>
+                <input type="text" id="solrTimeout" value="$!solrTimeout"/>
+                <button class="action">#springMessage('action.admin.apply')</button>
+                <span class="desc"></span>
+            </div>
+            <div class="line">
+                <label>#springMessage('content.admin.maxconnections'):</label>
+                <input type="text" id="solrMaxConnections" value="$!solrMaxConnections" />
+                <button class="action">#springMessage('action.admin.apply')</button>
+                <span class="desc"></span>
+            </div>
+        </div>
+        <div id="tab_constc" class="clearfix">
+            <iframe src="#springUrl('/lb-status')">#springMessage('content.error.logfail')</iframe>
+         </div>
+    </div>
+</div>
+
+
+
+<script type="text/javascript">
+    
+    /*  
+     * URLs
+     */
+    var propertyUpdateUrl = "#springUrl('/admin/update')";
+
+    /*
+     * Messages
+     */
+     var SUCCESS_CHANGE = "#springMessage('admin.change.success')";
+     var ERROR_CHANGE = "#springMessage('admin.change.error')";
+
+#[[
+    $(document).ready(function() {
+        // pop-up window
+       $(document.createElement("div"))
+                .attr("id", "confirm")
+                .appendTo($("body"))
+                .hide();     
+
+        $('button.action').click(function(e) {
+            var $this = $(this);
+            var propName = $this.siblings('input').attr('id');
+            var propValue = $this.siblings('input').val();
+            var rawType = $this.closest('div#tab_backc, div#tab_frontc, div#tab_backc').attr('id');
+            if (rawType === 'tab_frontc') {
+                var type = 'front';
+            } else if (rawType === 'tab_backc') {
+                var type = 'back';
+            }
+            if ($(this).parent())
+            $.post(propertyUpdateUrl, {'key' : propName, 'value': propValue,
+                'type': type}, successUpdate, 'text')
+            .fail(function() {
+                $("#confirm").finish().html(ERROR_CHANGE)  
+                        .fadeIn(600)
+                        .delay(3000)
+                        .fadeOut(1200);
+            }).success(function(data) {
+                $('.error').remove();
+                if (data !== 'success' && data != 'error') {
+                    var $error = $('<label class="error"></label>');
+                    $error.text(data);
+                    $error.css("font-size", "0.8em");
+                    $error.css("width", "auto");
+                    $this.parent().append($error);
+                } else {
+                    $this.siblings('input').attr('style', 'background-color: rgb(234, 133, 36)');
+                }
+            });
+        });
+    });
+
+    function successUpdate(d) {
+        if (d === 'success') {
+            console.log("System property was successfully changed");
+            $("#confirm").finish().html(SUCCESS_CHANGE)  
+                    .fadeIn(600)
+                    .delay(3000)
+                    .fadeOut(1200);
+        } else if (d === 'error'){
+            console.log("Error while attempting to change system property");
+            $("#confirm").finish().html(ERROR_CHANGE)  
+                    .fadeIn(600)
+                    .delay(3000)
+                    .fadeOut(1200);
+        } 
+    }
+</script>
+]]#

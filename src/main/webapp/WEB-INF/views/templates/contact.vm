@@ -1,0 +1,15 @@
+## contact template
+<h2>#springMessage("content.contact.title"):</h2>
+<h3>Paul Kulitski</h3>
+<dl class="dl-horizontal">
+    <dt>E-mail</dt>
+    <dd>p.kulitski@gmail.com p.kulitski@outlook.com</dd>
+</dl>
+<dl class="dl-horizontal">
+    <dt>#springMessage("content.contact.phone"):</dt>
+    <dd>+375 29 5701064</dd>
+</dl>
+<dl class="dl-horizontal">
+    <dt>#springMessage("content.contact.address"):</dt>
+    <dd>220000 Minsk Belarus</dd>
+</dl>   

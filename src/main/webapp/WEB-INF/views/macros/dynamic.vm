@@ -1,0 +1,43 @@
+## Reports! Dynamic macros
+
+#*
+ * Dynamic table scaffoldings
+ *#
+#macro ( dynamic_table )
+<div> \
+ <h2>#springMessage('content.search.list.title')</h2> \
+    <table tabindex="1" class="table"> \
+        <thead> \
+            <tr> \
+                <th>id</th> \
+                <th>#springMessage('content.detail.start')</th> \
+                <th>#springMessage('content.detail.end')</th> \
+                <th>#springMessage('content.detail.performer')</th> \
+                <th>#springMessage('content.detail.activity')</th> \
+            </tr> \
+        <tbody>     \
+        </tbody> \
+        </thead> \
+    </table> \
+</div> \
+#end
+
+#*
+ * Dynamic table row
+ *#
+#macro ( dynamic_row )
+<tr> \
+    <td></td> \
+    <td></td> \
+    <td></td> \
+    <td></td> \
+    <td></td> \
+<tr> \
+#end
+
+#*
+ * Dynamic action button group
+ *#
+#macro ( dynamic_button_group )
+<button id="addToWatchlist" class="action" onclick="addToChecklist()">#springMessage('content.list.button.addtowatchlist')</button> \
+#end

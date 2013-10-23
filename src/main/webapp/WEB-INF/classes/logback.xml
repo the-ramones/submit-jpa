@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<configuration scan="true">
+
+    <!-- coloring (for Windows OS) -->
+    <withJansi>true</withJansi>
+
+    <!-- Status Listener -->
+    <statusListener class="ch.qos.logback.core.status.OnConsoleStatusListener" />
+    
+    <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>%highlight(%d %5p | %t | %-55logger{55} | %m %n)</pattern>
+        </encoder>
+    </appender>
+    
+    <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>access.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>access.%d{yyyy-MM-dd}.log.zip</fileNamePattern>
+        </rollingPolicy>
+        <encoder>
+            <pattern>%highlight(%d %5p | %t | %-55logger{55} | %m %n)</pattern>
+        </encoder>
+    </appender>  
+
+    <logger name="sp">
+        <level value="DEBUG" />
+    </logger>
+    
+    <logger name="service">
+        <level value="DEBUG" />
+    </logger>
+
+    <logger name="org.springframework">
+        <level value="INFO" />
+    </logger>
+    
+    <logger name="org.codehaus.jackson">
+        <level value="DEBUG" />
+    </logger>    
+
+    <logger name="com.sun.mail.smtp">
+        <level value="DEBUG" />
+    </logger>    
+
+    <logger name="bitronix">
+        <level value="DEBUG" />
+    </logger>  
+
+    <logger name="org.apache.commons.digester.Digester">
+        <level value="INFO" />
+    </logger>    
+    
+    <root>
+        <level value="DEBUG" />
+        <appender-ref ref="CONSOLE" />
+        <appender-ref ref="FILE" />
+    </root>
+
+</configuration>

@@ -4,35 +4,153 @@
        xmlns:p="http://www.springframework.org/schema/p"
        xmlns:aop="http://www.springframework.org/schema/aop"
        xmlns:tx="http://www.springframework.org/schema/tx"
-       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
-       http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-2.5.xsd
-       http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-2.5.xsd">
-
-    <bean class="org.springframework.web.servlet.mvc.support.ControllerClassNameHandlerMapping"/>
-
-    <!--
-    Most controllers will use the ControllerClassNameHandlerMapping above, but
-    for the index controller we are using ParameterizableViewController, so we must
-    define an explicit mapping for it.
+       xmlns:util="http://www.springframework.org/schema/util"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:mvc="http://www.springframework.org/schema/mvc"
+       xmlns:dwr="http://www.directwebremoting.org/schema/spring-dwr"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.1.xsd
+       http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-3.1.xsd
+       http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-3.1.xsd       
+       http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-3.1.xsd
+       http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.1.xsd
+       http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-3.1.xsd
+       http://www.directwebremoting.org/schema/spring-dwr http://www.directwebremoting.org/schema/spring-dwr-3.0.xsd
+">
+    <!-- MVC -->
+    
+    <mvc:resources location="/resources/img/" mapping="/resources/img/**" />
+    <mvc:resources location="/resources/js/" mapping="/resources/js/**" />
+    <mvc:resources location="/resources/css/" mapping="/resources/css/**" />
+    <mvc:resources location="/resources/font/" mapping="/resources/font/**" />
+    
+    <context:property-placeholder location="classpath:report-servlet.properties" />
+    
+    <!-- Flip on all Spring MVC features or annotations: JSR-303, message conversion,
+    field formatting. 
+    "With this minimal configuration, anytime a @Valid @Controller input is encountered,
+    it will be validated by the JSR-303 provider. JSR-303, in turn, will enforce any
+    constraints declared against the input. Any ConstraintViolations will automatically
+    be exposed as errors in the BindingResult renderable by standard Spring MVC form tags. "
     -->
-    <bean id="urlMapping" class="org.springframework.web.servlet.handler.SimpleUrlHandlerMapping">
-        <property name="mappings">
-            <props>
-                <prop key="index.htm">indexController</prop>
-            </props>
+    <mvc:annotation-driven>
+        <mvc:message-converters register-defaults="true">
+            <bean class="org.springframework.http.converter.StringHttpMessageConverter">
+                <property name="supportedMediaTypes">
+                    <list>
+                        <value>text/plain;charset=UTF-8</value>
+                        <value>text/html;charset=UTF-8</value>
+                        <value>application/json;charset=UTF-8</value>
+                        <value>application/xml;charset=UTF-8</value>
+                    </list>
+                </property>  
+            </bean>
+        </mvc:message-converters>
+    </mvc:annotation-driven>
+    
+    <!-- Jackson Mapper
+    <bean id="jacksonMessageConverter" class="org.springframework.http.converter.json.MappingJacksonHttpMessageConverter" />
+    --> 
+    
+    <context:component-scan base-package="sp.controller" />
+    
+    <!-- Velocity integration -->
+    <bean id="velocityConfig"
+          class="org.springframework.web.servlet.view.velocity.VelocityConfigurer">
+        <!--<property name="resourceLoaderPath" value="/WEB-INF/views/" />-->
+        <property name="configLocation" >
+            <value>/WEB-INF/velocity.properties</value>
         </property>
     </bean>
-
+	 
     <bean id="viewResolver"
-          class="org.springframework.web.servlet.view.InternalResourceViewResolver"
-          p:prefix="/WEB-INF/jsp/"
-          p:suffix=".jsp" />
+          class="org.springframework.web.servlet.view.velocity.VelocityLayoutViewResolver">
+        <property name="cache" value="false" />
+        <property name="layoutUrl" value="/layout/layout.vm" />
+        <property name="layoutKey" value="layout" />
+        <property name="prefix" value="/templates/" />
+        <property name="suffix" value=".vm" />
+        <property name="exposeSpringMacroHelpers" value="true" />
+        <property name="toolboxConfigLocation" value="/WEB-INF/toolbox.xml" />
+        <property name="contentType" value="text/html;charset=UTF-8" />
+        <property name="dateToolAttribute" value="dateTool" />
+        <property name="numberToolAttribute" value="numberTool" />
+        <property name="viewClass"
+                  value="org.springframework.web.servlet.view.velocity.VelocityLayoutView" />
+    </bean>
+    
+    <!-- Internationalization -->    
+    <bean id="messageSource"
+          class="org.springframework.context.support.ReloadableResourceBundleMessageSource">
+        <property name="basenames">
+            <util:list>
+                <value>/WEB-INF/i18n/messages</value>
+                <value>/WEB-INF/i18n/messages_frontend</value>
+                <value>/WEB-INF/i18n/jslibs</value>
+                <value>/WEB-INF/i18n/validation_messages</value>                
+            </util:list>                
+        </property>        
+        <property name="defaultEncoding" value="UTF-8" />
+        <property name="cacheSeconds" value="1" />
+    </bean>
 
-    <!--
-    The index controller.
+    <!-- LocaleResolver implementation that uses a cookie sent back to the user 
+    in case of a custom setting, with a fallback to the specified default locale
+    or the request's accept-header locale.
+    This is particularly useful for stateless applications without user sessions.  
     -->
-    <bean name="indexController"
-          class="org.springframework.web.servlet.mvc.ParameterizableViewController"
-          p:viewName="index" />
+    <bean id="localeResolver"
+          class="org.springframework.web.servlet.i18n.CookieLocaleResolver">
+        <property name="defaultLocale" value="en" />
+    </bean>
+    
+    <!-- Interceptor that allows for changing the current locale on every request,
+         via a configurable request parameter. -->
+    <mvc:interceptors>        
+        <bean id="localeChangeInterceptor"
+              class="org.springframework.web.servlet.i18n.LocaleChangeInterceptor">
+            <!-- request parameter which specifies a locale -->
+            <property name="paramName" value="lang" />
+        </bean>
+        <bean id="userDetailsInterceptor" class="sp.interceptor.UserInterceptor" />
+    </mvc:interceptors>
+    
+    <!-- @RequestMapping annotation processor -->
+    <bean id="handlerMapping"
+          class="org.springframework.web.servlet.mvc.annotation.DefaultAnnotationHandlerMapping">
+    </bean>
 
+    <!-- multipart resolver -->                
+    <bean id="multipartResolver" 
+          class="org.springframework.web.multipart.commons.CommonsMultipartResolver"
+          p:maxUploadSize="500000"/>
+   
+    <!-- RESTful services 
+    <bean class="org.springframework.web.servlet.view.ContentNegotiatingViewResolver">
+        <property name="mediaTypes">
+            <map>
+                <entry key="json" value="application/json" />
+                <entry key="xml" value="text/xml" />
+                <entry key="htm" value="text/html" />
+            </map>
+        </property>
+        <property name="defaultContentType" value="text/html" />
+    </bean>
+    -->
+    
+    <!--
+    <bean id="conversionService" class="org.springframework.format.support.FormattingConversionServiceFactoryBean">
+        <property name="registerDefaultFormatters" value="false" />
+        <property name="formatters">
+            <set>
+                <bean class="org.springframework.format.number.NumberFormatAnnotationFormatterFactory" />
+            </set>
+        </property>
+        <property name="formatterRegistrars">
+            <set>
+                <bean class="org.springframework.format.datetime.DateTimeRegistrar"/>
+            </set>
+        </property>
+    </bean>
+    -->
+    
 </beans>

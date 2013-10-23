@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans:beans xmlns:beans="http://www.springframework.org/schema/beans"
+             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+             xmlns="http://www.springframework.org/schema/security"
+             xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.1.xsd
+                                 http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security-3.0.xsd       
+">
+    <!-- Security -->    
+    <http>
+        <form-login login-page="/login?login=true" 
+                    default-target-url="/home" 
+        />
+        <http-basic  />
+        <logout invalidate-session="true" 
+                logout-success-url="/home"  
+                logout-url="/j_spring_security_logout" />
+        <intercept-url pattern="/resources/**" filters="none"/>
+        <intercept-url pattern="/admin/**" access="ROLE_ADMIN" />
+        <intercept-url pattern="/registry*" access="ROLE_ADMIN"/>    
+        <intercept-url pattern="/report/**" access="ROLE_USER"/>    
+        <intercept-url pattern="/suggest-solr*" access="ROLE_USER"/>        
+        <intercept-url pattern="/login*" requires-channel="http"/>
+        <intercept-url pattern="/registry*" requires-channel="http"/>
+        <!--<intercept-url pattern="/**" access="ROLE_USER,ROLE_ANONYMOUS"/>-->
+        <remember-me
+            key="_spring_security_remember_me"
+            token-validity-seconds="2419200" 
+        /> 
+        <session-management session-fixation-protection="newSession" >
+            <concurrency-control max-sessions="1" error-if-maximum-exceeded="false"/>
+        </session-management>      
+        <anonymous enabled="true" username="anonymousUser" key="secureKey" granted-authority="ROLE_ANONYMOUS"/>
+    </http>
+    
+    <!-- Authentication ProviderManager -->
+    <authentication-manager>
+        <authentication-provider user-service-ref="userDetailsService"/>
+    </authentication-manager>
+    
+    <beans:bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+        <beans:property name="driverClassName" value="${database.driverClassName}"/>
+        <beans:property name="url" value="${database.security.url}"/>
+        <beans:property name="username" value="${database.username}"/>
+        <beans:property name="password" value="${database.password}"/>
+    </beans:bean>
+
+    <beans:bean id="userDetailsService"
+          class="org.springframework.security.core.userdetails.jdbc.JdbcDaoImpl">
+        <beans:property name="dataSource" ref="dataSource"/>
+    </beans:bean>        
+
+    <global-method-security pre-post-annotations="enabled" proxy-target-class="true">
+        <expression-handler ref="expressionHandler" />                
+    </global-method-security>
+    
+    <beans:bean id="expressionHandler" 
+                class="org.springframework.security.access.expression.method.DefaultMethodSecurityExpressionHandler">
+        <beans:property name="permissionEvaluator">
+            <beans:bean class="sp.security.ReportsPermissionEvaluator" />
+        </beans:property>
+    </beans:bean>
+    
+    <!-- Method invocation Security
+        @Secured - Spring
+        @RolesAllowed - JSR-250
+        @PreFilter @PostFilter @PreAuthorize @PostAuthorize
+        explicit pointcuts
+        
+        examples:
+        1. @Secured({'ROLE_USER', 'ROLE_ADMIN'})
+           public String securedMethod(UserModel model) throws AuthenticationException, AccessDeniedException
+        2. @RolesAllowed('ROLE_ADMIN')   
+           public String securedMethod(UserMOdel model) throw AuthenticationException, AcessDeniedException
+              + @DenyAll @PermitAll 
+        3. @PreAuthorise('hasRole('ROLE_ADMIN') and #spitter.spittle.length() < 140 or hasRole('ROLE_PREMIUM')")
+           @PostAuthorize('hasRole('ROLE_ADMIN') and returnObject.username == principal.username')
+           @PostFilter('filterObject.username == principal.username')  :  filters return List<Spittle>
+        4. <global-method-security secured-annotations="enabled" pre-post-annotations="enabled">            
+                <protect-pointcut expression="execution(@sp.Sensible * *.*(String)) and args(id,value)"
+                    access="ROLE_SPITTER, ROLE_ADMIN" />
+           </global-method-security>
+    -->
+
+</beans:beans>

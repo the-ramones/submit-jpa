@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ehcache xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+         xsi:noNamespaceSchemaLocation="ehcache.xsd"
+         updateCheck="false"
+         monitoring="off" 
+         dynamicConfig="false"
+         maxBytesLocalHeap="64M"
+         maxBytesLocalOffHeap="256M"
+         maxBytesLocalDisk="512M"    
+         name="registryCacheManager">
+    
+    <diskStore path="user.home/ehcache/registry_diskstore" />
+    
+    <defaultCache
+        maxElementsInMemory="10000"     
+        eternal="false"
+        timeToIdleSeconds="120"
+        timeToLiveSeconds="360"
+        overflowToDisk="false"
+        memoryStoreEvictionPolicy="LRU"
+    />
+    
+    <!-- entity caches -->
+    <cache name="enterprise.model.registry.Register"
+           maxBytesLocalHeap="32M"
+           maxBytesLocalOffHeap="96M"
+           maxBytesLocalDisk="192M"
+           eternal="true"
+           diskSpoolBufferSizeMB="16"
+           timeToIdleSeconds="0"
+           timeToLiveSeconds="0"
+           memoryStoreEvictionPolicy="LFU"
+           transactionalMode="xa"
+    >
+        <persistence strategy="localTempSwap" synchronousWrites="false"/>
+    </cache>
+    
+    <cache name="enterprise.model.registry.Op"
+           maxBytesLocalHeap="4M"
+           maxBytesLocalOffHeap="16M"
+           maxBytesLocalDisk="32M"
+           eternal="true"
+           diskSpoolBufferSizeMB="32"
+           timeToIdleSeconds="0"
+           timeToLiveSeconds="0"
+           memoryStoreEvictionPolicy="LFU">
+        <persistence strategy="localTempSwap" synchronousWrites="false"/>
+    </cache>
+    <!-- use "localRestartable" in BigMemory Go (for fast recovery of cache) -->
+    
+    <cache name="enterprise.model.registry.User"
+           maxBytesLocalHeap="8M"
+           maxBytesLocalOffHeap="16M"
+           maxBytesLocalDisk="32M"
+           eternal="true"
+           diskSpoolBufferSizeMB="32"
+           timeToIdleSeconds="0"
+           timeToLiveSeconds="0"
+           memoryStoreEvictionPolicy="LFU">
+        <persistence strategy="localTempSwap" synchronousWrites="false"/>
+    </cache>    
+
+    <!-- hibernate query caches -->
+    <cache name="org.hibernate.cache.StandardQueryCache"
+           maxBytesLocalHeap="12M"
+           maxBytesLocalOffHeap="96M"
+           maxBytesLocalDisk="224M"
+           eternal="false" 
+           timeToIdleSeconds="3600"
+           timeToLiveSeconds="3600"
+           memoryStoreEvictionPolicy="FIFO">
+        <persistence strategy="localTempSwap" synchronousWrites="false"/>
+    </cache>
+    
+    <!-- for hibernate first-level cache -->
+    <cache name="org.hibernate.cache.UpdateTimestampsCache"
+           maxBytesLocalHeap="8M"
+           maxBytesLocalOffHeap="32M"
+           overflowToOffHeap="true"
+           eternal="true">
+    </cache>
+
+    <transactionManagerLookup
+        class= "net.sf.ehcache.transaction.manager.DefaultTransactionManagerLookup"
+        properties="" propertySeparator=":"/>
+
+</ehcache>

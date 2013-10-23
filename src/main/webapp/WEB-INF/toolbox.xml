@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<toolbox>
+    <!-- Properties -->
+    <data type="string">
+        <key>app_version</key>
+        <value>0.1.2</value>
+    </data>
+    <data type="string">
+        <key>app_name</key>
+        <value>Reports!</value>
+    </data>
+    <data type="boolean">
+        <key>debug</key>
+        <value>true</value>
+    </data>
+    
+    <!-- Date Tool -->
+    <tool>
+        <key>datetool</key>
+        <scope>request</scope>
+        <class>sp.util.SpDateTool</class>
+    </tool>
+    
+    <!-- Math Tool -->
+    <tool>
+        <key>math</key>
+        <scope>request</scope>
+        <!-- restrict tool appliance 
+        <request-path>/catalog/*</request-path> 
+        <parameter name="param.name" value="param.value"/> 
+        -->
+        <class>org.apache.velocity.tools.generic.MathTool</class>
+    </tool>
+    
+    <!-- Escape Tool -->
+    <tool>
+        <key>esc</key>
+        <scope>request</scope>
+        <class>org.apache.velocity.tools.generic.EscapeTool</class>
+    </tool>    
+   
+    <!-- Sort Tool -->
+    <tool>
+        <key>sort</key>
+        <scope>request</scope>
+        <class>org.apache.velocity.tools.generic.SortTool</class>
+    </tool>
+   
+</toolbox>
+
+<!-- For ascending  :asc
+     For descending :desc
+
+    Example
+    #foreach($obj in $sorter.sort($objects, ["name:asc", "ordinal:desc"]))
+      $obj.name, $obj.ordinal
+    #end-->

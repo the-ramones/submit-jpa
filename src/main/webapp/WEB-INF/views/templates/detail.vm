@@ -1,0 +1,44 @@
+## Detail template. Utilizes report context variable
+#if($report)
+<div class="form-container clearfix">
+
+<h2>#springMessage("content.detail.title")</h2>
+<span class="detail" data-icon="#[[&#128179;]]#"></span>
+<dl class="dl-horizontal">
+    <dt>id</dt>
+    <dd>${report.id}</dd>
+</dl>
+<dl class="dl-horizontal">
+    <dt>#springMessage("content.detail.start")</dt>
+    <dd>$datetool.format('dd MMM yyyy', ${report.startDate})</dd>
+</dl>
+<dl class="dl-horizontal">
+    <dt>#springMessage("content.detail.end")</dt>
+    <dd>$datetool.format('dd MMM yyyy', ${report.endDate})</dd>
+</dl>
+<dl class="dl-horizontal">
+    <dt>#springMessage("content.detail.performer")</dt>
+    <dd>${report.performer}</dd>
+</dl>
+<dl class="dl-horizontal">
+    <dt>#springMessage("content.detail.activity")</dt>
+    <dd>${report.activity}</dd>
+</dl>
+    #if($uri)<button class="action" onclick="show_uri()">#springMessage('button.action.get')</button>#end
+    #if($back)<button class="action delete" onclick="redirect()">#springMessage('button.action.back')</button>#end
+</div>
+#else
+    #springMessage('content.detail.notfound')
+#end
+
+<script type="text/javascript">
+    function redirect() {
+        window.location.href="$back";
+    }
+    function show_uri() {
+        modal.open({content: '#modal_uri( $uri )', width: "30%"});
+        $("#close-btn").click(function() {
+            $("#close").click();
+        });
+    }
+</script>    

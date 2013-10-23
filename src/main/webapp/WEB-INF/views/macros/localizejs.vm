@@ -1,0 +1,36 @@
+## Reports! Global l10n Macros
+
+#*
+ * Localizes validation messages for jQuery Validator plugin
+ *#
+#macro ( validator_l10n )
+
+    #set( $v_url = '/resources/js/localization/' + $springMacroRequestContext.getMessage('jquery.validator') )
+    <script type="text/javascript" src="#springUrl($v_url)"></script>
+
+#end
+
+#*
+ * Localizes jQuery Datepicker plugin appearance 
+ *#
+#macro ( datepicker_l10n )
+    
+    #set($path_prefix = '/resources/js/localization/')
+    #set( $d_url = $path_prefix + $springMacroRequestContext.getMessage('jquery.datepicker') )
+    #set( $d_regional = $springMacroRequestContext.getMessage('jquery.datepicker.regional') )
+    #if( ($d_url ne $path_prefix) && $d_url )
+    <script type="text/javascript" src="#springUrl(${d_url})"></script>  
+    <script type="text/javascript">
+        #[[$.datepicker.setDefaults(
+            $.extend({'dateFormat': 'dd M yy'}, $.datepicker.regional[]]#'$d_regional'#[[])
+        );]]#
+    </script>
+    #{else}
+    <script type="text/javascript">
+        #[[$.datepicker.setDefaults(
+            {'dateFormat': 'dd M yy'}
+        );]]#
+    </script>
+    #end
+
+#end

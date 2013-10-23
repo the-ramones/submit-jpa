@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <title>$!page_title</title>
+        <meta name="description" content="Spring-based application's Reports!">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <link rel="stylesheet" href="#springUrl('/resources/css/normalize.min.css')">
+        <link rel="stylesheet" href="#springUrl('/resources/css/main.css')">  
+        <link rel="stylesheet" href="#springUrl('/resources/css/search.css')">
+        <link rel="stylesheet" href="#springUrl('/resources/css/modal.css')">
+        <link rel="stylesheet" href="#springUrl('/resources/css/pager.css')">
+        <link rel="stylesheet" href="#springUrl('/resources/css/jquery-ui-1.10.3.custom.min.css')">
+      
+        <!--<link href='http://fonts.googleapis.com/css?family=Roboto+Slab:100&subset=latin,cyrillic' rel='stylesheet' type='text/css'>-->
+
+        <script src="#springUrl('/resources/js/vendor/modernizr-2.6.2-respond-1.1.0.min.js')"></script>      
+        <script src="#springUrl('/resources/js/libs/jquery-1.10.2.js')"></script>
+        <script src="#springUrl('/resources/js/libs/jquery-ui-1.10.3.custom.min.js')"></script>
+
+    </head>
+    <body>
+        <!--[if lt IE 7]>
+            <p class="chromeframe">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> or <a href="http://www.google.com/chromeframe/?redirect=true">activate Google Chrome Frame</a> to improve your experience.</p>
+        <![endif]-->
+        <div class="page-wrap">
+        <div class="header-container">
+            <div class="wrapper clearfix">
+
+                #parse('/layout/header.vm')
+
+            </div>
+        </div>
+        <!-- content -->
+        <div class="main-container">
+            <div class="main wrapper clearfix">
+
+                #menu_sticker()
+ 
+                $!screen_content
+
+                #hint_sticker()
+
+            </div> <!-- #main -->
+        </div> <!-- #main-container -->
+        </div> <!-- #page_wrap -->
+        <div class="footer-container">
+            <div class="wrapper clearfix">
+
+                #parse('/layout/footer.vm')
+
+            </div>
+        </div>
+
+        <script src="#springUrl('/resources/js/libs/jquery.validate.js')"></script>        
+        <script src="#springUrl('/resources/js/main.js')"></script>
+        <script src="#springUrl('/resources/js/validation.js')"></script>
+        <script type="text/javascript" src="#springUrl('/resources/js/search.js')"></script>
+        <script type="text/javascript" src="#springUrl('/resources/js/modal.js')"></script>
+        <script src="#springUrl('/resources/js/dates.js')"></script>
+        <script src="#springUrl('/resources/js/checklist.js')"></script>
+        
+        #* 
+         * l10n 
+         *#
+        #validator_l10n()
+        #datepicker_l10n()
+
+        <script type="text/javascript">
+        </script>
+        
+    </body>
+</html>

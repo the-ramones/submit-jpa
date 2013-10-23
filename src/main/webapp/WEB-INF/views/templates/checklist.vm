@@ -1,0 +1,154 @@
+## Checklist template. Utilize reports context variable
+<div class="tile-menu-container">
+    <h3>#springMessage('content.checklist.title')</h3>
+    <div class="tile-button-menu clearfix">
+        <button class="action update" onclick="getStats();">#springMessage('content.checklist.button.statistics')</button>
+        <button class="action delete" onclick="sendEmail();">#springMessage('content.checklist.button.email')</button>
+        <button class="action" onclick="startNew();">#springMessage('content.checklist.button.newsearch')</button>
+    </div>
+</div>
+#if($reports)
+#foreach ($report in $reports)
+<div class="tile-container">
+    <h2>Details of activity №${report.id}</h2>
+    <span class="detail-small" data-icon="#[[&#128247;]]#"></span>
+    <dl class="dl-horizontal">
+        <dt>id</dt>
+        <dd>${report.id}</dd>
+    </dl>
+    <dl class="dl-horizontal">
+        <dt>#springMessage('content.detail.start')</dt>
+        <dd>$datetool.format('dd MMM yyyy', ${report.startDate})</dd>
+    </dl>
+    <dl class="dl-horizontal">
+        <dt>#springMessage('content.detail.end')</dt>
+        <dd>$datetool.format('dd MMM yyyy', ${report.endDate})</dd>
+    </dl>
+    <dl class="dl-horizontal">
+        <dt>#springMessage('content.detail.performer')</dt>
+        <dd>${report.performer}</dd>
+    </dl>
+    <dl class="dl-horizontal">
+        <dt>#springMessage('content.detail.activity')</dt>
+        <dd>${report.activity}</dd>
+    </dl>
+    <button class="action" onclick="getUri(this);">#springMessage('content.checklist.tile.uri')</button>
+    <button class="action delete" onclick="putAway(this);">#springMessage('content.checklist.tile.away')</button>
+</div>
+#end
+#{else}
+    <p>#springMessage('content.checklist.nothing')</p>
+#end
+
+<script>
+
+    /*
+     * URLs
+     */
+    var getReportUriUrl = "#springUrl('/report/ajax/uri')";
+    var removeFromChecklistUrl = "#springUrl('/checklist/remove')";
+    var cleanUpChecklistUrl = "#springUrl('/checklist/empty')";
+    var newSearchRedirectUrl = "#springUrl('/report/search?new_search')";
+    var checklistStatsUrl = "#springUrl('/checklist/stats')";
+    var sendEmailUrl = "#springUrl('/checklist/email')";
+
+    /*
+     * Modal window HTML templates
+     */
+    var modalUriHtml = '#modal_uri()';
+    var modalStatsHtml = '#modal_stats()';
+
+    /*
+     * Messages
+     */
+    var STATICTICS_FAIL = "#springMessage('checklist.stats.fail')";
+    var EMAIL_DONE = "#springMessage('checklist.email.done')";
+    var EMAIL_FAIL = "#springMessage('checklist.email.fail')";
+
+#[[
+    $(document).ready(function() {
+        $(".tile-container").draggable();
+    });
+
+    function getUri(tile) {
+        var idVal = $(tile).parent("div.tile-container").find("dl:first > dd").text().trim();
+        // jQuery ajax + utilize of Promise object
+        $.ajax(getReportUriUrl, {
+               method: "GET",
+               async: true,
+               cache: false,   
+               data: "id=" + idVal, 
+        }).done(function(uri) {
+               modal.open({ content: modalUriHtml, width: "30%"});
+               $("#modal").find('input[type="text"]').val(uri);
+               $("#close-btn").click(function() {  
+                   $("#close").click();
+               });
+        });
+    } 
+
+    function putAway(tile) {
+        var idVal = $(tile).parent("div.tile-container").find("dl:first > dd").text().trim();
+        id = "id=" + idVal;
+        $.ajax(removeFromChecklistUrl, {
+            method: "POST",
+            async: true,
+            cached: false,
+            data: id,
+            dataType: 'text',
+            success: function(data) {}
+        });
+        $(tile).parent("div.tile-container").slideUp(1000);
+    }
+
+    function startNew() {
+        $.ajax(cleanUpChecklistUrl, {
+            method: "POST",
+            async: false,
+            cache: false
+        }); 
+        window.location.href=newSearchRedirectUrl;
+    }
+
+    function getStats() { 
+        $.get(checklistStatsUrl, {}, renderStatsModal, 'json')
+            .fail(function() {
+                $("#confirm").finish().html(STATICTICS_FAIL)
+                    .fadeIn(600)
+                    .delay(3000)
+                    .fadeOut(1200);
+            });
+    }
+
+    function renderStatsModal(stats) {
+        var $html = $(modalStatsHtml);
+        $html.find("textarea:eq(0)").text(stats.performers);
+        $html.find("textarea:eq(1)").text(stats.activities)
+        $html.find("#avg").text(stats.averageRange);
+        $html.find("span:eq(1)").text(stats.countPerformers);
+        $html.find("span:eq(3)").text(stats.countActivities);
+        modal.open({content: $html.get(0).outerHTML, width: "40%" });
+        $("#close-btn").click(function() {
+            $("#close").click();
+            return false;
+        });
+    }
+
+    function sendEmail() {
+        $.get(sendEmailUrl, {}, function(result) {
+            if (result === "success") {
+                $("#confirm").finish().html(EMAIL_DONE)
+                    .fadeIn(600)
+                    .delay(3000)
+                    .fadeOut(1200);
+            }
+        },
+        'text').error(function() {
+            $("#confirm").finish().html(EMAIL_FAIL)
+                .fadeIn(600)
+                .delay(3000)
+                .fadeOut(1200);
+        });
+    }
+]]#
+</script>

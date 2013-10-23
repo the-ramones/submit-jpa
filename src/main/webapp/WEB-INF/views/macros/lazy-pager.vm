@@ -1,0 +1,65 @@
+#* Reports!
+ * Defines a pager. Utilizes 'pager' and 'settings' context variable
+ * from the Velocity template being called from.
+ *#
+#macro (lazy_pager $pager)
+#* Defines pager appearance. If, for example equals 3, then '<< 1 2 3 ... 'last' >>'
+ * will be drawn
+ *#
+## java.lang.Integer creation to get Integer.parseInt() method
+#set($Integer = 0)
+## Max number of pages in pager
+#set( $maxOnPager = $Integer.parseInt( $settings.get('maxOnPager') ) )
+## Number of pages in pager
+#set( $pages = $pager.getPageCount() )
+## Current page
+#set( $active = $pager.getPage() + 1 )
+## Current page URL from Apache RequestFacade
+#set( $url = $request.getRequestURL() )
+<div class="pagination clearfix">
+    <ul class="clearfix">
+        #if( $pages gt $maxOnPager )  
+            #* Defines difference between active page and last page.
+             * If $delta > $$maxOnPager, renders: << 2 3 4 5 ... 100 >>
+             * Otherwise: << 96 97 98 99 100 >>
+             *#
+            #set( $delta = $pages - $active )
+            ## draw 'spacer' and 'last available page' anchor
+            #set( $prev = $url + '?p=prev' )
+            <li><a href="$prev" #if($active eq 1)class="disabled"#end>«</a></li>            
+            #if($active gt 1)
+            
+               #if ( $delta le $maxOnPager )
+                    #set( $lower_bound = ($pages - $maxOnPager))
+                #{else}
+                    #set( $lower_bound = $active - 1 )
+                #end       
+                #set( $upper_bound = $lower_bound + $maxOnPager - 1 )
+            #{else}                
+               #set( $lower_bound = $active )
+               #set( $upper_bound = $active + $maxOnPager )
+            #end
+            #foreach ($page in [$lower_bound..$upper_bound] )
+                #set($page_url = $url + '?p=' + $page )
+                <li><a href="$page_url" class="#if($page eq $active)current#end active">$page</a></li>
+            #end
+            #if($delta gt $maxOnPager)<li class="spacer">…</li>#end
+            #set( $last = $pages )
+            #set( $last_url = $url + '?p=' + $last )
+            <li><a href="$last_url" class="#if($last eq $active)current#end active">$last</a></li>   
+            #set( $next = $url + '?p=next' )
+            <li><a href="$next" #if($active eq $pages)class="disabled"#end>»</a></li>
+        #{else}
+            ## draw all page's anchors
+            #set( $prev = $url + '?p=prev' )
+            <li><a href="$prev" #if($active eq 1)class="disabled"#end>«</a></li>
+            #foreach( $page in [1..$pages] )
+                #set($page_url = $url + '?p=' + $page )
+                <li><a href="$page_url" class="#if($page eq $active)current#end active">$page</a></li>
+            #end
+            #set( $next = $url + '?p=next' )
+            <li><a href="$next" #if($active eq $pages)class="disabled"#end>»</a></li>
+        #end
+    </ul>
+</div>
+#end

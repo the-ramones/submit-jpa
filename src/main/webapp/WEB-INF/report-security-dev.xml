@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans:beans xmlns:beans="http://www.springframework.org/schema/beans"
+             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+             xmlns="http://www.springframework.org/schema/security"
+             xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.1.xsd
+                                 http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security-3.0.xsd       
+">
+    <!-- Security -->
+    <http>
+        <form-login login-page="/login?login=true" 
+                    default-target-url="/home" 
+        />
+        <http-basic  />
+        <logout invalidate-session="true" 
+                logout-success-url="/home"  
+                logout-url="/j_spring_security_logout" />
+        <intercept-url pattern="/resources/**" filters="none"/>
+        <intercept-url pattern="/admin/**" access="ROLE_ADMIN" />
+        <intercept-url pattern="/registry*" access="ROLE_ADMIN"/>    
+        <intercept-url pattern="/report/**" access="ROLE_USER"/>    
+        <intercept-url pattern="/suggest-solr*" access="ROLE_USER"/>
+        <intercept-url pattern="/registry*" requires-channel="https"/>
+        <remember-me
+            key="_spring_security_remember_me"
+            token-validity-seconds="2419200" 
+        /> 
+        <session-management session-fixation-protection="newSession" >
+            <concurrency-control max-sessions="1" error-if-maximum-exceeded="false"/>
+        </session-management>      
+    </http>
+    
+    <global-method-security pre-post-annotations="enabled" />
+
+    <!-- User Repository 
+        <user-service id="userService">
+            <user name="admin" password="admin" authorities="ROLE_USER,ROLE_ADMIN"/>
+            <user name="user" password="user" authorities="ROLE_USER"/>
+            <user name="anonymous" password="anonymous" authorities="ROLE_ANONYMOUS"/>
+        </user-service>
+    -->
+    
+    <!-- Authentication ProviderManager -->
+    <authentication-manager>
+        <password-encoder ref="encoder" />
+        <authentication-provider user-service-ref="userDetailsService"/>
+    </authentication-manager>
+    
+    <beans:bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+        <beans:property name="driverClassName" value="${database.driverClassName}"/>
+        <beans:property name="url" value="${database.security.url}"/>
+        <beans:property name="username" value="${database.username}"/>
+        <beans:property name="password" value="${database.password}"/>
+    </beans:bean>
+
+    <beans:bean id="userDetailsService"
+          class="org.springframework.security.core.userdetails.jdbc.JdbcDaoImpl">
+        <beans:property name="dataSource" ref="dataSource"/>
+    </beans:bean>        
+    
+    <beans:bean id="encoder" 
+        class="org.springframework.security.crypto.password.StandardPasswordEncoder"/>
+
+    <!-- DataSource User Repository -->
+    <!-- The <jdbc-user-service> element uses a JDBC data source—wired in through
+        its data-source-ref attribute—to query a database for user details. 
+        Without any further configuration, the user service queries for user 
+        information using the following SQL:
+            select username,password,enabled
+            from users
+            where username=?    
+    -->
+    <!--<jdbc-user-service id="dbUserService" data-source-ref="dataSource" />-->
+    
+    <!-- or this way -->
+    <!-- 
+    <jdbc-user-service id="dbUserService" data-source-ref="dataSource"
+        users-by-username-query="select username,password,true from users where username=?"
+        authorities-by-username-query="select username,'ROLE_SPITTER' from user where username=?"
+        group-authorities-by-username-query="select username, 'ADMINISTRATION' from users where username=?"
+    />
+    -->
+    
+    <!-- Hierarchical LDAP User Repository -->
+    <!--<authentication-manager alias="authenticationManager">
+        <ldap-authentication-provider user-search-filter="(uid={0})"
+                                      group-search-filter="member={0}">
+                LDAP provider will compare passwords on the server side 
+            so the actual password is keep in secret. But when you attempt 
+            to transmit a entered password over the network it will be available 
+            for the hacker/cdn whatsoever. To prevent this you nedd to pin
+            encryption strategy / hash method to be evaluated against the 
+            entered password on the client side. Choises:
+            {sha}{ssha}{md4}{md5}{plaintext}{sha}{sha-256}
+
+        <password-compare password-attribute="passcode" hash="md5"/>
+        </ldap-authentication-provider>        
+    </authentication-manager>
+    -->
+    
+    <!--<ldap-user-service id="userService"
+                       user-search-base="ou=people"
+                       user-search-filter="(uid={0})"
+                       group-search-base="ou=groups"
+                       group-search-filter="member={0}" />
+    -->
+        
+    <!-- By default, Spring Security’s LDAP authentication assumes that the LDAP server is
+    listening on port 33389 on localhost. But if your LDAP server is on another machine,
+    then you can use the <ldap-server> element to configure the location:
+    -->
+    <!-- <ldap-server url="ldap://habuma.com:389/dc=habuma,dc=com"/> -->
+    
+    <!-- 
+    If you don’t happen to have an LDAP server laying around waiting to be authenticated
+    against, then the <ldap-server> can also be used to configure an embedded LDAP
+    server. Just leave off the url parameter. For example:
+        <ldap-server root="dc=habuma,dc=com" ldif="classpath:users.ldif"/>
+    -->
+    
+    <!--Users LDIF -->
+    <!--dn: ou=groups,dc=habuma,dc=com
+        objectclass:top
+        objectclass:organizationalUnit
+        ou: groups
+        dn: ou=people,dc=habuma,dc=com
+        objectclass:top
+        objectclass:organizationalUnit
+        ou: people
+        dn: uid=habuma,ou=people,dc=habuma,dc=com
+        objectclass:top
+        objectclass:person
+        objectclass:organizationalPerson
+        objectclass:inetOrgPerson
+        cn: CraigWalls
+        sn: Walls
+        uid: habuma
+        userPassword:password
+        dn: uid=jsmith,ou=people,dc=habuma,dc=com
+        objectclass:top
+        objectclass:person
+        objectclass:organizationalPerson
+        objectclass:inetOrgPerson
+         cn: JohnSmith
+        sn: Smith
+       uid: jsmith
+        userPassword:password
+        dn: cn=spitter,ou=groups,dc=habuma,dc=com
+        objectclass:top
+        objectclass:groupOfNames
+        cn: spitter
+        member: uid=habuma,ou=people,dc=habuma,dc=com
+    -->
+    
+</beans:beans>

@@ -1,0 +1,102 @@
+## Reports! Global Velocity Macros
+
+#*
+ * Uses 'view' variable from the context was called to construct Hint side bar
+ *#
+#macro ( hint )
+    #if ($view)
+        #set($hint = "hint." + $view)
+        #set($hint_title = "hint." + $view + ".title")
+    <div class="aside clearfix">
+        <h3>#springMessage($hint_title)</h3>
+        <p>#springMessage($hint)</p>
+        <button id="hide_btn" class="btn-small" type="button">#springMessage("button.hide")</button>
+    </div>
+    #end
+#end
+
+#*
+ * Constructs right sticker ('get hint' sticker)
+ *#
+#macro ( hint_sticker )    
+    <div class="sticky">
+        <a href="#"><i class="icon-briefcase"></i>#springMessage("sticker")</a>
+    </div>
+#end
+
+#*
+ * Uses 'user' variable from the context was called to construct Hint side bar
+ *#
+#macro ( menu_sticker )
+     <div class="login-wrap">
+        <div class="login-stick">
+            <ul>
+                <li id="login">
+                    <a href="#" data-icon="#[[&#128101;]]#"></a>
+                </li>
+                <li id="language">
+                    <a href="#" data-icon="#[[&#127758;]]#"></a>
+                </li>
+                <li id="checklist">
+                    <a href="#springUrl('/checklist')" data-icon="#[[&#59197;]]#"></a>
+                </li>
+            </ul>
+        </div>
+        <div class="popup" id="popup-login">
+            <div class="arrow"></div>
+            <ul>
+                #if($user )
+                    #if($user eq 'anonymousUser')
+                        <li><a href="#springUrl('/login?info=true')">#springMessage('sticker.left.anonymous')</a></li>
+                        <li><a href="#springUrl('/login?login=true')">#springMessage('sticker.left.login.login')</a></li>
+                    #else
+                        <li><a href="#springUrl('/login?info=true')">${user.getUsername()}</a></li>
+                        <li><a href="#springUrl('/login?logout=true')">#springMessage('sticker.left.login.logout')</a></li>
+                    #end
+                #{else}
+                    <li><a href="#springUrl('/login?login=true')">#springMessage('sticker.left.anonymous')</a></li>
+                    <li><a href="#springUrl('/login?login=true')">#springMessage('sticker.left.login.login')</a></li>
+                #end
+            </ul>
+        </div>                        
+        <div class="popup" id="popup-language">
+            <div class="arrow"></div>
+            <ul>                
+                #set($url = $request.getRequestURI())
+                #set($query = $request.getQueryString())                  
+                #if ($query ne '')
+                   #if($query.indexOf('&lang=') ne -1)
+                       #set($low_index = $query.indexOf('&lang='))
+                       #set($high_index = $low_index + 8)
+                       #set($Integer = 1)
+                       #set($adj_query = $query.substring(0, $Integer.valueOf($low_index)))
+                       #if($adj_query)
+                        #set($en_url = $url + '?' + $adj_query + '&lang=en')
+                        #set($ru_url = $url + '?' + $adj_query + '&lang=ru')
+                       #{else}
+                        #set($en_url = $url + '?lang=en')
+                        #set($ru_url = $url + '?lang=ru')
+                       #end
+                   #{else}
+                       #set($en_url = $url + '?' + $query + '&lang=en')
+                       #set($ru_url = $url + '?' + $query + '&lang=ru')
+                   #end
+                #{else}
+                    #set($en_url = $url + '?lang=en')
+                    #set($ru_url = $url + '?lang=ru') 
+                #end
+                <li><a href="$en_url">#springMessage('sticker.left.language.english')</a></li>
+                <li><a href="$ru_url">#springMessage('sticker.left.language.russian')</a></li>
+            </ul>
+        </div>
+    </div>  
+#end
+
+#*
+ * Confirmation float window. Renders message is specified as parameter 'msg'
+ *#
+#macro (confirm $msg)
+    <div id="confirm">
+        <p>$msg</p>
+    </div>
+#end

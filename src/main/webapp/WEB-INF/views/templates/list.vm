@@ -1,0 +1,35 @@
+## List template. Utilizes reports context variable
+<div class="form-container" style="width: 100%">
+    <h2>#springMessage('content.list.title')</h2>
+    <table class="table">
+        <caption>#springMessage('content.list.table.caption')</caption>
+        <thead>
+            <tr>
+                <th>id</th>
+                <th>#springMessage('content.detail.start')</th>
+                <th>#springMessage('content.detail.end')</th>
+                <th>#springMessage('content.detail.performer')</th>
+                <th>#springMessage('content.detail.activity')</th>
+            </tr>
+        </thead>
+        <tbody>
+        #if($reports)
+            #foreach($report in $reports)
+            <tr>
+                <td>${report.id}</td>
+                <td>$datetool.format( 'dd MMM yyyy', ${report.startDate} )</td>
+                <td>$datetool.format( 'dd MMM yyyy', ${report.endDate} )</td>
+                <td>${report.performer}</td>
+                <td>${report.activity}</td>
+            </tr>
+            #end
+            <div class="button-block clearfix hidden">
+                <button class="action" onclick="modal_action()">#springMessage('button.action.get')</button>
+                <button class="action update" onclick="modal_update()">#springMessage('button.action.update')</button>          
+                <button class="action delete" onclick="modal_delete()">#springMessage('button.action.delete')</button>
+            </div>
+        #end
+        </tbody>        
+    </table>
+    <button class="action add" onclick="modal_add()">#springMessage('content.list.button.addnew')</button>    
+</div> 

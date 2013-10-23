@@ -1,0 +1,13 @@
+## Changes layout from default to 'layout-email.vm'
+#set( $layout = "/layout/layout_email.vm" )
+#if($statistics)
+<div class="statistics"> 
+    <h2>#springMessage('modal.stats.title')</h2> 
+    <span style="width: 100%; font-weight: bold; text-align: center;">#springMessage('modal.stats.count.performers'):</span><span style="width: 100%; font-weight: bold; text-align: center;">$statistics.countPerformers</span> 
+    <textarea style="color: #222; width: 100%; resize: none; border: 1px solid rgb(221,221,221);" class="clearfix">$statistics.performers</textarea> 
+    <span style="width: 100%; font-weight: bold; text-align: center;">#springMessage('modal.stats.count.activities'):</span><span style="width: 100%; font-weight: bold; text-align: center;">$statistics.countActivities</span> 
+    <textarea class="clearfix" style="color: #222; width: 100%; resize: none; border:1px solid rgb(221,221,221);" class="clearfix">$statistics.activities</textarea> 
+    <label>#springMessage('modal.stats.avgrange'):</label> 
+    <span id="avg" style="width: 100%; font-weight: bold; text-align: center;">$statistics.averageRange</span><span style="width: 100%; font-weight: bold; text-align: center;">#springMessage('modal.stats.days')</span> 
+</div>
+#end

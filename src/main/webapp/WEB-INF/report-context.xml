@@ -8,12 +8,13 @@
        xmlns:jee="http://www.springframework.org/schema/jee"
        xmlns:jms="http://www.springframework.org/schema/jms"
        xmlns:lang="http://www.springframework.org/schema/lang"
-       xmlns:osgi="http://www.springframework.org/schema/osgi"
        xmlns:p="http://www.springframework.org/schema/p"
        xmlns:tx="http://www.springframework.org/schema/tx"
        xmlns:util="http://www.springframework.org/schema/util"
        xmlns:cache="http://www.springframework.org/schema/cache"
        xmlns:mvc="http://www.springframework.org/schema/mvc"
+       xmlns:task="http://www.springframework.org/schema/task"
+       xmlns:solr="http://www.springframework.org/schema/data/solr"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.1.xsd
           http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-3.1.xsd
           http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.1.xsd
@@ -21,43 +22,157 @@
           http://www.springframework.org/schema/jee http://www.springframework.org/schema/jee/spring-jee-3.1.xsd
           http://www.springframework.org/schema/jms http://www.springframework.org/schema/jms/spring-jms-3.1.xsd
           http://www.springframework.org/schema/lang http://www.springframework.org/schema/lang/spring-lang-3.1.xsd
-          http://www.springframework.org/schema/osgi http://www.springframework.org/schema/osgi/spring-osgi-1.2.xsd
           http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-3.1.xsd
           http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-3.1.xsd
           http://www.springframework.org/schema/cache http://www.springframework.org/schema/cache/spring-cache-3.1.xsd
           http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-3.1.xsd
+          http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task-3.1.xsd
+          http://www.springframework.org/schema/data/solr http://www.springframework.org/schema/data/solr/spring-solr-1.0.xsd
 ">
-    <!-- context -->
+    <!-- context -->    
+    <context:component-scan base-package="sp">
+        <context:exclude-filter type="regex" expression="sp.controller.*" />
+    </context:component-scan>
     
-    <context:annotation-config />
-    
+    <!-- properties -->
     <context:property-placeholder location="classpath:report.properties" />
-        
+    
+    <!-- email messages bundle -->
+    <bean id="emailMessageSource"
+          class="org.springframework.context.support.ReloadableResourceBundleMessageSource">
+        <property name="basename" value="/WEB-INF/i18n/messages_email" />
+        <property name="defaultEncoding" value="UTF-8" />
+        <property name="cacheSeconds" value="1" />
+    </bean>
+    
+    <!-- dynamic flash properties map-->
+    <bean id="backendProperties" class="java.util.HashMap" />
+    <bean id="frontendProperties" class="java.util.HashMap" />
+    
     <!-- persistence -->    
-
     <bean  id="reportsDS" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
         <property name="driverClassName" value="${database.driverClassName}" />
         <property name="url" value="${database.url}" />
         <property name="username" value="${database.username}" />
         <property name="password" value="${database.password}" />
     </bean>
-        
+    
+    <bean  id="registryDS" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+        <property name="driverClassName" value="${database.driverClassName}" />
+        <property name="url" value="${database.registry.url}" />
+        <property name="username" value="${database.username}" />
+        <property name="password" value="${database.password}" />
+    </bean>
+    
+    <!-- JPA vendor adapter -->
+    <bean id="jpaVendorAdapter" class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter">
+        <property name="showSql" value="${database.showSql}" />
+        <property name="generateDdl" value="${database.generateDdl}" />
+        <!--<property name="databasePlatform" value="${database.platform}" />-->
+    </bean>
+    
+    <!-- JPA Dialect -->
+    <bean id="jpaDialect" class="org.springframework.orm.jpa.vendor.HibernateJpaDialect" />
+
+    <!-- EntityMangerFactory, will be used with @PersistenceContext(unitName = "in-settings-name") -->
+    <bean id="entityManagerFactoryReports" 
+          class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean" 
+          depends-on="enterpriseDataSource,transactionManager">
+        <property name="persistenceUnitName" value="reportPU" />
+        <property name="jtaDataSource" ref="enterpriseDataSource" />
+        <property name="jpaPropertyMap">
+            <props>
+                <prop key="hibernate.dialect">org.hibernate.dialect.MySQL5Dialect</prop>
+                <prop key="hibernate.transaction.manager_lookup_class">org.hibernate.transaction.BTMTransactionManagerLookup</prop>
+            </props>
+        </property>
+        <!-- TODO: an inner beans? -->
+        <property name="jpaDialect" ref="jpaDialect" />
+        <property name="jpaVendorAdapter" ref="jpaVendorAdapter" />
+    </bean>
+    
+      <!-- EntityMangerFactory, will be used with @PersistenceContext(unitName = "in-settings") -->
+    <bean id="entityManagerFactoryRegistry" 
+          class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean" 
+          depends-on="registryDataSource,transactionManager">
+        <property name="persistenceUnitName" value="registryPU" />
+        <property name="jtaDataSource" ref="registryDataSource" />
+        <property name="jpaPropertyMap">
+            <props>
+                <prop key="hibernate.dialect">org.hibernate.dialect.MySQL5Dialect</prop>
+                <prop key="hibernate.transaction.manager_lookup_class">org.hibernate.transaction.BTMTransactionManagerLookup</prop>
+            </props>
+        </property>
+        <property name="jpaDialect" ref="jpaDialect" />
+        <property name="jpaVendorAdapter" ref="jpaVendorAdapter" />
+    </bean>
+
     <!-- will parse @PersistenceContext and @PersistenceUnit annotations with 'unitName'
          parameter specified or without if <persistence-unit name="DEFAULT"> and 
          autowire EntityManager and EntityManagerFactory beans to them by type
     -->
-    <bean class="org.springframework.orm.jpa.support.PersistenceAnnotationBeanPostProcessor" />
+    <bean class="org.springframework.orm.jpa.support.PersistenceAnnotationBeanPostProcessor" />    
     
-    <!-- EclipseLink JPA vendor adapter -->
-    <bean id="jpaVendorAdapter" class="org.springframework.orm.jpa.vendor.EclipseLinkJpaVendorAdapter">
-        <property name="showSql" value="${database.showSql}" />
-        <property name="generateDdl" value="${database.generateDdl}" />
-        <property name="databasePlatform" value="${database.platform}" />
+    <!-- transactions -->
+    <!-- Check sp.config.BitronixJtaConfig.class -->
+    <tx:annotation-driven transaction-manager="transactionManager" proxy-target-class="true" />
+    
+    <!-- caches -->        
+    <!-- @Cacheable will be scanned at start-up of context 
+    <cache:annotation-driven cache-manager="cacheManager" mode="proxy" order="" />
+    
+    <bean id="cacheManager" class="org.springframework.cache.ehcache.EhCacheCacheManager">
+        <property name="cacheManager" ref="ehcache"/>
+    </bean>
+    -->
+ 
+    <!-- Ehcache library setup -->
+    <!--
+    <bean id="ehcache" class="org.springframework.cache.ehcache.EhCacheManagerFactoryBean">
+        <property name="configLocation" value="classpath:ehcache-report.xml"/>
+    </bean>
+    -->
+    
+    <!-- post processors -->
+    
+    <!-- Scans for @Required annotations in source code and check availability of
+    an attribute. If hasn't been set throws an exception -->
+    <bean class="org.springframework.beans.factory.annotation.RequiredAnnotationBeanPostProcessor" /> 
+    
+    <!-- Enables Sprig Validation.
+        1. If want use JSR-303 validation, <mvc:annotation-driven /> will be sufficient.
+        2. Turn on if want to use Spring Validation or both.
+        3. Set <mvc:annotation-driven validator="validator" /> at the same time 
+           with lines below. This way you instantiate GLOBAL validator( will be
+           used for all controllers).
+        4. To set up per-controller validator use: 
+            @InitBinder
+            public void initBinder(WebDataBinder binder) {
+                binder.setValidator(new CustomValidator())   // mutually exclusive with previously instantiated global validator (won't be fired for this controller class)
+                binder.addValidators(new CustomValidator())  // cooperaters with global validator, order of fire up doesn't matter
+            }   
+        Note that for Spring Validator interface should specify <mvc:annotation-driver validator="spring-validator" />, but not compeletely assure
+        
+        <bean id="validator" class="org.springframework.validation.beanvalidation.LocalValidatorFactoryBean" />
+    -->
+    
+    <!-- solr -->    
+    <solr:solr-server id="reportsSolrServer" url="${solr.host}"
+                      timeout="15000" 
+                      maxConnections="16" />
+    
+    <bean id="solrTemplate" class="org.springframework.data.solr.core.SolrTemplate">
+        <constructor-arg ref="reportsSolrServer" />
     </bean>
     
-    <!-- EclipseLink JPA Dialect bean -->
-    <bean id="jpaDialect" class="org.springframework.orm.jpa.vendor.EclipseLinkJpaDialect" />
+    <aop:aspectj-autoproxy />
 
+    <!-- CGLIB proxy or Java Interface Proxy? -->
+    <task:annotation-driven />    
+        
+    <!-- security -->
+    <import resource="report-security.xml" />
+    
     <!-- Auto detect instrumentation jar from GlassFish, OC4J, Spring VM agent
     and (but through ReflectiveLoadTimeWeaver) TomcatInstrumentableClassLoader
     have to : weaver instrument on server (spring-agent.jar, org.springframework.instrument.jar, eclipselink.jar)
@@ -66,71 +181,5 @@
         2. manual set to <bean class="org.springframework.instrument.classloading.InstrumentationLoadTimeWeaver">
     -->
     <!--<context:load-time-weaver />-->
-        
-    <!-- EntityMangerFactory, will be used with @PersistenceContext(unitName = "in-settings") -->
-    <bean id="entityManagerFactory" class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
-        <property name="persistenceUnitName" value="reportPU" />
-        <property name="dataSource" ref="reportsDS" />
-        <!-- public class InstrumentationLoadTimeWeaver extends Object implements LoadTimeWeaver
-        
-        LoadTimeWeaver relying on VM Instrumentation.
-        Start the JVM specifying the Java agent to be used, like as follows:
 
-            -javaagent:path/to/org.springframework.instrument.jar
-
-        where org.springframework.instrument.jar is a JAR file containing the InstrumentationSavingAgent class, as shipped with Spring.
-
-        In Eclipse, for example, set the "Run configuration"'s JVM args to be of the form:
-
-            -javaagent:${project_loc}/lib/org.springframework.instrument.jar
-        -->
-        <!--
-        <property name="loadTimeWeaver">
-            <bean class="org.springframework.instrument.classloading.SimpleLoadTimeWeaver" />
-            <bean class="org.springframework.instrument.classloading.InstrumentationLoadTimeWeaver">
-        </property>
-        
-        http://www.stackoverflow.com/questions/10389354/eclipselink-and-spring-3-1
-        -->
-        <property name="jpaPropertyMap">
-            <props>
-                <prop key="eclipselink.weaving">false</prop>
-            </props>
-        </property>
-        <!-- an inner beans? -->
-        <property name="jpaDialect" ref="jpaDialect" />
-        <property name="jpaVendorAdapter" ref="jpaVendorAdapter" />
-    </bean>
-
-    <bean id="transactionManager" class="org.springframework.orm.jpa.JpaTransactionManager">
-        <property name="entityManagerFactory" ref="entityManagerFactory" />
-    </bean>
-    
-    <!-- @Transactional will be scanned at start-up of context -->
-    <tx:annotation-driven transaction-manager="transactionManager" />
-    
-<!--     @Cacheable will be scanned at srart-up of context 
-    <cache:annotation-driven cache-manager="cacheManager" mode="proxy" order="" />
-    
-    <bean id="cacheManager" class="org.springframework.cache.ehcache.EhCacheCacheManager">
-        <property name="cacheManager" ref="ehcache"/>
-    </bean>
- 
-     Ehcache library setup 
-    <bean id="ehcache" class="org.springframework.cache.ehcache.EhCacheManagerFactoryBean">
-        <property name="configLocation" value="classpath:ehcache-report.xml"/>
-    </bean>-->
-    
-    <!--     C3P0 pool? 
-    <bean id="c3p0reportDS" class="com.mchange.v2.c3p0.ComboPooledDataSource" destroy-method="close">
-        <property name="driverClass" value="com.mysql.jdbc.Driver" />
-        <property name="jdbcUrl" value="jdbc:mysql://localhost:3306/driftslogg" />
-        <property name="user" value="root" />
-        <property name="password" value="root" />
-        <property name="acquireIncrement" value="5" />
-        <property name="idleConnectionTestPeriod" value="60" />
-        <property name="maxPoolSize" value="100" />
-        <property name="maxStatements" value="50" />
-        <property name="minPoolSize" value="10" />
-    </bean>-->
 </beans>

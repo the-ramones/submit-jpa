@@ -1,0 +1,60 @@
+USE enterprise;
+
+SET AUTOCOMMIT = 0;
+DELETE FROM enterprise.reports;
+
+INSERT INTO reports VALUES
+    (1,DATE('2012-01-30'), DATE('2012-02-12'),'John Travolta', 'laundering'),
+    (2,DATE('2012-02-01'), DATE('2012-02-27'),'John Travolta', 'acting'),
+    (3,DATE('2012-05-30'), DATE('2012-06-12'),'John Travolta', 'acting'),
+    (4,DATE('2012-01-25'), DATE('2012-02-18'),'Leonardo DiCaprio', 'acting'),
+    (5,DATE('2012-03-30'), DATE('2012-07-12'),'Leonardo DiCaprio', 'acting'),
+    (6,DATE('2012-08-30'), DATE('2012-08-12'),'Leonardo DiCaprio', 'acting'),
+    (7,DATE('2012-01-30'), DATE('2012-04-12'),'Ben Affleck', 'directing'),
+    (8,DATE('2013-03-30'), DATE('2013-05-22'),'Ben Affleck', 'acting'),
+    (9,DATE('2013-01-30'), DATE('2013-02-12'),'Ben Affleck', 'scripting'),
+    (10,DATE('2012-11-28'), DATE('2012-12-19'),'Ben Affleck', 'acting'),
+    (11,DATE('2012-01-23'), DATE('2012-02-12'),'Matt Damon', 'scripting'),
+    (12,DATE('2012-02-21'), DATE('2012-03-01'),'Matt Damon', 'actinging'),
+    (13,DATE('2012-03-25'), DATE('2012-04-02'),'Matt Damon', 'chilling'),
+    (14,DATE('2012-04-24'), DATE('2012-05-03'),'Matt Damon', 'acting'),
+    (15,DATE('2012-05-24'), DATE('2012-06-04'),'George Clooney', 'acting'),
+    (16,DATE('2012-06-27'), DATE('2012-07-05'),'George Clooney', 'promoting'),
+    (17,DATE('2012-07-28'), DATE('2012-08-06'),'George Clooney', 'promoting'),
+    (18,DATE('2012-08-29'), DATE('2012-09-07'),'George Clooney', 'acting'),
+    (19,DATE('2012-09-13'), DATE('2012-10-08'),'Anne Hathaway', 'scoring'),
+    (20,DATE('2012-10-14'), DATE('2012-11-09'),'Anne Hathaway', 'scoring'),
+    (21,DATE('2012-11-14'), DATE('2012-12-15'),'Anne Hathaway', 'promoting'),
+    (22,DATE('2012-12-11'), DATE('2013-02-03'),'Anne Hathaway', 'acting'),
+    (23,DATE('2013-01-11'), DATE('2013-01-11'),'Brad Pitt', 'scripting'),
+    (24,DATE('2013-01-23'), DATE('2013-02-15'),'Brad Pitt', 'acting'),
+    (25,DATE('2013-02-23'), DATE('2013-03-16'),'Brad Pitt', 'scoring'),
+    (26,DATE('2013-03-02'), DATE('2013-04-17'),'Brad Pitt', 'promoting'),
+    (27,DATE('2013-01-12'), DATE('2013-02-25'),'Denzel Washington', 'acting'),
+    (28,DATE('2013-01-13'), DATE('2013-02-26'),'Denzel Washington', 'acting'),
+    (29,DATE('2013-02-14'), DATE('2013-04-27'),'Denzel Washington', 'producing'),
+    (30,DATE('2013-03-15'), DATE('2013-05-28'),'Denzel Washingtom', 'promoting'),
+    (31,DATE('2013-04-16'), DATE('2013-06-29'),'Zooye Dechannel', 'acting'),
+    (32,DATE('2013-05-17'), DATE('2013-06-30'),'Zooye Dechannel', 'singing'),
+    (33,DATE('2013-06-18'), DATE('2013-06-30'),'Zooye Dechannel', 'acting'),
+    (34,DATE('2013-01-19'), DATE('2013-06-30'),'Robert De Niro', 'acting'),
+    (35,DATE('2013-02-16'), DATE('2013-03-29'),'Robert De Niro', 'chilling'),
+    (36,DATE('2013-03-13'), DATE('2013-04-28'),'Al Pachino', 'acting'),
+    (37,DATE('2013-04-12'), DATE('2013-05-27'),'Al Pachino', 'acting'),
+    (38,DATE('2013-05-11'), DATE('2013-06-26'),'Dustin Hoffman', 'producing'),
+    (39,DATE('2013-06-02'), DATE('2013-06-25'),'Dustin Hoffman', 'acting'),
+    (40,DATE('2013-01-05'), DATE('2013-02-24'),'Tom Hanks', 'acting'),
+    (41,DATE('2013-02-06'), DATE('2013-03-23'),'Tom Hanks', 'acting'),
+    (42,DATE('2013-03-07'), DATE('2013-04-22'),'Bruce Willis', 'acting'),
+    (43,DATE('2013-04-03'), DATE('2013-05-14'),'Bruce Willis', 'producing'),
+    (44,DATE('2013-05-11'), DATE('2013-06-15'),'Kevin Costner', 'scripting'),
+    (45,DATE('2013-06-14'), DATE('2013-06-16'),'Kevin Costner', 'actinging'),
+    (46,DATE('2013-01-16'), DATE('2013-02-17'),'John Travolta', 'laundering'),
+    (47,DATE('2013-02-19'), DATE('2013-03-18'),'Will Smith', 'scripting'),
+    (48,DATE('2013-03-21'), DATE('2013-04-19'),'Will Smith', 'acting'),
+    (49,DATE('2013-03-03'), DATE('2013-05-13'),'Will Smith', 'producing'),
+    (50,DATE('2013-04-23'), DATE('2013-05-24'),'Will Smith', 'promoting');
+
+COMMIT;
+
+

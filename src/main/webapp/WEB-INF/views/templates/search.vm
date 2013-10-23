@@ -1,0 +1,333 @@
+## Real-time search template
+<div class="search-container clearfix" id="search">
+    <h2>#springMessage('content.search.title')</h2>
+    <form name="search-form" method="POST" action="#springUrl('/report/suggest')" >       
+            <input type="button" name="search-button" id="search_button" />
+            <input type="text" name="search" value="" placeholder="#springMessage('content.search.placeholder')" autocomplete="off" />
+            <div id="index-check">
+                <input id="suggest-checkbox" class="css-checkbox" type="checkbox" checked/>
+                <label for="suggest-checkbox" name="use-index-checkbox" class="css-label">#springMessage('content.suggest')</label>
+                <br />
+                <input id="use-index-checkbox" class="css-checkbox" type="checkbox" checked/>
+                <label for="use-index-checkbox" name="use-index-checkbox" class="css-label">#springMessage('content.useindex')</label>
+                <br />
+                <input id="only-recent-checkbox" class="css-checkbox" type="checkbox" />
+                <label for="only-recent-checkbox" name="use-index-checkbox" class="css-label">#springMessage('content.onlyrecent')</label>
+            </div>
+            <div id="progress-container">
+                <progress id="index-progress" value="0" max="100" style="display: none;"></progress>
+                <br />
+                <label for="index-progress" name="index-progress-label" style="display: none;"></label>
+            </div>
+            <ul class="subnav">
+            </ul>       
+    </form>
+    <p class="stats invisible">#springMessage('content.search.result'): <span></span> (<span></span> #springMessage('content.search.second').) </p>    
+</div>
+
+#hint()
+
+<div class="results-wrap clearfix">
+  
+</div>
+
+<script type="text/javascript">
+
+    /*
+     * Dynamic html elements
+     */
+    var tableHtml = '#dynamic_table()';
+    var rowHtml = '#dynamic_row()';
+    var buttonHtml = '#dynamic_button_group()';
+    
+    /*
+     * Suggest url
+     */
+    var promptUrl = "#springUrl('/report/suggest/ajax/prompt')";
+    var promptStringsUrl = "#springUrl('/report/suggest/ajax/prompt-strings')";
+    var suggestUrl = "#springUrl('/report/suggest/ajax')";
+    var addToChecklistUrl = "#springUrl('/report/ajax/watch')";
+
+    /*
+     * Constants
+     */
+    var limit = 10;
+
+    /*
+     * Messages
+     */
+    var NOTHING_FOUND = "#springMessage('search.nothingfound')";
+    var SELECT_ONE_MSG = "#springMessage('checklist.selectone')";
+    var ADDED_TO_CHECKLIST_MSG = "#springMessage('checklist.added')";
+    var NOTADDED_TO_CHECKLIST_MSG = "#springMessage('checklist.notadded')";
+    var CONTENT_NOTHING_FOUND = "#springMessage('content.notfound')";
+    
+    var INDEXING = "#springMessage('search.indexing')";
+
+#[[
+    /*
+     * Search Button action
+     */
+    $("#search_button").click(function(e) {
+        /*
+         * query string
+         */
+        var suggest = document.getElementById("suggest-checkbox").checked;
+        var useIndex = document.getElementById("use-index-checkbox").checked;
+        var onlyRecent = document.getElementById("only-recent-checkbox").checked;        
+        var query = 'query=' + encodeURI($("input[name='search']").val().trim()
+            + '&limit=' + limit + '&useIndex=' + useIndex + '&recent=' + onlyRecent
+            + '&suggest=' + suggest);
+        //TODO: timings
+        search_lock = true;
+        upload();
+        var startTime = new Date();
+        $.ajax(suggestUrl, {
+            method: "POST",
+            async: true,
+            cache: false,
+            data: query,            
+            complete: function(data) {
+                unload();
+                hidePrompts();
+                var requestTime = (new Date()) - startTime;
+                var formattedRequestTime = parseInt(requestTime / 1000) + ',' + (requestTime % 1000);
+                $("p.stats span:last").text(formattedRequestTime);
+                search_lock = false;
+            },
+            error: function() {
+                $("p.stats span:first").text(NOTHING_FOUND);
+                $("p.stats").removeClass("invisible");
+                console.log("Error in ajax request to Suggest service");
+            },
+            success: onSearchSuccess,
+            dataType: 'json'
+        });
+    });
+
+    var search_lock = false;
+
+    function onSearchSuccess(resultsPager) {
+        $('body').addClass('stop-scrolling')
+        var $results = $(".results-wrap");
+        $results.empty();
+        var bound = resultsPager.results.length;
+        if (bound > 0) {
+            if ($("table.table").size() === 0) {
+                $(tableHtml).appendTo($results);
+            }        
+            var $table = $results.find(".table tbody");
+            for (var i = 0; i < bound; i++) {
+                var report = resultsPager.results[i];
+                var $row = $(rowHtml);
+                $children = $row.children();
+                $children.get(0).innerHTML = report.id;
+                $children.get(1).innerHTML = formatDate(new Date(report.startDate));
+                $children.get(2).innerHTML = formatDate(new Date(report.startDate));
+                $children.get(3).innerHTML = report.performer;
+                $children.get(4).innerHTML = report.activity;
+                $row.data("id", report.id);
+                $table.append($row);
+            }
+            $results.append($(buttonHtml));
+            /*
+            * On-click modal appearing
+            */
+            $(".table tbody tr").click(function(event) {
+                $(this).toggleClass("selected");
+            });
+            var onlyRecent = document.getElementById("only-recent-checkbox").checked;        
+            if (!onlyRecent) {
+                if (resultsPager.pager.pageCount > 1) {
+                    var $pager = lazy_pager(resultsPager.pager);
+                    $pager.insertBefore($('#addToWatchlist'));
+                }
+            }
+            /*
+             * Add actions to page links, except 'curent' page
+             */
+            $('.pagination ul li a').not('.current').click(function(e) {
+                pageClickAction(this);
+            });
+        } else {
+            $results.text(CONTENT_NOTHING_FOUND);
+        }
+        $("p.stats span:first").text(bound);
+        $("p.stats").removeClass("invisible");
+        unload();
+
+        $('body').removeClass('stop-scrolling')
+    }
+
+    function upload(base) {
+       var $load = $("<div id='ajax-overlay'></div>");
+       if (base == undefined) {
+           $("body").append($load);
+       } else {
+           $(base).append($load);
+       }
+       $load.fadeIn();
+    }
+
+    function unload() {
+        $("#ajax-overlay").fadeOut();
+        $("#ajax-overlay").remove();
+    }  
+   
+    const DEFAULT_PROMPT_COUNT_LIMIT = 8;
+    const SUGGEST_VALID_CHARS_REGEXP = new RegExp('^[ 0-9a-zа-я-#@%&\\$]{1,255}(?!-)$', 'i');
+
+    $(document).ready(function() {
+
+    // IE fix, make focused only if visibility = true
+    $('input[name="search"]').focus();
+    /*
+     * Prevent default on-click form submission
+     */
+    $('form[name="search-form"]').keypress(function(e) {
+        if (e.which === 13) {
+            e.preventDefault();
+            return false;
+        }
+    });
+     
+    /*
+     * Suggests
+     */        
+    $("input[name='search']").keyup(function(event) {
+        if (event.which === 13) {
+            event.preventDefault();
+            $("#search_button").click();
+            return false;
+        }
+        var uIndex = document.getElementById("use-index-checkbox").checked;
+        if ([33,34,37,38,39,40].indexOf(event.which) === -1) {
+            if (!search_lock) {
+                if ($("#suggest-checkbox").is(":checked")) {            
+                    var query = $('input[name="search"]').val();            
+                    var queryTrimmed = query.trim();
+                    if (queryTrimmed !== '' && SUGGEST_VALID_CHARS_REGEXP.test(queryTrimmed)) {
+                        $.ajax(promptStringsUrl, { 
+                            method: "POST",                  
+                            async: true,
+                            cached: false,
+                            dataType: 'json',
+                            data: {'query': query, limit: DEFAULT_PROMPT_COUNT_LIMIT, useIndex: uIndex},
+                                success: makeSuggest
+                        });
+                    } else {
+                        var $base = $('.subnav');
+                        $base.empty();
+                    }
+                }
+            }
+        }
+    });
+
+    });
+
+    function makeSuggest(prompts) {
+        var $base = $('.subnav');
+        $base.empty();
+        var bound = prompts.length;
+        for (var i = 0; i < bound; i++) {
+            var prompt = prompts[i];
+            var $suggest = $('<a>');
+            $suggest.attr('href', '#');
+            $suggest.html(prompt);
+            var $wrapper = $("<li>");
+            $wrapper.html($suggest);
+            $base.append($wrapper);
+        }
+        $(".subnav li").css({
+            visibility: 'visible',
+            top: '120%',
+            opacity: "1",
+            transition: "all"
+        });
+        $("body").click(function(e) {
+            $(".subnav li").css({
+               visibility: 'hidden'});
+        });
+    }
+
+function progress($pbar) {
+    /*
+     * Prevent unneccesary 'bounce' scrolling
+     */
+    $("html").addClass("stop-scrolling");
+    var time = 10;
+    var max = parseInt($pbar.attr('max'));
+    var percent = max / 100;
+    var animate = function() {
+        var value = parseInt($pbar.attr('value'));
+        if (value <= max) {
+            $pbar.attr('value', value + 1 * percent);
+            $('label[name="index-progress-label"]').html(INDEXING + value + '%');
+        } else {
+            clearInterval(interval);
+            $pbar.attr('value', 0);
+            $pbar.hide();
+            $('label[name="index-progress-label"]').hide();
+            /*
+             * Activate suggest feature after successful indexing completion on
+             * the server
+             */
+        }
+    };
+    var interval = setInterval(function() {
+        animate();
+    }, time);
+    $("html").removeClass("stop-scrolling");
+}
+
+    function pageClickAction(page) {
+        var $page = $(page);
+        var p = $page.data('page');
+        loadPage(p);
+    }
+
+    function loadPage(page) {
+        //TODO: timings
+        search_lock = true;
+        upload('.results-wrap');
+
+        var useIndex = document.getElementById("use-index-checkbox").checked;
+        var query = 'query=' + encodeURI($("input[name='search']").val().trim()
+            + '&limit=' + limit + '&useIndex=' + useIndex + '&p=' + page);
+        var startTime = new Date();
+        $.ajax(suggestUrl, {
+            method: "POST",
+            async: true,
+            cache: false,
+            data: query,            
+            complete: function(data) {
+                unload();
+                hidePrompts();
+                var requestTime = (new Date()) - startTime;
+                var formattedRequestTime = parseInt(requestTime / 1000) + ',' + (requestTime % 1000);
+                $("p.stats span:last").text(formattedRequestTime);
+                search_lock = false;
+            },
+            error: function() {
+                $("p.stats span:first").text(NOTHING_FOUND);
+                $("p.stats").removeClass("invisible");
+                console.log("Error in ajax request to Suggest service");
+            },
+            success: onSearchSuccess,
+            contentType: 'application/x-www-form-urlencoded; charset=UTF-8',
+            mimeType: "application/json; charset=UTF-8",
+            dataType: 'json'
+        });
+    }
+
+    function hidePrompts() {
+        $(".subnav li").css({
+            visibility: 'hidden'}
+        );
+    }
+    
+]]#
+</script>
+
+<script type="text/javascript" src="#springUrl('/resources/js/pager.js')"></script>

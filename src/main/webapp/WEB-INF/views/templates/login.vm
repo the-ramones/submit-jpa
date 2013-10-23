@@ -1,0 +1,24 @@
+<div class="form-container">
+    <h2>#springMessage('content.login.title')</h2>
+    <form name="login-form" method="POST" action="#springUrl('/j_spring_security_check')">
+        <div class="form-line clearfix">
+            <label for="j_username">#springMessage('content.login.caption.username')</label>
+            <input type="text" id="j_username" name="j_username" placeholder="#springMessage('content.login.placeholder.username')" autocomplete="off">
+        </div>
+        <div class="form-line clearfix">
+            <label for="j_password">#springMessage('content.login.caption.password')</label>
+            <input type="password" id="j_password" name="j_password" placeholder="#springMessage('content.login.placeholder.password')" autocomplete="off">
+        </div>
+        <div class="form-line clearfix">
+            <label for="_spring_security_remember_me">#springMessage('content.login.caption.rememberme')</label>
+            <input type="checkbox" name="_spring_security_remember_me" autocomplete="off"/>
+        </div>
+        <input name="login-submit" class="btn" type="submit" value="#springMessage('content.login.button.signin')"/>
+    </form>    
+</div>
+<script type="text/javascript">
+    document.getElementById("j_username").focus();
+</script>     
+
+#hint()
+     

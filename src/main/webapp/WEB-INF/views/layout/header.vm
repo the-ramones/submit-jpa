@@ -1,0 +1,33 @@
+<a href="#springUrl('/home')"><div id="logo"></div></a>
+<h1 class="title">#springMessage("title")</h1>   
+<div id="nav">
+    <ul>
+        <li><a href="#springUrl('/home')">#springMessage("menu.home")</a></li>
+        <li><a href="#springUrl('/report?new_search')">#springMessage("menu.reports")</a>
+            <ul>
+                <li><a href="#springUrl('/report/add')">#springMessage("menu.report.add")</a></li>
+                <li><a href="#springUrl('/report/search?new_search')">#springMessage("menu.report.build")</a>
+                    <ul>
+                        <li><a href="#springUrl('/report/search?new_search')">#springMessage("menu.report.build.search")</a></li>
+                        <li><a href="#springUrl('/report/detail')">#springMessage("menu.report.build.detail")</a></li>
+                        <li><a href="#springUrl('/registry?new')">#springMessage("menu.report.build.registry")</a></li>
+                    </ul>
+                </li>
+                <li><a>#springMessage("menu.search")</a>
+                    <ul>
+                        <li><a href="#springUrl('/report/suggest')">#springMessage("menu.report.ajax")</a></li>
+                        <li><a href="#springUrl('/suggest-solr')">#springMessage("menu.solr")</a></li>                        
+                    </ul>
+                </li>
+                <li><a href="#springUrl('/admin')">#springMessage('menu.manager')</a></li>
+            </ul>
+        </li>        
+        <li><a  href="#springUrl('/contact')">#springMessage("menu.contact")</a>
+            <ul>
+                <li><a href="#springUrl('/instruction')">#springMessage("menu.contact.instructions")</a></li>
+                <li><a href="#springUrl('/contact')">#springMessage("menu.contact.contacts")</a></li>
+                <li><a href="#springUrl('/about')">#springMessage("menu.contact.about")</a></li>
+            </ul>
+        </li>
+    </ul>
+</div>

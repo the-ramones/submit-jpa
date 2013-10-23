@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ehcache xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+         xsi:noNamespaceSchemaLocation="ehcache.xsd"
+         updateCheck="false"
+         monitoring="off" 
+         dynamicConfig="false"
+         maxBytesLocalHeap="128M"
+         maxBytesLocalOffHeap="256M"
+         maxBytesLocalDisk="512M"    
+         name="enterpriseCacheManager">
+    
+    <diskStore path="user.home/ehcache/enterprise-diskstore" />
+    
+    <defaultCache
+        maxElementsInMemory="10000"     
+        eternal="false"
+        timeToIdleSeconds="120"
+        timeToLiveSeconds="360"
+        overflowToDisk="false"
+        memoryStoreEvictionPolicy="LRU"
+    />
+    
+    <!-- entity caches -->
+    <cache name="enterprise.hibernate.Report"
+           maxBytesLocalHeap="64M"
+           maxBytesLocalOffHeap="128M"
+           maxBytesLocalDisk="368M"
+           eternal="true"
+           diskSpoolBufferSizeMB="32"
+           timeToIdleSeconds="0"
+           timeToLiveSeconds="0"
+           memoryStoreEvictionPolicy="LFU"
+           transactionalMode="xa"
+    >
+        <persistence strategy="localTempSwap" synchronousWrites="false"/>
+    </cache>
+    <!-- use "localRestartable" in BigMemory Go (for fast recovery of cache) -->
+    
+    <!-- hibernate query caches -->
+    <cache name="org.hibernate.cache.StandardQueryCache"
+           maxBytesLocalHeap="48M"
+           maxBytesLocalOffHeap="80M"
+           maxBytesLocalDisk="144M"
+           eternal="false" 
+           timeToIdleSeconds="3600"
+           timeToLiveSeconds="3600"
+           memoryStoreEvictionPolicy="FIFO">
+        <persistence strategy="localTempSwap" synchronousWrites="false"/>
+    </cache>
+
+    <!-- for hibernate first-level cache -->
+    <cache name="org.hibernate.cache.UpdateTimestampsCache"
+           maxBytesLocalHeap="16M"
+           maxBytesLocalOffHeap="48M"
+           overflowToOffHeap="true"
+           eternal="true">
+    </cache>
+    
+    <transactionManagerLookup
+        class= "net.sf.ehcache.transaction.manager.DefaultTransactionManagerLookup"
+        properties="" propertySeparator=":"/>
+
+</ehcache>

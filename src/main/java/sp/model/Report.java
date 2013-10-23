@@ -7,22 +7,70 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Past;
+import javax.validation.constraints.Pattern;
+import javax.validation.constraints.Size;
+import javax.xml.bind.annotation.XmlRootElement;
+import org.apache.solr.client.solrj.beans.Field;
+import org.hibernate.validator.constraints.NotEmpty;
+import org.springframework.format.annotation.DateTimeFormat;
+import sp.model.searchable.ReportSearchable;
+import sp.validation.ReportDate;
+import sp.validation.ValidReport;
 
 /**
- *
- * @author the-ramones
+ * Report entity
+ * 
+ * @author Paul Kulitski
  */
 @Entity
 @Table(name = "reports", schema = "enterprise")
-public class Report implements Serializable {
+@NamedQueries({
+    @NamedQuery(name = "Report.getPerformers", query = "select distinct r.performer from Report r"),
+    @NamedQuery(name = "Report.getReportsByPerformer", query = "select r from Report r where r.performer = :performer"),
+    @NamedQuery(name = "Report.getReports", query = "select r from Report r where r.performer = :performer and r.startDate >= :startDate and r.endDate <= :endDate"),
+    @NamedQuery(name = "Report.getReportsByPeriod", query = "select r from Report r where r.startDate >= :startDate and r.endDate <= :endDate"),    
+    @NamedQuery(name = "Report.getReportsByIds", query = "select r from Report r where r.id IN :ids"),
+    @NamedQuery(name = "Report.hasReport", query = "select r from Report r where r.id = :id"),
+    @NamedQuery(name = "Report.hasReports", query = "select count(r) from Report r where r.id IN :ids"),
+    @NamedQuery(name = "Report.removeReport", query = "delete from Report r where r.id = :id"),
+    @NamedQuery(name = "Report.getAllReports", query = "select r from Report r")
+})
+@XmlRootElement
+@ValidReport
+public class Report implements Serializable, ReportSearchable {
 
+    @Field(ReportSearchable.ID_FIELD)
     private Long id;
+    
+    @NotNull()
+    @Past() 
+    @DateTimeFormat(pattern = "dd MMM yyyy")
+    @ReportDate
+    @Field(ReportSearchable.START_DATE_FIELD)
     private Date startDate;
-    private Date endDate;
+    
+    @DateTimeFormat(pattern = "dd MMM yyyy")
+    @ReportDate
+    @Field(ReportSearchable.END_DATE_FIELD)
+    private Date endDate; 
+    
+    @NotEmpty()
+    @Size(min = 1, max = 255)
+    @Pattern(regexp = "^(?iu)[a-zа-я][ 0-9a-zа-я-#@%&\\$]{1,255}(?<!-)$")
+    @Field(ReportSearchable.PERFORMER_FIELD)
     private String performer;
+    
+    @NotEmpty()
+    @Size(min = 1, max = 255)
+    @Pattern(regexp = "^(?iu)[a-zа-я0-9 #@%&\\$]{1,255}(?<!-)$")
+    @Field(ReportSearchable.ACTIVITY_FIELD)
     private String activity;
 
     @Id
@@ -110,5 +158,10 @@ public class Report implements Serializable {
             return false;
         }
         return true;
+    }
+
+    @Override
+    public String toString() {
+        return "Report{" + "id=" + id + ", startDate=" + startDate + ", endDate=" + endDate + ", performer=" + performer + ", activity=" + activity + '}';
     }
 }

@@ -1,0 +1,181 @@
+## Reports! Modal Velocity Macros
+
+#*
+ * Uses 'uri' variable from the context was called to show uri 
+ *#
+#macro ( modal_uri $uri )
+    <h2>#springMessage('modal.reporturi'):</h2> \
+    <input type="text" value="$!uri" style="width: 100%"> \
+    <div class="modal-block"> \
+        <div class="button-block-modal"> \
+            <button id="close-btn" class="action delete">#springMessage('button.close')</button> \
+        </div> \
+    </div> \
+#end
+
+#*
+ * Detailed information information
+ *#
+#macro ( modal_action )
+<div> \
+<h2>#springMessage('content.activity') №<span></span></h2> \
+<dl class="dl-horizontal"> \
+    <dt>id</dt> \
+    <dd id="id"></dd> \
+</dl> \
+<dl class="dl-horizontal"> \
+    <dt>#springMessage("content.detail.start")</dt> \
+    <dd id="startDate"></dd> \
+</dl> \
+<dl class="dl-horizontal"> \
+    <dt>#springMessage("content.detail.end")</dt> \
+    <dd id="endDate"></dd> \
+</dl> \
+<dl class="dl-horizontal"> \
+    <dt>#springMessage("content.detail.performer")</dt> \
+    <dd id="performer"></dd> \
+</dl> \
+<dl class="dl-horizontal"> \
+    <dt>#springMessage("content.detail.activity")</dt> \
+    <dd id="activity"></dd> \
+</dl> \
+<input type="text" value="" name="uri" style="width:320px;"><br /> \
+<div class="modal-block"> \
+    <div class="button-block-modal"> \
+        <button id="close-btn" class="action delete">#springMessage('button.close')</button> \
+    </div> \
+</div> \
+</div> \
+#end
+
+#*
+ * Add form template
+ *#
+#macro ( modal_add )
+<h2>#springMessage('content.add.title')</h2> \
+<p class="error error-block">#springShowErrors("<br/>" "")</p> \
+<form name="report-add"> \
+    <div class="form-line clearfix"> \
+        <label for="startDate">#springMessage('content.add.caption.start'):</label> \
+        <input id="startDate" name="startDate" value="" type="text" placeholder="#springMessage('content.add.placeholder.start')" autocomplete="off"> \
+        <label for="startDate" class="error">#springShowErrors("<br/>" "")</label> \
+    </div> \
+    <div class="form-line clearfix"> \
+        <label for="endDate">#springMessage('content.add.caption.end'):</label> \
+        <input id="endDate" name="endDate" value="" type="text" placeholder="#springMessage('content.add.placeholder.end')" autocomplete="off"> \
+        <label for="endDate" class="error">#springShowErrors("<br/>" "")</label> \
+    </div> \
+    <div class="form-line clearfix"> \
+        <label for="performer">#springMessage('content.add.caption.performer'):</label> \
+        <input id="performer" name="performer" value="" type="text" placeholder="#springMessage('content.add.placeholder.performer')"> \
+        <label for="performer" class="error">#springShowErrors("<br/>" "")</label> \
+    </div>  \
+ \
+    <div class="form-line clearfix"> \
+        <label for="activity">#springMessage('content.add.caption.activity'):</label> \
+        <input id="activity" name="activity" value="" type="text" placeholder="#springMessage('content.add.placeholder.activity')">      \
+        <label for="activity" class="error">#springShowErrors("<br/>" "")</label> \
+    </div> \
+    <div class="clearfix"> \
+        <div class="button-block-modal"> \
+            <button id="add-btn" class="action" name="report-submit" type="submit">#springMessage('button.add')</button> \
+            <button id="close-btn" class="action delete">#springMessage('button.close')</button> \
+        </div> \
+    </div> \
+</form>        \
+#end
+
+#*
+ * Update form template
+ *#
+#macro ( modal_update ) 
+<div> \
+<h2>#springMessage('content.update.title')</h2> \
+<h2>#springMessage('content.activity') №<span></span></h2> \
+ \
+<p class="error error-block">#springShowErrors("<br/>" "")</p> \
+<form name="report-update"> \
+    <div class="form-line clearfix"> \
+        <label for="startDate">#springMessage('content.add.caption.start'):</label> \
+        <input id="startDate" name="startDate" value="" type="text" placeholder="#springMessage('content.add.placeholder.start')" autocomplete="off"> \
+        <label for="startDate" class="error">#springShowErrors("<br/>" "")</label> \
+    </div> \
+    <div class="form-line clearfix"> \
+        <label for="endDate">#springMessage('content.add.caption.end'):</label> \
+        <input id="endDate" name="endDate" value="" type="text" placeholder="#springMessage('content.add.placeholder.end')" autocomplete="off"> \
+        <label for="endDate" class="error">#springShowErrors("<br/>" "")</label> \
+    </div> \
+    <div class="form-line clearfix"> \
+        <label for="performer">#springMessage('content.add.caption.performer'):</label> \
+        <input id="performer" name="performer" value="" type="text" placeholder="#springMessage('content.add.placeholder.performer')"> \
+        <label for="performer" class="error">#springShowErrors("<br/>" "")</label> \
+    </div>  \
+ \
+    <div class="form-line clearfix"> \
+        <label for="activity">#springMessage('content.add.caption.activity'):</label> \
+        <input id="activity" name="activity" value="" type="text" placeholder="#springMessage('content.add.placeholder.activity')">      \
+        <label for="activity" class="error">#springShowErrors("<br/>" "")</label> \
+    </div> \
+    <div class="clearfix"> \
+        <div class="button-block-modal"> \
+            <button id="update-btn" class="action" name="report-submit" type="submit">#springMessage('button.action.update')</button> \
+            <button id="close-btn" class="action delete">#springMessage('button.close')</button> \
+        </div> \
+    </div> \
+</form>        \
+</div> \
+#end
+
+#*
+ * Delete form template
+ *#
+#macro ( modal_delete )
+<div> \
+<h2>#springMessage("content.delete.title")</h2> \
+<h2>#springMessage('content.activity') №<span></span></h2> \
+<dl class="dl-horizontal"> \
+    <dt>id</dt> \
+    <dd id="id"></dd> \
+</dl> \
+<dl class="dl-horizontal"> \
+    <dt>#springMessage("content.detail.start")</dt> \
+    <dd id="startDate"></dd> \
+</dl>  \
+<dl class="dl-horizontal"> \
+    <dt>#springMessage("content.detail.end")</dt> \
+    <dd id="endDate"></dd> \
+</dl> \
+<dl class="dl-horizontal"> \
+    <dt>#springMessage("content.detail.performer")</dt> \
+    <dd id="performer"></dd> \
+</dl> \
+<dl class="dl-horizontal"> \
+    <dt>#springMessage("content.detail.activity")</dt> \
+    <dd id="activity"></dd> \
+</dl> \
+<div class="clearfix"> \
+    <span class="modal-span">#springMessage('modal.delete.assure')</span> \
+    <div class="button-block-modal"> \
+        <button id="confirm-btn" class="action">#springMessage('content.yes')</button> \
+        <button id="close-btn" class="action delete">#springMessage('content.no')</button> \
+    </div> \
+</div> \
+</div> \
+#end
+
+#macro ( modal_stats )
+<div class="statistics"> \
+    <h2>#springMessage('modal.stats.title')</h2> \
+    <span>#springMessage('modal.stats.count.performers'):</span><span></span> \
+    <textarea class="clearfix"></textarea> \
+    <span>#springMessage('modal.stats.count.activities'):</span><span></span> \
+    <textarea class="clearfix"></textarea> \
+    <label>#springMessage('modal.stats.avgrange'):</label> \
+    <span id="avg"></span><span>#springMessage('modal.stats.days')</span> \
+    <div class="modal-block"> \
+        <div class="button-block-modal"> \
+            <button id="close-btn" class="action delete">#springMessage('button.close')</button> \
+        </div> \
+    </div> \
+</div> \
+#end

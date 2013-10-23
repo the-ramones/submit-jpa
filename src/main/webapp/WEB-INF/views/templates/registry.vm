@@ -1,0 +1,36 @@
+<div class="form-container" style="width: 98%">
+    ## registry list template
+    #if($registry-pager)
+    <h2>#springMessage('registry.title')</h2>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>id</th>
+                <th>#springMessage('registry.table.user')</th>
+                <th>#springMessage('registry.table.op')</th>
+                <th>#springMessage('registry.table.time')</th>
+            </tr>
+            </thead>
+        <tbody>
+        #if($registers)
+            #foreach($register in $registers)
+            <tr>                
+                <td>${register.id.id}</td>
+                <td>${register.user.fullname}</td>
+                <td>${register.op.title}</td>
+                <td>$datetool.format( 'dd MMM yyyy', ${register.recordTime} )</td>
+            </tr>        
+            #end
+        #end
+        </tbody>        
+    </table>
+    #else
+        #springMessage('content.notfound')
+    #end
+
+    #if($registry-pager)
+        #if($registry-pager.getPageCount() gt 1)
+            #lazy_pager($registry-pager)    
+        #end
+    #end
+</div>

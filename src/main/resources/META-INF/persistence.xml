@@ -1,9 +1,27 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <persistence version="2.0" xmlns="http://java.sun.com/xml/ns/persistence" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://java.sun.com/xml/ns/persistence http://java.sun.com/xml/ns/persistence/persistence_2_0.xsd">
-    <persistence-unit name="reportPU" transaction-type="RESOURCE_LOCAL">
-        <description>Reports Not-JTA application PU</description>
-        <provider>org.eclipse.persistence.jpa.PersistenceProvider</provider>
-        <class>sp.model.Report</class>
-        <exclude-unlisted-classes>true</exclude-unlisted-classes>
-    </persistence-unit>
+  <persistence-unit name="reportPU" transaction-type="JTA">
+    <description>Reports Non-JTA application PU</description>
+    <!--<jta-data-source>jdbc/enterpriseDS</jta-data-source>-->
+    <provider>org.hibernate.ejb.HibernatePersistence</provider>
+    <class>sp.model.Report</class>
+    <exclude-unlisted-classes>true</exclude-unlisted-classes>
+    <properties>
+      <!--<property name="hibernate.transaction.jta.platform" value="org.hibernate.service.jta.platform.internal.BitronixJtaPlatform" />-->
+      <property name="hibernate.archive.autodetection" value="class"/>
+    </properties>
+  </persistence-unit>
+  <persistence-unit name="registryPU" transaction-type="JTA">
+    <description>Reports service Non-JTA application PU</description>
+    <!--<jta-data-source>jdbc/registryDS</jta-data-source>-->
+    <provider>org.hibernate.ejb.HibernatePersistence</provider>
+    <class>sp.model.Op</class>
+    <class>sp.model.Register</class>
+    <class>sp.model.User</class>
+    <exclude-unlisted-classes>true</exclude-unlisted-classes>
+    <properties>
+      <!--<property name="hibernate.transaction.jta.platform" value="org.hibernate.service.jta.platform.internal.BitronixJtaPlatform" />-->
+      <property name="hibernate.archive.autodetection" value="class"/>
+    </properties>
+  </persistence-unit>
 </persistence>
