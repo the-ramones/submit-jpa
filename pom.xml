@@ -294,7 +294,7 @@
                 </executions>
             </plugin>
             <!-- Test Servers -->
-                   <plugin>
+            <plugin>
                 <groupId>org.mortbay.jetty</groupId>
                 <artifactId>jetty-maven-plugin</artifactId>
                 <version>8.1.8.v20121106</version>
@@ -311,7 +311,7 @@
                     <!-- Read system properties from profile specific configuration file -->
                     <systemPropertiesFile>${project.basedir}/profiles/${build.profile.id}/config.properties</systemPropertiesFile>
                     <webApp>
-                        <contextPath>/solr</contextPath>
+                        <contextPath>/sp</contextPath>
                     </webApp>
                 </configuration>
             </plugin>
@@ -321,7 +321,7 @@
                 <artifactId>tomcat7-maven-plugin</artifactId>
                 <version>2.1</version>
                 <configuration>
-                    <path>/solr</path>                    
+                    <path>/sp</path>                    
                     <port>8090</port>
                     <mode>war</mode>                    
                     <charset>UTF-8</charset>
@@ -331,9 +331,9 @@
                     <solr.default.core.name>${solr.default.core.name}</solr.default.core.name>
                     <solr.solr.home>${user.home}/${solr.solr.home}</solr.solr.home>
                     <server>maven-tomcat</server>
-                    <tomcatUsers>${project.basedir}/profiles/${build.profile.id}/tomcat-users.xml</tomcatUsers>
+                    <!--                    <tomcatUsers>${project.basedir}/profiles/${build.profile.id}/tomcat-users.xml</tomcatUsers>
                     <username>netbeans</username>
-                    <password>netbeans</password>
+                    <password>netbeans</password>-->
                 </configuration>
             </plugin>
             <!-- Maven Tomcat 6 -->
@@ -342,21 +342,30 @@
                 <artifactId>tomcat6-maven-plugin</artifactId>
                 <version>2.1</version>
                 <configuration>                    
-                    <path>/solr</path>                    
-                    <port>8089</port>
+                    <path>/sp</path>                    
+                    <port>8090</port>
                     <mode>war</mode>                    
                     <charset>UTF-8</charset>
                     <update>true</update>
-                    <url>http://localhost:8089/manager</url>
+                    <url>http://localhost:8080/manager</url>
                     <systemProperties>
                         <solr.default.core.directory>${solr.default.core.directory}</solr.default.core.directory>
                         <solr.default.core.name>${solr.default.core.name}</solr.default.core.name>
                         <solr.solr.home>${solr.solr.home}</solr.solr.home>
                     </systemProperties>
                     <server>maven-tomcat6</server>
-                    <tomcatUsers>${project.basedir}/profiles/${build.profile.id}/tomcat-users.xml</tomcatUsers>
+<!--                    <webapps> 
+                        <webapp> 
+                            <groupId>reports</groupId> 
+                            <artifactId>reports-solr</artifactId> 
+                            <version>0.1.1</version> 
+                            <type>war</type>    
+                            <asWebapp>true</asWebapp> 
+                        </webapp> 
+                    </webapps> -->
+                    <!-- <tomcatUsers>${project.basedir}/profiles/${build.profile.id}/tomcat-users.xml</tomcatUsers>
                     <username>netbeans</username>
-                    <password>netbeans</password>
+                    <password>netbeans</password>-->
                 </configuration>
             </plugin>
         </plugins>

@@ -32,4 +32,18 @@
                 <netbeans.deploy.clientUrlPart></netbeans.deploy.clientUrlPart>
             </properties>
         </action>
+        <action>
+            <actionName>CUSTOM-tomcat6-run-war</actionName>
+            <displayName>tomcat6-run-war</displayName>
+            <goals>
+                <goal>tomcat6:run-war</goal>
+            </goals>
+        </action>
+        <action>
+            <actionName>CUSTOM-tomcat6-shutdown</actionName>
+            <displayName>tomcat6-shutdown</displayName>
+            <goals>
+                <goal>tomcat6:shutdown</goal>
+            </goals>
+        </action>
     </actions>
