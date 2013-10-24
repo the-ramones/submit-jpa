@@ -20,6 +20,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.beans.support.PagedListHolder;
+import org.springframework.context.annotation.DependsOn;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -37,6 +38,7 @@ import sp.model.Report;
 import sp.service.ReportService;
 import sp.util.SpHasher;
 import sp.util.SpSortDefinition;
+import sp.util.service.SolrAdministrator;
 
 /**
  * Report controller for synchronous actions
@@ -60,6 +62,11 @@ public class ReportController {
     private int CHECKLIST_INITIAL_CAPACITY = 32;
     @Inject
     private ReportService reportService;
+
+    @ModelAttribute("page_key")
+    public String referenceData() {
+        return "title.reports";
+    }
 
     @PostConstruct
     public void postConstruct() {

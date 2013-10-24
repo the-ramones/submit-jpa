@@ -73,8 +73,7 @@
          </div>
     </div>
 </div>
-
-
+#set($page_title = 'Admin')
 
 <script type="text/javascript">
     

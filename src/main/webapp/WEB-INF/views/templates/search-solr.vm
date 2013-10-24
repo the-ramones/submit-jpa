@@ -37,6 +37,8 @@
 </div>
 #end
 
+#set($page_title = 'Solr search')
+
 <div class="results-wrap clearfix">
   
 </div>

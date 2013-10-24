@@ -23,6 +23,8 @@
     </form>    
 </div>
 
+#set($page_title = 'Logout')
+
 <script type="text/javascript">
 </script>     
 

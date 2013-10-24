@@ -19,7 +19,7 @@ public class SolrServiceImpl implements SolrService {
 
     @Inject
     SolrRepository solrRepository;
-
+    
     @Override
     public Page<Report> searchByPerformer(String query) {
         return solrRepository.searchByPerformer(query);

@@ -45,6 +45,7 @@
 
 </div>
 
+#set($page_title = 'Results')
 
 <script type="text/javascript">
 

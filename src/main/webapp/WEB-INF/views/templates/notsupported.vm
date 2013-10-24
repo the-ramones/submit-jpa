@@ -1,1 +1,2 @@
 #springMessage("content.notsupported.title")
+#set($page_title = 'Not supported')

@@ -19,6 +19,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.CookieValue;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -48,6 +49,11 @@ public class ChecklistController {
     private UserService userService;
     @Inject
     private EmailService emailService;
+
+    @ModelAttribute("page_key")
+    public String referenceData() {
+        return "title.checklist";
+    }
 
     /**
      * Checks User session for 'checklist' set with IDs of checked-for-later
@@ -147,7 +153,6 @@ public class ChecklistController {
         }
         return null;
     }
-    
     private static final String JSESSIONID_KEY = "JSESSIONID";
 
     @RequestMapping(value = "email", method = RequestMethod.GET)
@@ -196,7 +201,7 @@ public class ChecklistController {
 
                 //TODO: replace mock implementation with Spring Security artifacts
                 User user = userService.getUserById(1);
-                
+
                 /*
                  * Sending an e-mail
                  */

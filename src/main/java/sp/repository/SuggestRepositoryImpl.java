@@ -225,22 +225,27 @@ public class SuggestRepositoryImpl implements SuggestRepository {
 
             TypedQuery<String> resultQuery = em.createQuery(cqPerformers);
             if ((limit != null) && (limit > 0)) {
-                resultQuery.setMaxResults(limit.intValue() / 2 + 1);
-            }
-            results = resultQuery.getResultList();
-
-            CriteriaQuery<String> cqActivity = cb.createQuery(String.class);
-
-            cqActivity.select(report.get(Report_.activity)).where(
-                    cb.like(cb.lower(report.get(Report_.activity)), nQuery));
-            
-            cqActivity.groupBy(report.get(Report_.activity));
-            
-            resultQuery = em.createQuery(cqActivity);
-            if ((limit != null) && (limit > 0)) {
                 resultQuery.setMaxResults(limit.intValue() / 2);
             }
-            results.addAll(resultQuery.getResultList());            
+            results = resultQuery.getResultList();
+      
+            CriteriaBuilder cb2 = em.getCriteriaBuilder();
+            CriteriaQuery<String> cqActivity = cb2.createQuery(String.class);
+            Root<Report> report2 = cqActivity.from(Report.class);
+                        
+            cqActivity.select(report2.get(Report_.activity)).where(
+                    cb2.like(cb.lower(report2.get(Report_.activity)), nQuery));
+            
+            cqActivity.groupBy(report2.get(Report_.activity));
+            
+            TypedQuery<String> resultQuery2 = em.createQuery(cqActivity);
+            if ((limit != null) && (limit > 0)) {
+                resultQuery2.setMaxResults(limit.intValue() / 2);
+            }
+            List<String> results2 = resultQuery2.getResultList();  
+            
+            results.addAll(results2);
+            
             return results;
         } else {
             return null;

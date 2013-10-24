@@ -1,1 +1,2 @@
 <h3>#springMessage('content.about.title')</h3>
+#set($page_title = 'About')

@@ -31,6 +31,8 @@
     #springMessage('content.detail.notfound')
 #end
 
+#set($page_title = 'Details')
+
 <script type="text/javascript">
     function redirect() {
         window.location.href="$back";

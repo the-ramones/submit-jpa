@@ -33,3 +33,4 @@
     </table>
     <button class="action add" onclick="modal_add()">#springMessage('content.list.button.addnew')</button>    
 </div> 
+#set($page_title = 'Results')

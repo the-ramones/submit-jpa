@@ -4,3 +4,4 @@
 #{else}
     <button class="action delete" onclick="javascript: window.location.href='#springUrl('/report/search?new_search')';" style="margin-left:0;">#springMessage('button.action.back')</button>
 #end
+#set($page_title = 'Nothing')

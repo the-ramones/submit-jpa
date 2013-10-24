@@ -20,5 +20,7 @@
     document.getElementById("j_username").focus();
 </script>     
 
+#set($page_title = 'Login')
+
 #hint()
      

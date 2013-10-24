@@ -44,6 +44,11 @@ public class SolrSuggestController {
         return new SpPageable();
     }
 
+    @ModelAttribute("page_key")
+    public String referenceData() {
+        return "title.solrsuggest";
+    }
+
     @RequestMapping(value = "", method = RequestMethod.GET)
     public String setupForm(Model model) {
         /*

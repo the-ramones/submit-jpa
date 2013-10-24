@@ -32,6 +32,7 @@
     </form> 
      
 </div>
+#set($page_title = 'Add')
 
 <script type="text/javascript">
     document.getElementById("performer").focus();

@@ -6,6 +6,7 @@
     <provider>org.hibernate.ejb.HibernatePersistence</provider>
     <class>sp.model.Report</class>
     <exclude-unlisted-classes>true</exclude-unlisted-classes>
+    <validation-mode>CALLBACK</validation-mode>
     <properties>
       <!--<property name="hibernate.transaction.jta.platform" value="org.hibernate.service.jta.platform.internal.BitronixJtaPlatform" />-->
       <property name="hibernate.archive.autodetection" value="class"/>
@@ -19,6 +20,7 @@
     <class>sp.model.Register</class>
     <class>sp.model.User</class>
     <exclude-unlisted-classes>true</exclude-unlisted-classes>
+    <validation-mode>CALLBACK</validation-mode>
     <properties>
       <!--<property name="hibernate.transaction.jta.platform" value="org.hibernate.service.jta.platform.internal.BitronixJtaPlatform" />-->
       <property name="hibernate.archive.autodetection" value="class"/>

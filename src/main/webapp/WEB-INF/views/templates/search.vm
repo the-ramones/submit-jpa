@@ -25,6 +25,8 @@
     <p class="stats invisible">#springMessage('content.search.result'): <span></span> (<span></span> #springMessage('content.search.second').) </p>    
 </div>
 
+#set($page_title = 'Search')
+
 #hint()
 
 <div class="results-wrap clearfix">

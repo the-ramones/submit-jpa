@@ -34,3 +34,4 @@
         #end
     #end
 </div>
+#set($page_title = 'Registry')

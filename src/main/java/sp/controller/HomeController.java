@@ -2,6 +2,7 @@ package sp.controller;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 /**
@@ -11,6 +12,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
  */
 @Controller
 public class HomeController {
+
+    @ModelAttribute("page_key")
+    public String referenceData() {
+        return "title.home";
+    }
 
     @RequestMapping({"/", "/home"})
     public String home(Model model) {

@@ -1,1 +1,2 @@
 #springMessage("content.access.title")
+#set($page_title = 'Error')

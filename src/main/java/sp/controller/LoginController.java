@@ -9,6 +9,7 @@ import org.springframework.security.authentication.AuthenticationTrustResolverIm
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -23,16 +24,21 @@ public class LoginController {
 
     protected static final Logger logger = LoggerFactory.getLogger(LoginController.class);
 
+    @ModelAttribute("page_key")
+    public String referenceData() {
+        return "title.login";
+    }
+
     /**
      * Renders login form
-     * 
+     *
      * @param isLogin is login request
      * @param isLogout is logout request
      * @param isInfoRequest is user info request
      * @param auth Authentication instance
      * @param principal principal instance
      * @param model model object
-     * @return 
+     * @return
      */
     @RequestMapping(value = "/login", method = RequestMethod.GET)
     public String loginForm(@RequestParam(value = "login", required = false) boolean isLogin,

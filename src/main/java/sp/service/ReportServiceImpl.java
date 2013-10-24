@@ -140,7 +140,7 @@ public class ReportServiceImpl implements ReportService {
     }
 
     @Override
-    @Transactional(readOnly = true)
+    @Transactional(readOnly = true, propagation = Propagation.SUPPORTS)
     public List<Report> getAllReports() {
         return reportRepository.getAllReports();
     }

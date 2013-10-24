@@ -6,6 +6,7 @@ import javax.inject.Named;
 import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -29,6 +30,11 @@ public class AdminController {
     @Named("messageSource")
     MessageSource messageSource;
 
+    @ModelAttribute("page_key")
+    public String referenceData() {
+        return "title.admin";
+    }
+    
     @RequestMapping(value = {"/", "/manager", "/admin"}, method = RequestMethod.GET)
     public String manager(Model model) {
         /*

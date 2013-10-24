@@ -41,6 +41,8 @@
     <p>#springMessage('content.checklist.nothing')</p>
 #end
 
+#set($page_title = 'Checklist')
+
 <script>
 
     /*

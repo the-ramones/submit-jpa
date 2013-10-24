@@ -43,6 +43,11 @@ public class RegistryController {
     RegistryService registryService;
     protected static final Logger logger = LoggerFactory.getLogger(RegistryController.class);
 
+    @ModelAttribute("page_key")
+    public String referenceData() {
+        return "title.registry";
+    }
+
     @ModelAttribute("settings")
     public Map<String, String> populateReferenceData() {
         Map<String, String> settings = new HashMap<String, String>();

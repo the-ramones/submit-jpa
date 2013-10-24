@@ -1,10 +1,12 @@
 package sp.repository;
 
 import java.util.ArrayList;
+import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 import javax.inject.Named;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.context.annotation.DependsOn;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
@@ -19,6 +21,7 @@ import org.springframework.stereotype.Repository;
 import sp.model.Report;
 import sp.model.searchable.ReportSearchable;
 import sp.model.searchable.ReportSearchableField;
+import sp.util.service.SolrAdministrator;
 
 /**
  * Basic implementations of {@link SolrRepository}
@@ -27,6 +30,7 @@ import sp.model.searchable.ReportSearchableField;
  */
 //@Lazy
 @Repository
+@DependsOn("solrAdministrator")
 public class SolrRepositoryImpl implements SolrRepository {
 
     @Inject
@@ -36,6 +40,15 @@ public class SolrRepositoryImpl implements SolrRepository {
     private static final Integer DEFAULT_PAGE_SIZE = 10;
     protected static final Logger logger = LoggerFactory.getLogger(SolrRepositoryImpl.class);
 
+    @Inject
+    SolrAdministrator solrAdministrator;
+    
+    @PostConstruct
+    public void postConstruct() {
+        solrAdministrator.launchFullDataImport();
+    }
+
+    
     @Override
     public Page<Report> searchByPerformer(String query) {
         SimpleQuery q;

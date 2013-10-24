@@ -59,6 +59,11 @@ public class SuggestController {
     @Value("${prompt.limit.default}")
     private int DEFAULT_LIMIT;
 
+    @ModelAttribute("page_key")
+    public String referenceData() {
+        return "title.suggest";
+    }
+
     @ModelAttribute("settings")
     public Map<String, String> populateReferenceData() {
         Map<String, String> settings = new HashMap<String, String>();

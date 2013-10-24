@@ -42,5 +42,7 @@
     </form>  
 </div>
 
+#set($page_title = 'Search')
+
 #hint()
   
