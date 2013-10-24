@@ -67,27 +67,6 @@ FROM reports
 ORDER BY performer;
 
 -- db chema definition
-DROP SCHEMA IF EXISTS userdetails;
-CREATE SCHEMA userdetails;
-
-use userdetails;
-
-CREATE TABLE users(
-      username VARCHAR(255) NOT NULL PRIMARY KEY,
-      password VARCHAR(255) NOT NULL,
-      enabled BOOLEAN NOT NULL,
-      app_user INT NOT NULL
-)ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
-CREATE TABLE authorities (
-    username VARCHAR(255) NOT NULL,
-    authority VARCHAR(255) NOT NULL,
-    CONSTRAINT fk_authorities_users FOREIGN KEY(username) REFERENCES users(username)
-)ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
-CREATE UNIQUE INDEX ix_auth_username ON authorities (username, authority);
-
--- db chema definition
 DROP SCHEMA IF EXISTS registry;
 CREATE SCHEMA registry;
 
@@ -144,13 +123,6 @@ CREATE TABLE authorities (
 )ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE UNIQUE INDEX ix_auth_username ON authorities (username, authority);
-
--- user & authorities
-
-CREATE USER 'netbeans'@'%' IDENTIFIED BY 'netbeans';
-GRANT ALL PRIVILEGES ON TO enterprise.* 'netbeans'@'%';
-GRANT ALL PRIVILEGES ON TO registry.* 'netbeans'@'%';
-GRANT ALL PRIVILEGES ON TO userdetails.* 'netbeans'@'%';
 
 -- dumps
 
@@ -237,6 +209,7 @@ INSERT INTO registers VALUES (1,1,1,TIMESTAMP('2013-01-21 14:11:09')),
         (6,3,2,TIMESTAMP('2013-07-30 08:41:05')),
         (7,1,3,TIMESTAMP('2013-02-17 09:51:04'));
 
+COMMIT;
 -- dump data 
 
 use userdetails;
@@ -251,3 +224,14 @@ INSERT INTO authorities VALUES ('admin', 'ROLE_ADMIN'),
         ('admin', 'ROLE_USER'),
         ('user', 'ROLE_USER'),
         ('anonymous', 'ROLE_ANONYMOUS');
+
+COMMIT;
+
+-- user & authorities
+
+REVOKE ALL ON *.* FROM 'netbeans'@'localhost';
+DROP USER 'netbeans'@'localhost';
+CREATE USER 'netbeans'@'localhost' IDENTIFIED BY 'netbeans';
+GRANT ALL PRIVILEGES ON enterprise.* TO 'netbeans'@'localhost';
+GRANT ALL PRIVILEGES ON registry.* TO 'netbeans'@'localhost';
+GRANT ALL PRIVILEGES ON userdetails.* TO 'netbeans'@'localhost';

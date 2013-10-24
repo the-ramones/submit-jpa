@@ -347,7 +347,7 @@
                     <mode>war</mode>                    
                     <charset>UTF-8</charset>
                     <update>true</update>
-                    <url>http://localhost:8080/manager</url>
+                    <url>http://localhost:8090/manager</url>
                     <systemProperties>
                         <solr.default.core.directory>${solr.default.core.directory}</solr.default.core.directory>
                         <solr.default.core.name>${solr.default.core.name}</solr.default.core.name>

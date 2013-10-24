@@ -518,3 +518,19 @@ Setting custom MessageInterpolator of type org.springframework.validation.beanva
 Setting custom ConstraintValidatorFactory of type org.springframework.validation.beanvalidation.SpringConstraintValidatorFactory
 Trying to load META-INF/validation.xml for XML based Validator configuration.
 No META-INF/validation.xml found. Using annotation based configuration only.
+Logging Provider: org.jboss.logging.Log4jLoggerProvider
+HV000001: Hibernate Validator 4.3.0.Final
+Found javax.persistence.Persistence on classpath containing 'getPersistenceUtil'. Assuming JPA 2 environment. Trying to instantiate JPA aware TraversableResolver
+Instantiated JPA aware TraversableResolver of type org.hibernate.validator.internal.engine.resolver.JPATraversableResolver.
+Trying to load META-INF/validation.xml for XML based Validator configuration.
+No META-INF/validation.xml found. Using annotation based configuration only.
+Found javax.persistence.Persistence on classpath containing 'getPersistenceUtil'. Assuming JPA 2 environment. Trying to instantiate JPA aware TraversableResolver
+Instantiated JPA aware TraversableResolver of type org.hibernate.validator.internal.engine.resolver.JPATraversableResolver.
+Trying to load META-INF/validation.xml for XML based Validator configuration.
+No META-INF/validation.xml found. Using annotation based configuration only.
+Found javax.persistence.Persistence on classpath containing 'getPersistenceUtil'. Assuming JPA 2 environment. Trying to instantiate JPA aware TraversableResolver
+Instantiated JPA aware TraversableResolver of type org.hibernate.validator.internal.engine.resolver.JPATraversableResolver.
+Setting custom MessageInterpolator of type org.springframework.validation.beanvalidation.LocaleContextMessageInterpolator
+Setting custom ConstraintValidatorFactory of type org.springframework.validation.beanvalidation.SpringConstraintValidatorFactory
+Trying to load META-INF/validation.xml for XML based Validator configuration.
+No META-INF/validation.xml found. Using annotation based configuration only.
